@@ -1,7 +1,7 @@
 from setuptools import setup
 
 requirements = [
-    # package requirements go here
+    'nbconvert>=5.3', 'pypandoc'
 ]
 
 setup(
@@ -14,6 +14,7 @@ setup(
     packages=['jupyter_docx_bundler'],
     install_requires=requirements,
     keywords=['jupyter', 'docx', 'bundler'],
+    license='MIT',
     classifiers=[
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
