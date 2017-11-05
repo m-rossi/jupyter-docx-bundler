@@ -45,8 +45,8 @@ def html_to_docx(htmlfile, docxfile, handler, metadata):
         Filename for the notebook exported as docx
     handler : tornado.web.RequestHandler
         Handler that serviced the bundle request
-    metadata : list
-        List of dicts with author information like [{'name': 'author'}]
+    metadata : dict
+        Dicts with metadata information of the notebook
     """
 
     # check if html file exists
@@ -63,10 +63,10 @@ def html_to_docx(htmlfile, docxfile, handler, metadata):
     # set extra args for pandoc
     extra_args = []
     if 'authors' in metadata:
-        if isinstance(metadata.authors, list) and \
-                all(['name' in x for x in metadata.authors]):
+        if isinstance(metadata['authors'], list) and \
+                all(['name' in x for x in metadata['authors']]):
             extra_args.append('--metadata=author:{}'.format(
-                ', '.join([x.name for x in metadata.authors])))
+                ', '.join([x.name for x in metadata['authors']])))
         else:
             handler.log.warning('Author metadata has wrong format, see https:/'
                                 '/github.com/m-rossi/jupyter_docx_bundler/blob'
