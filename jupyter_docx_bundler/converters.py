@@ -43,6 +43,10 @@ def html_to_docx(htmlfile, docxfile, handler, metadata):
         Filename of the notebook exported as html
     docxfile : str
         Filename for the notebook exported as docx
+    handler : tornado.web.RequestHandler
+        Handler that serviced the bundle request
+    metadata : list
+        List of dicts with author information like [{'name': 'author'}]
     """
 
     # check if html file exists
