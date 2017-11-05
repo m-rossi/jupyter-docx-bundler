@@ -43,7 +43,10 @@ def bundle(handler, model):
         converters.notebook_to_html(model['content'], htmlfile)
 
         # convert html to docx
-        converters.html_to_docx(htmlfile, docxfile)
+        converters.html_to_docx(htmlfile,
+                                docxfile,
+                                handler,
+                                model['content']['metadata'])
 
         # Set headers to trigger browser download
         handler.set_header('Content-Disposition',

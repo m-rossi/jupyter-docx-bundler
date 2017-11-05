@@ -17,4 +17,9 @@ jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix
 
 ### Adding Metadata
 
-The bundle extension uses metadata of the notebook, if you you provide it. You can add a title to your docx-document by adding `"name": "Notebook name"` to the notebook metadata, which can be edited under _Edit_ -> _Edit Notebook Metadata_.
+The bundle extension uses metadata of the notebook, if you you provide it.
+
+* You can add a title by adding `"name": "Notebook name"`
+* You can add authors by adding `"authors": [{"name": "author1"}, {"name": "author2"}]`
+
+The notebook metadata can be edited under _Edit_ -> _Edit Notebook Metadata_.

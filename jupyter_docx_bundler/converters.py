@@ -33,7 +33,7 @@ def notebook_to_html(content, htmlfile):
         file.write(content)
 
 
-def html_to_docx(htmlfile, docxfile):
+def html_to_docx(htmlfile, docxfile, handler, metadata):
     """ Convert html file to docx file.
 
     Parameters
@@ -56,8 +56,21 @@ def html_to_docx(htmlfile, docxfile):
         raise FileNotFoundError('Path to docx-file does not exist: {}'.format(
             os.path.dirname(docxfile)))
 
+    # set extra args for pandoc
+    extra_args = []
+    if 'authors' in metadata:
+        if isinstance(metadata.authors, list) and \
+                all(['name' in x for x in metadata.authors]):
+            extra_args.append('--metadata=author:{}'.format(
+                ', '.join([x.name for x in metadata.authors])))
+        else:
+            handler.log.warning('Author metadata has wrong format, see https:/'
+                                '/github.com/m-rossi/jupyter_docx_bundler/blob'
+                                '/master/README.md')
+
     # convert to docx
     pypandoc.convert_file(htmlfile,
                           'docx',
                           format='html+tex_math_dollars',
-                          outputfile=docxfile)
+                          outputfile=docxfile,
+                          extra_args=extra_args)
