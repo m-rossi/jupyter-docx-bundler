@@ -1,4 +1,4 @@
-from nbconvert import HTMLExporter
+from nbconvert import HTMLExporter, preprocessors
 import os
 import pypandoc
 
@@ -16,6 +16,12 @@ def notebook_to_html(content, htmlfile):
     """
     # prepare html exporter, anchor_link_text=' ' suppress anchors being shown
     html_exporter = HTMLExporter(anchor_link_text=' ')
+
+    # preprocess notebook
+    tag_preprocessor = preprocessors.TagRemovePreprocessor()
+    tag_preprocessor.remove_cell_tags.add('nbconvert-remove-cell')
+    tag_preprocessor.remove_input_tags.add('nbconvert-remove-input')
+    tag_preprocessor.preprocess(content, {})
 
     # export to html
     content, resources = html_exporter.from_notebook_node(
