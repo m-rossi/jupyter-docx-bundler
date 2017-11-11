@@ -1,5 +1,7 @@
 # Jupyter docx bundler extension
 
+[![PyPi Version](https://img.shields.io/pypi/v/jupyter_docx_bundler.svg)](https://pypi.python.org/pypi/jupyter_docx_bundler)
+
 Jupyter bundler extension to export notebook as a docx file
 
 ## Install
