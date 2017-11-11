@@ -11,6 +11,13 @@ pip install git+https://github.com/m-rossi/jupyter_docx_bundler.git
 jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix
 ```
 
+### Installing with pip
+
+```
+pip install jupyter_docx_bundler
+jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix
+```
+
 ## Usage
 
 ### Adding Metadata
