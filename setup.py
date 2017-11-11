@@ -7,7 +7,7 @@ requirements = [
 
 # Get the long description from the README file
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                       'README.md'),
+                       'README.rst'),
           encoding='utf-8') as f:
     long_description = f.read()
 
