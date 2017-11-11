@@ -13,7 +13,7 @@ with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
 
 setup(
     name='jupyter_docx_bundler',
-    version='0.1.0',
+    version='0.1.1',
     description='Jupyter bundler extension to export notebook as a docx file',
     long_description=long_description,
     author='Marco Rossi',
