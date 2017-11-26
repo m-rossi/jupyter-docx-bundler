@@ -1,15 +1,12 @@
 package:
   name: jupyter_docx_bundler
-  version: 0.1.0
+  version: 0.1.1
 
 source:
   path: ..
 
 build:
-  # If the installation is complex, or different between Unix and Windows, use
-  # separate bld.bat and build.sh files instead of this key.  Add the line
-  # "skip: True  # [py<35]" (for example) to limit to Python 3.5 and newer, or
-  # "skip: True  # [not win]" to limit to Windows.
+  noarch: python
   script: python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
@@ -18,6 +15,11 @@ requirements:
     - setuptools
   run:
     - python
+    - jupyter
+    - notebook >=5.0
+    - pypandoc >=1.4
+    - nbconvert >=5.3.1
+    - pandoc >=2.0
 
 about:
   home: https://github.com/m-rossi/jupyter_docx_bundler
