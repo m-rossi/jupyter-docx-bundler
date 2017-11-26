@@ -19,7 +19,7 @@ requirements:
     - notebook >=5.0
     - pypandoc >=1.4
     - nbconvert >=5.3.1
-    - pandoc >=2.0
+    - pandoc >=1.19.2.1
 
 about:
   home: https://github.com/m-rossi/jupyter_docx_bundler
