@@ -20,6 +20,12 @@ pip install jupyter_docx_bundler
 jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix
 ```
 
+### Installing with conda
+
+```
+conda install -c mrossi jupyter_docx_bundler
+```
+
 ## Usage
 
 ### Adding Metadata
