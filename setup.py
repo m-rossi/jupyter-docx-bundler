@@ -2,7 +2,10 @@ import os
 from setuptools import setup
 
 requirements = [
-    'nbconvert>=5.3', 'pypandoc'
+    'jupyter',
+    'nbconvert>=5.3.1',
+    'pypandoc>=1.4',
+    'notebook>=5.0'
 ]
 
 # Get the long description from the README file
