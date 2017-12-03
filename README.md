@@ -6,13 +6,6 @@ Jupyter bundler extension to export notebook as a docx file
 
 ## Install
 
-### Installing from git
-
-```
-pip install git+https://github.com/m-rossi/jupyter_docx_bundler.git
-jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix
-```
-
 ### Installing with pip
 
 ```
