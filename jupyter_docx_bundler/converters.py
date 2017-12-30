@@ -24,9 +24,7 @@ def notebook_to_html(content, htmlfile):
     tag_preprocessor.preprocess(content, {})
 
     # export to html
-    content, resources = html_exporter.from_notebook_node(
-        content,
-        resources={'metadata': content['metadata']})
+    content, _ = html_exporter.from_notebook_node(content)
 
     # check if export path exists
     if os.path.dirname(htmlfile) is not '' and not os.path.isdir(
