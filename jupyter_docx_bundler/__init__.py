@@ -31,7 +31,7 @@ def bundle(handler, model):
     """
 
     # prepare notebook
-    notebook_filename = model['name']
+    notebook_filename = os.path.basename(model['name'])
     notebook_name = os.path.splitext(notebook_filename)[0]
 
     with tempfile.TemporaryDirectory() as tempdir:
