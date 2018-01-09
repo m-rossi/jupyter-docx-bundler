@@ -1,6 +1,6 @@
 package:
   name: jupyter_docx_bundler
-  version: 0.1.1
+  version: 0.1.2
 
 source:
   path: ..
@@ -14,7 +14,6 @@ requirements:
     - setuptools
   run:
     - python
-    - jupyter
     - notebook >=5.0
     - pypandoc >=1.4
     - nbconvert >=5.3.1
