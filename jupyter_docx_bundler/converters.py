@@ -37,7 +37,7 @@ def notebook_to_html(content, htmlfile):
         file.write(content)
 
 
-def html_to_docx(htmlfile, docxfile, handler, metadata):
+def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
     """ Convert html file to docx file.
 
     Parameters
@@ -47,9 +47,9 @@ def html_to_docx(htmlfile, docxfile, handler, metadata):
         Filename of the notebook exported as html
     docxfile : str
         Filename for the notebook exported as docx
-    handler : tornado.web.RequestHandler
+    handler : tornado.web.RequestHandler, optional
         Handler that serviced the bundle request
-    metadata : dict
+    metadata : dict, optional
         Dicts with metadata information of the notebook
     """
 
@@ -66,12 +66,12 @@ def html_to_docx(htmlfile, docxfile, handler, metadata):
 
     # set extra args for pandoc
     extra_args = []
-    if 'authors' in metadata:
+    if metadata is not None and 'authors' in metadata:
         if isinstance(metadata['authors'], list) and \
                 all(['name' in x for x in metadata['authors']]):
             extra_args.append('--metadata=author:{}'.format(
                 ', '.join([x.name for x in metadata['authors']])))
-        else:
+        elif handler is not None:
             handler.log.warning('Author metadata has wrong format, see https:/'
                                 '/github.com/m-rossi/jupyter_docx_bundler/blob'
                                 '/master/README.md')

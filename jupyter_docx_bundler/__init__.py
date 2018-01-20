@@ -45,8 +45,8 @@ def bundle(handler, model):
         # convert html to docx
         converters.html_to_docx(htmlfile,
                                 docxfile,
-                                handler,
-                                model['content']['metadata'])
+                                metadata=model['content']['metadata'],
+                                handler=handler)
 
         # Set headers to trigger browser download
         handler.set_header('Content-Disposition',
