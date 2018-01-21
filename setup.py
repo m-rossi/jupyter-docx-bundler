@@ -24,6 +24,10 @@ setup(
     packages=['jupyter_docx_bundler'],
     python_requires='>=3, >=2.7',
     install_requires=requirements,
+    extras_require={'test': ['pytest',
+                             'pytest-lazy-fixture',
+                             'nbformat',
+                             'requests']},
     keywords=['jupyter', 'docx', 'bundler'],
     license='MIT',
     classifiers=[
