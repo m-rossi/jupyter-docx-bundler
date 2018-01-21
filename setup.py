@@ -26,7 +26,9 @@ setup(
     install_requires=requirements,
     extras_require={'test': ['pytest',
                              'pytest-lazy-fixture',
+                             'matplotlib',
                              'nbformat',
+                             'numpy'
                              'requests']},
     keywords=['jupyter', 'docx', 'bundler'],
     license='MIT',

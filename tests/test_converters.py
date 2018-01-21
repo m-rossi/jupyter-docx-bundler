@@ -1,4 +1,5 @@
 from jupyter_docx_bundler import converters
+from nbconvert.preprocessors import ExecutePreprocessor
 import nbformat
 import os
 import pytest
@@ -37,7 +38,30 @@ def download_notebook(request):
     return nbformat.reads(r.content.decode('utf8'), 4)
 
 
-@pytest.fixture(params=[pytest.lazy_fixture('download_notebook')])
+@pytest.fixture(params=[100, 1000])
+def matplotlib_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+
+    nb.cells.append(nbformat.v4.new_code_cell('\n'.join(
+        ['import numpy as np',
+         'import matplotlib.pyplot as plt',
+         '% matplotlib inline'])))
+
+    for _ in range(request.param):
+        nb.cells.append(nbformat.v4.new_code_cell('\n'.join(
+            ['plt.figure(dpi=100)',
+             'plt.plot(np.linspace(0, 1), np.power(np.linspace(0, 1), 2))',
+             'plt.show()'])))
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
+@pytest.fixture(params=[pytest.lazy_fixture('download_notebook'),
+                        pytest.lazy_fixture('matplotlib_notebook')],
+                ids=['download_notebook', 'matplotlib_notebook'])
 def notebook(request):
     return request.param
 
