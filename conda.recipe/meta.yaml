@@ -22,4 +22,6 @@ requirements:
 
 about:
   home: https://github.com/m-rossi/jupyter_docx_bundler
+  license: MIT
+  license_file: LICENSE
   summary: Jupyter bundler extension to export notebook as a docx file
