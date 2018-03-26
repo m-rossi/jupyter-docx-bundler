@@ -1,6 +1,6 @@
 package:
   name: jupyter_docx_bundler
-  version: 0.1.2
+  version: {{ GIT_DESCRIBE_TAG }}
 
 source:
   path: ..
