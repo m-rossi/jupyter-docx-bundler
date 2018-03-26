@@ -1,4 +1,3 @@
-import os
 from setuptools import setup
 
 requirements = [
@@ -7,11 +6,11 @@ requirements = [
     'notebook>=5.0'
 ]
 
-# Get the long description from the README file
-with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                       'README.rst'),
-          encoding='utf-8') as f:
-    long_description = f.read()
+try:
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
+except ImportError:
+    long_description = open('README.md').read()
 
 setup(
     name='jupyter_docx_bundler',
