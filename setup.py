@@ -13,30 +13,30 @@ except ImportError:
     long_description = open('README.md').read()
 
 setup(
-    name='jupyter_docx_bundler',
-    setup_requires=['setuptools_scm'],
-    use_scm_version=True,
-    description='Jupyter bundler extension to export notebook as a docx file',
-    long_description=long_description,
     author='Marco Rossi',
     author_email='developer@marco-rossi.com',
-    url='https://github.com/m-rossi/jupyter_docx_bundler',
-    packages=['jupyter_docx_bundler'],
-    python_requires='>=3, >=2.7',
-    install_requires=requirements,
-    extras_require={'test': ['pytest',
-                             'pytest-lazy-fixture',
-                             'matplotlib',
-                             'nbformat',
-                             'numpy'
-                             'requests']},
-    keywords=['jupyter', 'docx', 'bundler'],
-    license='MIT',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Framework :: Jupyter',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
-    ]
+    ],
+    description='Jupyter bundler extension to export notebook as a docx file',
+    extras_require={'test': ['pytest',
+                             'pytest-lazy-fixture',
+                             'matplotlib',
+                             'nbformat',
+                             'numpy'
+                             'requests']},
+    install_requires=requirements,
+    keywords=['jupyter', 'docx', 'bundler'],
+    license='MIT',
+    long_description=long_description,
+    name='jupyter_docx_bundler',
+    packages=['jupyter_docx_bundler'],
+    python_requires='>=3, >=2.7',
+    setup_requires=['setuptools_scm'],
+    url='https://github.com/m-rossi/jupyter_docx_bundler',
+    use_scm_version=True,
 )
