@@ -6,11 +6,8 @@ requirements = [
     'notebook>=5.0'
 ]
 
-try:
-    import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
-except ImportError:
-    long_description = open('README.md').read()
+with open('README.md') as f:
+    long_description = f.read()
 
 setup(
     author='Marco Rossi',
@@ -33,10 +30,11 @@ setup(
     keywords=['jupyter', 'docx', 'bundler'],
     license='MIT',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     name='jupyter_docx_bundler',
     packages=['jupyter_docx_bundler'],
     python_requires='>=3, >=2.7',
-    setup_requires=['setuptools_scm'],
+    setup_requires=['setuptools>=38.6.0', 'setuptools_scm'],
     url='https://github.com/m-rossi/jupyter_docx_bundler',
     use_scm_version=True,
 )
