@@ -11,7 +11,7 @@ build:
 requirements:
   build:
     - python
-    - setuptools >= 38.6.0
+    - setuptools >=38.6.0
     - setuptools_scm
   run:
     - python
