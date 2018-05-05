@@ -43,15 +43,3 @@ You can hide individual code cells or just their inputs by defining cell tags:
 _(Currently there are no default values configured for these tags, the ones listed above are defined in my code and not in [nbconvert](https://github.com/jupyter/nbconvert). This may will change in the future.)_
 
 Cell tags can be shown by activating the cell toolbar under _View_ -> _Cell Toolbar_ -> _Tags_.
-
-## Known issues
-
-### Out of Memory error on Windows
-
-Converting large files on Windows can fail because by default pandoc can only use 2 GB of memory, see the discussion here: [jgm/pandoc#3669](https://github.com/jgm/pandoc/issues/3669).
-There is a workaround mentioned here: [Fixing pandoc "out of memory" errors on Windows](https://jonathanchang.org/blog/fixing-pandoc-out-of-memory-errors-on-windows/). It worked for me on my Windows 10, 64-bit machine.
-
-Therefore I've forked [conda-forge/pandoc-feedstock](https://github.com/conda-forge/pandoc-feedstock) and modified it to include the necessary commands: [m-rossi/pandoc-feedstock](https://github.com/m-rossi/pandoc-feedstock). Now you can install my version of pandoc with
-```
-conda install -c mrossi pandoc
-```
