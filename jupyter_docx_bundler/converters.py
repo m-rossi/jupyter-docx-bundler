@@ -1,5 +1,7 @@
-from nbconvert import HTMLExporter, preprocessors
 import os
+import re
+
+from nbconvert import HTMLExporter, preprocessors
 import pypandoc
 
 
@@ -22,6 +24,9 @@ def notebook_to_html(content, htmlfile):
     tag_preprocessor.remove_cell_tags.add('nbconvert-remove-cell')
     tag_preprocessor.remove_input_tags.add('nbconvert-remove-input')
     tag_preprocessor.preprocess(content, {})
+
+    for cell in content['cells']:
+        attachment_to_embedded_image(cell)
 
     # export to html
     content, _ = html_exporter.from_notebook_node(content)
@@ -82,3 +87,23 @@ def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
                           format='html+tex_math_dollars',
                           outputfile=docxfile,
                           extra_args=extra_args)
+
+
+def attachment_to_embedded_image(cell):
+    """Converts cell with embedded images as attachments of notebook cell to
+    markdown embedded images.
+
+    Parameters
+    ----------
+    cell : NotebookNode
+        Cell with attachments
+    """
+    if 'attachments' in cell:
+        for att in cell['attachments']:
+            s = re.split(f'!\[.+\]\(attachment:{att}\)', cell['source'])
+            if len(s) != 2:
+                raise NotImplementedError
+            for key, val in cell['attachments'][att].items():
+                s.insert(1, f'<img src="data:{key};base64,{val}" />')
+            cell['source'] = ''.join(s)
+        cell.pop('attachments')

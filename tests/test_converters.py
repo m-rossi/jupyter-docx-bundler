@@ -1,10 +1,36 @@
-from jupyter_docx_bundler import converters
+import base64
+import os
+import re
+
+import matplotlib.pyplot as plt
 from nbconvert.preprocessors import ExecutePreprocessor
 import nbformat
-import os
+import numpy as np
 import pytest
-import re
 import requests
+
+from jupyter_docx_bundler import converters
+
+
+def encode_image_base64(filepath):
+    """Encode an image as a base64 string
+
+    Parameters
+    ----------
+    filepath : str
+        Filepath of the image file
+
+    Returns
+    -------
+    dict
+        Dictionary with identifier as key and base64-encoded data as value.
+
+    """
+    key = 'image/' + os.path.splitext(filepath)[1][1:]
+    with open(filepath, 'rb') as image:
+        data = base64.b64encode(image.read()).decode('utf8')
+
+    return {key: data}
 
 
 @pytest.fixture(params=['https://nbviewer.jupyter.org/github/unpingco/Python-f'
@@ -59,9 +85,36 @@ def matplotlib_notebook(tmpdir, request):
     return nb
 
 
+@pytest.fixture(params=['png', 'jpg', 'jpeg'])
+def embedded_images_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+
+    filename = 'matplotlib.' + request.param
+
+    plt.figure()
+    plt.plot(np.linspace(0, 1), np.power(np.linspace(0, 1), 2))
+    plt.savefig(os.path.join(tmpdir, filename))
+
+    nb.cells.append(nbformat.v4.new_markdown_cell('\n'.join(
+        ['line1',
+         '![' + filename + '](attachment:' + filename + ')',
+         'line3'])))
+
+    nb.cells[-1]['attachments'] = \
+        {filename: encode_image_base64(os.path.join(tmpdir, filename))}
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
 @pytest.fixture(params=[pytest.lazy_fixture('download_notebook'),
-                        pytest.lazy_fixture('matplotlib_notebook')],
-                ids=['download_notebook', 'matplotlib_notebook'])
+                        pytest.lazy_fixture('matplotlib_notebook'),
+                        pytest.lazy_fixture('embedded_images_notebook')],
+                ids=['download_notebook',
+                     'matplotlib_notebook',
+                     'embedded_images_notebook'])
 def notebook(tmpdir, request):
     nbformat.write(request.param, os.path.join(tmpdir, 'notebook.ipynb'))
 
