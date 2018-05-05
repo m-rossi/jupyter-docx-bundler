@@ -62,7 +62,9 @@ def matplotlib_notebook(tmpdir, request):
 @pytest.fixture(params=[pytest.lazy_fixture('download_notebook'),
                         pytest.lazy_fixture('matplotlib_notebook')],
                 ids=['download_notebook', 'matplotlib_notebook'])
-def notebook(request):
+def notebook(tmpdir, request):
+    nbformat.write(request.param, os.path.join(tmpdir, 'notebook.ipynb'))
+
     return request.param
 
 
