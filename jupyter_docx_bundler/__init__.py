@@ -36,8 +36,8 @@ def bundle(handler, model):
 
     with tempfile.TemporaryDirectory() as tempdir:
         # prepare file names
-        htmlfile = os.path.join(tempdir, '{}.html'.format(notebook_name))
-        docxfile = os.path.join(tempdir, '{}.docx'.format(notebook_name))
+        htmlfile = os.path.join(tempdir, f'{notebook_name}.html')
+        docxfile = os.path.join(tempdir, f'{notebook_name}.docx')
 
         # convert notebook to html
         converters.notebook_to_html(model['content'], htmlfile)
@@ -50,8 +50,8 @@ def bundle(handler, model):
 
         # Set headers to trigger browser download
         handler.set_header('Content-Disposition',
-                           'attachment; filename="{}"'.format(
-                               os.path.basename(docxfile)))
+                           f'attachment; filename="'
+                           f'{os.path.basename(docxfile)}"')
         handler.set_header('Content-Type',
                            'application/vnd.openxmlformats-officedocument.word'
                            'processingml.document')

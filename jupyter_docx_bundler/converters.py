@@ -34,8 +34,8 @@ def notebook_to_html(content, htmlfile):
     # check if export path exists
     if os.path.dirname(htmlfile) is not '' and not os.path.isdir(
             os.path.dirname(htmlfile)):
-        raise FileNotFoundError('Path to html-file does not exist: {}'.format(
-            os.path.dirname(htmlfile)))
+        raise FileNotFoundError(f'Path to html-file does not exist: '
+                                f'{os.path.dirname(htmlfile)}')
 
     # write content to html file
     with open(htmlfile, 'w', encoding='utf-8') as file:
@@ -60,22 +60,22 @@ def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
 
     # check if html file exists
     if not os.path.isfile(htmlfile):
-        raise FileNotFoundError('html-file does not exist: {}'.format(
-            htmlfile))
+        raise FileNotFoundError(f'html-file does not exist: {htmlfile}')
 
     # check if export path exists
     if os.path.dirname(docxfile) is not '' and not os.path.isdir(
             os.path.dirname(docxfile)):
-        raise FileNotFoundError('Path to docx-file does not exist: {}'.format(
-            os.path.dirname(docxfile)))
+        raise FileNotFoundError(f'Path to docx-file does not exist: '
+                                f'{os.path.dirname(docxfile)}')
 
     # set extra args for pandoc
     extra_args = []
     if metadata is not None and 'authors' in metadata:
         if isinstance(metadata['authors'], list) and \
                 all(['name' in x for x in metadata['authors']]):
-            extra_args.append('--metadata=author:{}'.format(
-                ', '.join([x.name for x in metadata['authors']])))
+            extra_args.append(
+                f'--metadata=author:'
+                f'{", ".join([x.name for x in metadata["authors"]])}')
         elif handler is not None:
             handler.log.warning('Author metadata has wrong format, see https:/'
                                 '/github.com/m-rossi/jupyter_docx_bundler/blob'

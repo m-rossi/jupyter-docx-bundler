@@ -49,7 +49,7 @@ def download_notebook(request):
     # check extension of file
     filename = os.path.basename(notebook_url)
     if not notebook_url.endswith('.ipynb'):
-        raise ValueError('{} is not a Jupyter notebook.'.format(filename))
+        raise ValueError(f'{filename} is not a Jupyter notebook.')
 
     # redirect notebook if notebook is located on nbviewer.jupyter.org
     if 'nbviewer' in notebook_url:
