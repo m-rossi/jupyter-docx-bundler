@@ -1,5 +1,6 @@
 import base64
 import os
+import platform
 import re
 
 import matplotlib.pyplot as plt
@@ -92,6 +93,8 @@ def embedded_images_notebook(tmpdir, request):
 
     plt.figure()
     plt.plot(np.linspace(0, 1), np.power(np.linspace(0, 1), 2))
+    if platform.system() == 'Windows' and request.param is not 'png':
+        pytest.skip('Image export only works for png on Windows.')
     plt.savefig(os.path.join(tmpdir, filename))
 
     nb.cells.append(nbformat.v4.new_markdown_cell('\n'.join(
