@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 import requests
 
-from jupyter_docx_bundler import converters
+from .. import converters
 
 
 def encode_image_base64(filepath):
