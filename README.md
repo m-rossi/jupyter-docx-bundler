@@ -43,3 +43,17 @@ You can hide individual code cells or just their inputs by defining cell tags:
 _(Currently there are no default values configured for these tags, the ones listed above are defined in my code and not in [nbconvert](https://github.com/jupyter/nbconvert). This may will change in the future.)_
 
 Cell tags can be shown by activating the cell toolbar under _View_ -> _Cell Toolbar_ -> _Tags_.
+
+## Development
+
+### Testing
+
+The package is tested with [pytest](https://docs.pytest.org/en/latest/) and uses the plugin [pytest-lazy-fixture](https://github.com/TvoroG/pytest-lazy-fixture).
+
+### Building
+
+To build the package with [conda-build](https://github.com/conda/conda-build) you need to call
+```
+conda-build -c defaults -c conda-forge conda.recipe
+```
+The additional channel [conda-forge](https://conda-forge.org) is necessary because the packages [Pandoc](https://pandoc.org) and [pytest-lazy-fixture](https://github.com/TvoroG/pytest-lazy-fixture) are only available there.
