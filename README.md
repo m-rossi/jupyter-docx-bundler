@@ -1,6 +1,6 @@
 # Jupyter docx bundler extension
 
-[![PyPi Version](https://img.shields.io/pypi/v/jupyter_docx_bundler.svg)](https://pypi.python.org/pypi/jupyter_docx_bundler)
+[![PyPi Version](https://img.shields.io/pypi/v/jupyter_docx_bundler.svg)](https://pypi.org/project/jupyter-docx-bundler/)
 [![Conda Version](https://img.shields.io/conda/vn/mrossi/jupyter_docx_bundler.svg)](https://anaconda.org/mrossi/jupyter_docx_bundler)
 
 Jupyter bundler extension to export notebook as a docx file
