@@ -9,7 +9,7 @@ Jupyter bundler extension to export notebook as a docx file
 
 ### Installing with pip
 
-Make sure you have [Pandoc](https://pandoc.org) installed. You can easily install it from conda with `conda install pandoc`.
+Make sure you have [Pandoc](https://pandoc.org) installed.
 
 ```
 pip install jupyter_docx_bundler
