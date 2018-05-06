@@ -41,8 +41,7 @@ def encode_image_base64(filepath):
                         'ckers/blob/master/Chapter1_Introduction/Ch1_Introduct'
                         'ion_PyMC3.ipynb',
                         'https://nbviewer.jupyter.org/github/waltherg/notebook'
-                        's/blob/master/2013-12-03-Crank_Nicolson.ipynb'],
-                autouse=True)
+                        's/blob/master/2013-12-03-Crank_Nicolson.ipynb'])
 def download_notebook(request):
     notebook_url = request.param
 
@@ -64,8 +63,7 @@ def download_notebook(request):
     return nbformat.reads(r.content.decode('utf8'), 4)
 
 
-@pytest.fixture(params=[100, 1000],
-                autouse=True)
+@pytest.fixture(params=[100, 1000])
 def matplotlib_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
 
@@ -86,8 +84,7 @@ def matplotlib_notebook(tmpdir, request):
     return nb
 
 
-@pytest.fixture(params=['png', 'jpg', 'jpeg'],
-                autouse=True)
+@pytest.fixture(params=['png', 'jpg', 'jpeg'])
 def embedded_images_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
 
@@ -111,28 +108,48 @@ def embedded_images_notebook(tmpdir, request):
     return nb
 
 
-@pytest.fixture(params=[pytest.lazy_fixture('download_notebook'),
-                        pytest.lazy_fixture('matplotlib_notebook'),
-                        pytest.lazy_fixture('embedded_images_notebook')],
-                ids=['download_notebook',
-                     'matplotlib_notebook',
-                     'embedded_images_notebook'])
-def notebook(tmpdir, request):
-    nbformat.write(request.param, os.path.join(tmpdir, 'notebook.ipynb'))
-
-    return request.param
-
-
-def test_notebook_to_html(tmpdir, notebook):
+def test_notebook_to_html_download(tmpdir, download_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
-    converters.notebook_to_html(notebook, htmlfile)
+    converters.notebook_to_html(download_notebook, htmlfile)
 
 
-def test_html_to_docx(tmpdir, notebook):
+def test_notebook_to_html_matplotlib(tmpdir, matplotlib_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
-    converters.notebook_to_html(notebook, htmlfile)
+    converters.notebook_to_html(matplotlib_notebook, htmlfile)
+
+
+def test_notebook_to_html_embedded_images(tmpdir, embedded_images_notebook):
+    # convert notebook to HTML
+    htmlfile = os.path.join(tmpdir, 'notebook.html')
+    converters.notebook_to_html(embedded_images_notebook, htmlfile)
+
+
+def test_html_to_docx_download(tmpdir, download_notebook):
+    # convert notebook to HTML
+    htmlfile = os.path.join(tmpdir, 'notebook.html')
+    converters.notebook_to_html(download_notebook, htmlfile)
+
+    # convert notebook to DOCX
+    docxfile = os.path.join(tmpdir, 'notebook.docx')
+    converters.html_to_docx(htmlfile, docxfile)
+
+
+def test_html_to_docx_matplotlib(tmpdir, matplotlib_notebook):
+    # convert notebook to HTML
+    htmlfile = os.path.join(tmpdir, 'notebook.html')
+    converters.notebook_to_html(matplotlib_notebook, htmlfile)
+
+    # convert notebook to DOCX
+    docxfile = os.path.join(tmpdir, 'notebook.docx')
+    converters.html_to_docx(htmlfile, docxfile)
+
+
+def test_html_to_docx_embedded_images(tmpdir, embedded_images_notebook):
+    # convert notebook to HTML
+    htmlfile = os.path.join(tmpdir, 'notebook.html')
+    converters.notebook_to_html(embedded_images_notebook, htmlfile)
 
     # convert notebook to DOCX
     docxfile = os.path.join(tmpdir, 'notebook.docx')

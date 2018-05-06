@@ -20,7 +20,7 @@ setup(
     ],
     description='Jupyter bundler extension to export notebook as a docx file',
     extras_require={'test': ['pytest',
-                             'pytest-lazy-fixture',
+                             'pillow',
                              'matplotlib',
                              'nbformat',
                              'numpy'

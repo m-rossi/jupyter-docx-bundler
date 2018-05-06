@@ -48,7 +48,7 @@ Cell tags can be shown by activating the cell toolbar under _View_ -> _Cell Tool
 
 ### Testing
 
-The package is tested with [pytest](https://docs.pytest.org/en/latest/) and uses the plugin [pytest-lazy-fixture](https://github.com/TvoroG/pytest-lazy-fixture).
+The package is tested with [pytest](https://docs.pytest.org/en/latest/).
 
 ### Building
 
@@ -56,4 +56,4 @@ To build the package with [conda-build](https://github.com/conda/conda-build) yo
 ```
 conda-build -c defaults -c conda-forge conda.recipe
 ```
-The additional channel [conda-forge](https://conda-forge.org) is necessary because the packages [Pandoc](https://pandoc.org) and [pytest-lazy-fixture](https://github.com/TvoroG/pytest-lazy-fixture) are only available there.
+The additional channel [conda-forge](https://conda-forge.org) is necessary because the package [Pandoc](https://pandoc.org) is only available there in a recent version.

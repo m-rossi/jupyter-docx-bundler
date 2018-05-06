@@ -27,8 +27,8 @@ test:
     - matplotlib
     - nbformat
     - numpy
+    - pillow
     - pytest
-    - pytest-lazy-fixture
     - requests
   commands:
     - pytest --pyargs jupyter_docx_bundler
