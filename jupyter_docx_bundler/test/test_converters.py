@@ -42,7 +42,7 @@ def encode_image_base64(filepath):
                         'ion_PyMC3.ipynb',
                         'https://nbviewer.jupyter.org/github/waltherg/notebook'
                         's/blob/master/2013-12-03-Crank_Nicolson.ipynb'],
-                scope='module')
+                autouse=True)
 def download_notebook(request):
     notebook_url = request.param
 
@@ -64,7 +64,8 @@ def download_notebook(request):
     return nbformat.reads(r.content.decode('utf8'), 4)
 
 
-@pytest.fixture(params=[100, 1000])
+@pytest.fixture(params=[100, 1000],
+                autouse=True)
 def matplotlib_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
 
@@ -85,7 +86,8 @@ def matplotlib_notebook(tmpdir, request):
     return nb
 
 
-@pytest.fixture(params=['png', 'jpg', 'jpeg'])
+@pytest.fixture(params=['png', 'jpg', 'jpeg'],
+                autouse=True)
 def embedded_images_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
 

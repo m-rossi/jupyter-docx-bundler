@@ -20,6 +20,19 @@ requirements:
     - nbconvert >=5.3.1
     - pandoc >=2.2
 
+test:
+  imports:
+    - jupyter_docx_bundler
+  requires:
+    - matplotlib
+    - nbformat
+    - numpy
+    - pytest
+    - pytest-lazy-fixture
+    - requests
+  commands:
+    - pytest --pyargs jupyter_docx_bundler
+
 about:
   home: https://github.com/m-rossi/jupyter_docx_bundler
   license: MIT
