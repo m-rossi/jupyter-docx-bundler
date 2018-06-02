@@ -69,14 +69,13 @@ def matplotlib_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
 
     nb.cells.append(nbformat.v4.new_code_cell('\n'.join(
-        ['import numpy as np',
-         'import matplotlib.pyplot as plt',
+        ['import matplotlib.pyplot as plt',
          '% matplotlib inline'])))
 
     for _ in range(request.param):
         nb.cells.append(nbformat.v4.new_code_cell('\n'.join(
             ['plt.figure(dpi=100)',
-             'plt.plot(np.linspace(0, 1), np.power(np.linspace(0, 1), 2))',
+             'plt.plot(range(100))',
              'plt.show()'])))
 
     ep = ExecutePreprocessor()
