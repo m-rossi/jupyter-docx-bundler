@@ -1,10 +1,5 @@
 from setuptools import setup
 
-requirements = [
-    'nbconvert>=5.3.1', # TODO Update nbconvert version when released
-    'pypandoc>=1.4',
-    'notebook>=5.0'
-]
 
 with open('README.md') as f:
     long_description = f.read()
@@ -25,13 +20,18 @@ setup(
                              'nbformat',
                              'numpy'
                              'requests']},
-    install_requires=requirements,
+    install_requires=[
+        'nbconvert>=5.3.1',  # TODO Update nbconvert version when released
+        'pypandoc>=1.4',
+        'notebook>=5.0'
+    ],
     keywords=['jupyter', 'docx', 'bundler'],
     license='MIT',
     long_description=long_description,
     long_description_content_type='text/markdown',
     name='jupyter_docx_bundler',
-    packages=['jupyter_docx_bundler'],
+    packages=['jupyter_docx_bundler',
+              'jupyter_docx_bundler.test'],
     python_requires='>=3.6',
     setup_requires=['setuptools>=38.6.0', 'setuptools_scm'],
     url='https://github.com/m-rossi/jupyter_docx_bundler',
