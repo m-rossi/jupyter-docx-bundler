@@ -54,6 +54,5 @@ The package is tested with [pytest](https://docs.pytest.org/en/latest/).
 
 To build the package with [conda-build](https://github.com/conda/conda-build) you need to call
 ```
-conda-build -c defaults -c conda-forge conda.recipe
+conda-build conda.recipe
 ```
-The additional channel [conda-forge](https://conda-forge.org) is necessary because the package [Pandoc](https://pandoc.org) is only available there in a recent version.
