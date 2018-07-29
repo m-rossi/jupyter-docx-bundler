@@ -1,0 +1,6 @@
+pytest
+pillow
+matplotlib
+nbformat
+numpy
+requests
