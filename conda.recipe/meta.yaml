@@ -10,11 +10,11 @@ build:
 
 requirements:
   build:
-    - python >=3.6
+    - python {{ python }}
     - setuptools >=38.6.0
     - setuptools_scm
   run:
-    - python >=3.6
+    - python
     - notebook >=5.0
     - pypandoc >=1.4
     - nbconvert >=5.3.1
