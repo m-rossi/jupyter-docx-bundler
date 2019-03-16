@@ -19,6 +19,7 @@ jobs:
     - bash: sudo chown -R $USER /usr/share/miniconda
       displayName: Take ownership of conda installation
     - template: .azure-templates/conda.yml
+    - template: .azure-templates/test.yml
 - job: 'macosx'
   pool:
     vmImage: 'macOS-10.13'
@@ -39,6 +40,7 @@ jobs:
     - bash: sudo chown -R $USER $CONDA
       displayName: Take ownership of conda installation
     - template: .azure-templates/conda.yml
+    - template: .azure-templates/test.yml
 - job: 'windows'
   pool:
     vmImage: 'vs2017-win2016'
@@ -57,3 +59,4 @@ jobs:
     - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
       displayName: Add conda to PATH
     - template: .azure-templates/conda.yml
+    - template: .azure-templates/test.yml

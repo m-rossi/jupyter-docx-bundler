@@ -1,0 +1,3 @@
+steps:
+  - script: conda create --yes --quiet --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt
+    displayName: Create conda environment for testing
