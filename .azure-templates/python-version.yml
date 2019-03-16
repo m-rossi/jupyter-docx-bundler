@@ -1,4 +1,4 @@
 task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-    architecture: 'x64'
+inputs:
+  versionSpec: '$(python.version)'
+  architecture: 'x64'
