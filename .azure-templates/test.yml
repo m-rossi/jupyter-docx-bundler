@@ -1,3 +1,11 @@
 steps:
   - script: conda create --yes --quiet --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt
     displayName: Create conda environment for testing
+  - script: |
+      conda activate jupyter-docx-bundler-testing
+      pytest . --junitxml=result.xml
+    displayName: pytest
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: 'result.xml'
+      testRunTitle: 'Python $(python.version)'
