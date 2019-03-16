@@ -48,7 +48,14 @@ Cell tags can be shown by activating the cell toolbar under _View_ -> _Cell Tool
 
 ### Testing
 
-The package is tested with [pytest](https://docs.pytest.org/en/latest/).
+The package is tested with [pytest](https://docs.pytest.org/en/latest/). Clone the repository and install the requirements for example with conda:
+```
+conda install --file requirements.txt --file requirements_test.txt
+```
+Test the package with
+```
+pytest .
+```
 
 ### Building
 
