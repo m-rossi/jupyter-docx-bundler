@@ -1,6 +1,5 @@
 steps:
 - script: |
-    conda init --all
-    conda activate base
     conda update conda -y --quiet
     conda install conda-build -y --quiet
+    conda init --all
