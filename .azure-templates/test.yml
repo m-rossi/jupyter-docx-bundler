@@ -1,9 +1,13 @@
 steps:
   - script: conda create --yes --quiet --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt
     displayName: Create conda environment for testing
-  - script: |
-      conda activate jupyter-docx-bundler-testing
-      pytest . --junitxml=result.xml
+  - script: source activate jupyter-docx-bundler-testing
+    condition: or(eq( variables['Agent.OS'], 'Linux' ), eq( variables['Agent.OS'], 'Darwin' ))
+    displayName: Activate testing environment on unix
+  - script: call activate jupyter-docx-bundler-testing
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    displayName: Activate testing environment on windows
+  - script: pytest . --junitxml=result.xml
     displayName: pytest
   - task: PublishTestResults@2
     inputs:
