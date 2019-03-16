@@ -18,7 +18,7 @@ requirements:
     - notebook >=5.0
     - pypandoc >=1.4
     - nbconvert >=5.3.1
-    - pandoc >=2.2
+    - pandoc
 
 test:
   imports:

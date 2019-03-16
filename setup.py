@@ -26,7 +26,7 @@ setup(
         ],
     },
     install_requires=[
-        'nbconvert>=5.3.1',  # TODO Update nbconvert version when released
+        'nbconvert>=5.3.1',
         'pypandoc>=1.4',
         'notebook>=5.0',
     ],
