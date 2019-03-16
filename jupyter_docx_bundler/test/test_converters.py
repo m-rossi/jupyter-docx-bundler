@@ -70,7 +70,7 @@ def matplotlib_notebook(tmpdir, request):
 
     nb.cells.append(nbformat.v4.new_code_cell('\n'.join(
         ['import matplotlib.pyplot as plt',
-         '% matplotlib inline'])))
+         '%matplotlib inline'])))
 
     for _ in range(request.param):
         nb.cells.append(nbformat.v4.new_code_cell('\n'.join(
