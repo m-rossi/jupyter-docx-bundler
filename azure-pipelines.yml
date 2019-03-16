@@ -10,7 +10,7 @@ jobs:
         python.version: '3.7'
     maxParallel: 2
   steps:
-    - template: .azure-templates/python-version.yaml
+    - template: .azure-templates/python-version.yml
     - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
       displayName: Add conda to PATH
     - bash: sudo chown -R $USER /usr/share/miniconda
@@ -27,7 +27,7 @@ jobs:
         python.version: '3.7'
     maxParallel: 2
   steps:
-    - template: .azure-templates/python-version.yaml
+    - template: .azure-templates/python-version.yml
     - bash: echo "##vso[task.prependpath]$CONDA/bin"
       displayName: Add conda to PATH
     - bash: sudo chown -R $USER $CONDA
@@ -44,7 +44,7 @@ jobs:
         python.version: '3.7'
     maxParallel: 2
   steps:
-    - template: .azure-templates/python-version.yaml
+    - template: .azure-templates/python-version.yml
     - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
       displayName: Add conda to PATH
     - template: .azure-templates/conda.yml
