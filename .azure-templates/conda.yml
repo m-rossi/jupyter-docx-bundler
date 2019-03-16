@@ -1,4 +1,5 @@
-script: |
-  conda activate base
-  conda update conda -y --quiet
-  conda install conda-build -y --quiet
+steps:
+- script: |
+    conda activate base
+    conda update conda -y --quiet
+    conda install conda-build -y --quiet
