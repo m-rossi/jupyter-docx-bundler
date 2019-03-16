@@ -15,26 +15,39 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     description='Jupyter bundler extension to export notebook as a docx file',
-    extras_require={'test': ['pytest',
-                             'pillow',
-                             'matplotlib',
-                             'nbformat',
-                             'numpy'
-                             'requests']},
+    extras_require={
+        'test': [
+            'pytest',
+            'pillow',
+            'matplotlib',
+            'nbformat',
+            'numpy',
+            'requests',
+        ],
+    },
     install_requires=[
         'nbconvert>=5.3.1',  # TODO Update nbconvert version when released
         'pypandoc>=1.4',
-        'notebook>=5.0'
+        'notebook>=5.0',
     ],
-    keywords=['jupyter', 'docx', 'bundler'],
+    keywords=[
+        'jupyter',
+        'docx',
+        'bundler',
+    ],
     license='MIT',
     long_description=long_description,
     long_description_content_type='text/markdown',
     name='jupyter_docx_bundler',
-    packages=['jupyter_docx_bundler',
-              'jupyter_docx_bundler.test'],
+    packages=[
+        'jupyter_docx_bundler',
+        'jupyter_docx_bundler.test',
+    ],
     python_requires='>=3.6',
-    setup_requires=['setuptools>=38.6.0', 'setuptools_scm'],
+    setup_requires=[
+        'setuptools>=38.6.0',
+        'setuptools_scm',
+    ],
     url='https://github.com/m-rossi/jupyter_docx_bundler',
     use_scm_version=True,
 )
