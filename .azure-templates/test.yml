@@ -5,12 +5,12 @@ steps:
       source activate jupyter-docx-bundler-testing
       pytest . --junitxml=result.xml
     condition: or(eq( variables['Agent.OS'], 'Linux' ), eq( variables['Agent.OS'], 'Darwin' ))
-    displayName: pytest
+    displayName: pytest on unix
   - script: |
       call activate jupyter-docx-bundler-testing
       pytest . --junitxml=result.xml
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
-    displayName: pytest
+    displayName: pytest on windows
   - task: PublishTestResults@2
     inputs:
       testResultsFiles: 'result.xml'
