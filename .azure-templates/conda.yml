@@ -2,4 +2,10 @@ steps:
 - script: |
     conda update conda -y --quiet
     conda install conda-build -y --quiet
-    conda init --all
+  displayName: Update and install conda and conda-build
+- script: conda init bash
+  condition: or(eq( variables['Agent.OS'], 'Linux' ), eq( variables['Agent.OS'], 'Darwin' ))
+  displayName: Init conda for bash
+- script: conda init powershell
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  displayName: Init conda for powershell
