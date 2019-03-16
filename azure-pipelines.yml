@@ -3,7 +3,12 @@ jobs:
   pool:
     vmImage: 'Ubuntu-16.04'
   strategy:
-    - template: .azure-templates/matrix.yml
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 2
   steps:
     - template: .azure-templates/python-version.yaml
     - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
@@ -15,7 +20,12 @@ jobs:
   pool:
     vmImage: 'macOS-10.13'
   strategy:
-    - template: .azure-templates/matrix.yml
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 2
   steps:
     - template: .azure-templates/python-version.yaml
     - bash: echo "##vso[task.prependpath]$CONDA/bin"
@@ -27,7 +37,12 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   strategy:
-    - template: .azure-templates/matrix.yaml
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 2
   steps:
     - template: .azure-templates/python-version.yaml
     - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
