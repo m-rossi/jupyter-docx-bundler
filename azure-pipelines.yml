@@ -1,0 +1,35 @@
+jobs:
+- job: 'linux'
+  pool:
+    vmImage: 'Ubuntu-16.04'
+  strategy:
+    - template: .azure-templates/matrix.yml
+  steps:
+    - template: .azure-templates/python-version.yaml
+    - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
+      displayName: Add conda to PATH
+    - bash: sudo chown -R $USER /usr/share/miniconda
+      displayName: Take ownership of conda installation
+    - template: .azure-templates/conda.yml
+- job: 'macosx'
+  pool:
+    vmImage: 'macOS-10.13'
+  strategy:
+    - template: .azure-templates/matrix.yml
+  steps:
+    - template: .azure-templates/python-version.yaml
+    - bash: echo "##vso[task.prependpath]$CONDA/bin"
+      displayName: Add conda to PATH
+    - bash: sudo chown -R $USER $CONDA
+      displayName: Take ownership of conda installation
+    - template: .azure-templates/conda.yml
+- job: 'windows'
+  pool:
+    vmImage: 'vs2017-win2016'
+  strategy:
+    - template: .azure-templates/matrix.yaml
+  steps:
+    - template: .azure-templates/python-version.yaml
+    - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+      displayName: Add conda to PATH
+    - template: .azure-templates/conda.yml
