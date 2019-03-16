@@ -1,5 +1,5 @@
 package:
-  name: jupyter_docx_bundler
+  name: jupyter-docx-bundler
   version: {{ GIT_DESCRIBE_TAG }}
 
 source:
@@ -10,7 +10,7 @@ build:
 
 requirements:
   build:
-    - python {{ python }}
+    - python
     - setuptools >=38.6.0
     - setuptools_scm
   run:
@@ -30,10 +30,10 @@ test:
     - pytest
     - requests
   commands:
-    - pytest --pyargs jupyter_docx_bundler
+    - pytest --pyargs jupyter-docx-bundler
 
 about:
-  home: https://github.com/m-rossi/jupyter_docx_bundler
+  home: https://github.com/m-rossi/jupyter-docx-bundler
   license: MIT
   license_file: LICENSE
   summary: Jupyter bundler extension to export notebook as a docx file
