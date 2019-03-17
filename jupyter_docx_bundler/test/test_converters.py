@@ -90,6 +90,10 @@ def matplotlib_notebook(tmpdir, request):
 
 @pytest.fixture(params=['png', 'jpg', 'jpeg'])
 def embedded_images_notebook(tmpdir, request):
+    # TODO Remove when matplotlib 3.04 or 3.1 is released
+    if platform.system() == 'Darwin':
+        pytest.skip('matplotlib is currently broken on Mac OS X, see https://github.com/matplotlib'
+                    '/matplotlib/issues/13096')
     nb = nbformat.v4.new_notebook()
 
     filename = 'matplotlib.' + request.param
