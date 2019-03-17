@@ -45,6 +45,7 @@ jobs:
         testResultsFiles: '**/test-*.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
+    - template: .azure-template/conda-build.yml
 - job: 'macosx'
   pool:
     vmImage: 'macOS-10.13'
@@ -76,6 +77,7 @@ jobs:
         testResultsFiles: '**/test-*.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
+    - template: .azure-template/conda-build.yml
 - job: 'windows'
   pool:
     vmImage: 'vs2017-win2016'
@@ -105,3 +107,4 @@ jobs:
         testResultsFiles: '**/test-*.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
+    - template: .azure-template/conda-build.yml

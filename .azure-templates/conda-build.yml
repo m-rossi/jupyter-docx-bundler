@@ -1,0 +1,6 @@
+steps:
+- script: conda build --output-folder conda-bld conda.recipe
+  displayName: conda-build
+- task: PublishPipelineArtifact@0
+  inputs:
+    pathtoPublish: 'conda-bld/**/*.tar.gz'
