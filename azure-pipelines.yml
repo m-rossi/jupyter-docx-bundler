@@ -1,4 +1,19 @@
 jobs:
+- job: 'codestyle'
+  pool:
+    vmImage: 'Ubuntu-16.04'
+  steps:
+    - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
+      displayName: Add conda to PATH
+    - bash: sudo chown -R $USER /usr/share/miniconda
+      displayName: Take ownership of conda installation
+    - template: .azure-templates/conda.yml
+    - script: conda install --yes --quiet flake8
+      displayName: Install flake8
+    - script: |
+        source activate base
+        flake8 . --max-line-length=99
+      displayname: flake8
 - job: 'linux'
   pool:
     vmImage: 'Ubuntu-16.04'
