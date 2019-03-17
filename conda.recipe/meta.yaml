@@ -1,6 +1,11 @@
+{% if GIT_DESCRIBE_NUMBER == '0' %}
+{% set version = GIT_DESCRIBE_TAG %}
+{% else %}
+{% set version = GIT_DESCRIBE_TAG + '.dev' + GIT_DESCRIBE_NUMBER %}
+{% endif %}
 package:
   name: jupyter-docx-bundler
-  version: {{ GIT_DESCRIBE_TAG }}
+  version: {{version}}
 
 source:
   path: ..
