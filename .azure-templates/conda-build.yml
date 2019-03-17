@@ -4,4 +4,4 @@ steps:
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: '$(Agent.OS)_$(Agent.OSArchitecture)_$(python.version)'
-    targetPath: 'conda-bld/**/*.tar.bz2'
+    targetPath: 'conda-bld/*/*.tar.bz2'
