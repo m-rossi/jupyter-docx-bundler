@@ -13,7 +13,7 @@ jobs:
     - script: |
         source activate base
         flake8 . --max-line-length=99
-      displayname: flake8
+      displayName: flake8
 - job: 'linux'
   pool:
     vmImage: 'Ubuntu-16.04'
