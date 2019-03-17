@@ -51,6 +51,11 @@ jobs:
         testResultsFiles: '**/test-*.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
     - script: |
         source activate base
         conda build --output-folder conda-bld --python $(python.version) conda.recipe
@@ -93,6 +98,11 @@ jobs:
         testResultsFiles: '**/test-*.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
     - script: |
         source activate base
         conda build --output-folder conda-bld --python $(python.version) conda.recipe
@@ -133,6 +143,11 @@ jobs:
         testResultsFiles: '**/test-*.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
     - script: |
         call activate base
         conda build --output-folder conda-bld --python $(python.version) conda.recipe
