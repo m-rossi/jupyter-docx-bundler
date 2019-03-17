@@ -53,7 +53,7 @@ jobs:
       condition: succeededOrFailed()
     - script: |
         source activate base
-        conda build --output-folder conda-bld conda.recipe
+        conda build --output-folder conda-bld --python $(python.version) conda.recipe
       displayName: conda-build
     - task: PublishPipelineArtifact@0
       inputs:
@@ -95,7 +95,7 @@ jobs:
       condition: succeededOrFailed()
     - script: |
         source activate base
-        conda build --output-folder conda-bld conda.recipe
+        conda build --output-folder conda-bld --python $(python.version) conda.recipe
       displayName: conda-build
     - task: PublishPipelineArtifact@0
       inputs:
@@ -135,7 +135,7 @@ jobs:
       condition: succeededOrFailed()
     - script: |
         call activate base
-        conda build --output-folder conda-bld conda.recipe
+        conda build --output-folder conda-bld --python $(python.version) conda.recipe
       displayName: conda-build
     - task: PublishPipelineArtifact@0
       inputs:
