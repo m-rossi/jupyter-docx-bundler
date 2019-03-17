@@ -1,5 +1,0 @@
-steps:
-- script: |
-    conda update conda -y --quiet
-    conda install conda-build -y --quiet
-  displayName: Update and install conda and conda-build
