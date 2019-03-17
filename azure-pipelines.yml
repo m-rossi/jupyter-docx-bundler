@@ -50,7 +50,7 @@ jobs:
     - script: |
         source activate jupyter-docx-bundler-testing
         pytest . --junitxml=result.xml
-        displayName: pytest
+      displayName: pytest
 - job: 'windows'
   pool:
     vmImage: 'vs2017-win2016'
