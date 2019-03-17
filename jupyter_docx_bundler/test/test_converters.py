@@ -100,7 +100,7 @@ def embedded_images_notebook(tmpdir, request):
 
     plt.figure()
     plt.plot(np.linspace(0, 1), np.power(np.linspace(0, 1), 2))
-    if platform.system() == 'Windows' and request.param is not 'png':
+    if platform.system() == 'Windows' and request.param != 'png':
         pytest.skip('Image export only works for png on Windows.')
     plt.savefig(os.path.join(tmpdir, filename))
 
