@@ -19,7 +19,12 @@ jobs:
     - bash: sudo chown -R $USER /usr/share/miniconda
       displayName: Take ownership of conda installation
     - template: .azure-templates/conda.yml
-    - template: .azure-templates/test.yml
+    - script: conda create --yes --quiet --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+      displayName: Create conda environment for testing
+    - script: |
+        source activate jupyter-docx-bundler-testing
+        pytest . --junitxml=result.xml
+      displayName: pytest
 - job: 'macosx'
   pool:
     vmImage: 'macOS-10.13'
@@ -40,7 +45,12 @@ jobs:
     - bash: sudo chown -R $USER $CONDA
       displayName: Take ownership of conda installation
     - template: .azure-templates/conda.yml
-    - template: .azure-templates/test.yml
+    - script: conda create --yes --quiet --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+      displayName: Create conda environment for testing
+    - script: |
+        source activate jupyter-docx-bundler-testing
+        pytest . --junitxml=result.xml
+        displayName: pytest
 - job: 'windows'
   pool:
     vmImage: 'vs2017-win2016'
@@ -59,4 +69,9 @@ jobs:
     - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
       displayName: Add conda to PATH
     - template: .azure-templates/conda.yml
-    - template: .azure-templates/test.yml
+    - script: conda create --yes --quiet --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+      displayName: Create conda environment for testing
+    - script: |
+        call activate jupyter-docx-bundler-testing
+        pytest . --junitxml=result.xml
+      displayName: pytest
