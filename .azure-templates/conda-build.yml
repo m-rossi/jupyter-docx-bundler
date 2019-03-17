@@ -3,4 +3,5 @@ steps:
   displayName: conda-build
 - task: PublishPipelineArtifact@0
   inputs:
-    pathtoPublish: 'conda-bld/**/*.tar.bz2'
+    artifactName: '$(Agent.OS)_$(Agent.OSArchitecture)_$(python.version)'
+    targetPath: 'conda-bld/**/*.tar.bz2'
