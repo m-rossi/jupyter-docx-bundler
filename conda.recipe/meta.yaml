@@ -30,7 +30,7 @@ test:
     - pytest
     - requests
   commands:
-    - pytest --pyargs jupyter-docx-bundler
+    - pytest --pyargs jupyter_docx_bundler
 
 about:
   home: https://github.com/m-rossi/jupyter-docx-bundler
