@@ -38,11 +38,11 @@ jobs:
       displayName: Create conda environment for testing
     - script: |
         source activate jupyter-docx-bundler-testing
-        pytest . --junitxml=result.xml
+        pytest . --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
       displayName: pytest
     - task: PublishTestResults@2
       inputs:
-        testResultsFiles: 'result.xml'
+        testResultsFiles: '**/test-*.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
 - job: 'macosx'
@@ -69,11 +69,11 @@ jobs:
       displayName: Create conda environment for testing
     - script: |
         source activate jupyter-docx-bundler-testing
-        pytest . --junitxml=result.xml
+        pytest . --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
       displayName: pytest
     - task: PublishTestResults@2
       inputs:
-        testResultsFiles: 'result.xml'
+        testResultsFiles: '**/test-*.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
 - job: 'windows'
@@ -98,10 +98,10 @@ jobs:
       displayName: Create conda environment for testing
     - script: |
         call activate jupyter-docx-bundler-testing
-        pytest . --junitxml=result.xml
+        pytest . --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
       displayName: pytest
     - task: PublishTestResults@2
       inputs:
-        testResultsFiles: 'result.xml'
+        testResultsFiles: '**/test-*.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()

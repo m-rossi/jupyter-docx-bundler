@@ -28,6 +28,7 @@ test:
     - nbformat
     - pillow
     - pytest
+    - pytest-cov
     - requests
   commands:
     - pytest --pyargs jupyter_docx_bundler

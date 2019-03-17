@@ -18,6 +18,7 @@ setup(
     extras_require={
         'test': [
             'pytest',
+            'pytest-cov',
             'pillow',
             'matplotlib',
             'nbformat',
