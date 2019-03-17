@@ -25,6 +25,11 @@ jobs:
         source activate jupyter-docx-bundler-testing
         pytest . --junitxml=result.xml
       displayName: pytest
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: 'result.xml'
+        testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
+      condition: succeededOrFailed()
 - job: 'macosx'
   pool:
     vmImage: 'macOS-10.13'
@@ -51,6 +56,11 @@ jobs:
         source activate jupyter-docx-bundler-testing
         pytest . --junitxml=result.xml
       displayName: pytest
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: 'result.xml'
+        testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
+      condition: succeededOrFailed()
 - job: 'windows'
   pool:
     vmImage: 'vs2017-win2016'
@@ -75,3 +85,8 @@ jobs:
         call activate jupyter-docx-bundler-testing
         pytest . --junitxml=result.xml
       displayName: pytest
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: 'result.xml'
+        testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
+      condition: succeededOrFailed()
