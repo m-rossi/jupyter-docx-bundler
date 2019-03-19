@@ -44,18 +44,18 @@ jobs:
       displayName: Create conda environment for testing
     - script: |
         source activate jupyter-docx-bundler-testing
-        pytest . --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        pytest . --junitxml=junit/test-results.xml --cov=jupyter_docx_bundler --cov-report=xml:coverage.xml --cov-report=html:coverage_html
       displayName: pytest
     - task: PublishTestResults@2
       inputs:
-        testResultsFiles: '**/test-*.xml'
+        testResultsFiles: 'junit/test-results.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: Cobertura
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+        summaryFileLocation: 'coverage.xml'
+        reportDirectory: 'coverage_html'
     - script: |
         source activate base
         conda build --output-folder conda-bld --python $(python.version) conda.recipe
@@ -91,18 +91,18 @@ jobs:
       displayName: Create conda environment for testing
     - script: |
         source activate jupyter-docx-bundler-testing
-        pytest . --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        pytest . --junitxml=junit/test-results.xml --cov=jupyter_docx_bundler --cov-report=xml:coverage.xml --cov-report=html:coverage_html
       displayName: pytest
     - task: PublishTestResults@2
       inputs:
-        testResultsFiles: '**/test-*.xml'
+        testResultsFiles: 'junit/test-results.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: Cobertura
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+        summaryFileLocation: 'coverage.xml'
+        reportDirectory: 'coverage_html'
     - script: |
         source activate base
         conda build --output-folder conda-bld --python $(python.version) conda.recipe
@@ -136,18 +136,18 @@ jobs:
       displayName: Create conda environment for testing
     - script: |
         call activate jupyter-docx-bundler-testing
-        pytest . --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        pytest . --junitxml=junit/test-results.xml --cov=jupyter_docx_bundler --cov-report=xml:coverage.xml --cov-report=html:coverage_html
       displayName: pytest
     - task: PublishTestResults@2
       inputs:
-        testResultsFiles: '**/test-*.xml'
+        testResultsFiles: 'junit/test-results.xml'
         testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
       condition: succeededOrFailed()
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: Cobertura
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+        summaryFileLocation: 'coverage.xml'
+        reportDirectory: 'coverage_html'
     - script: |
         call activate base
         conda build --output-folder conda-bld --python $(python.version) conda.recipe
