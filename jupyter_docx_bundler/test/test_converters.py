@@ -66,11 +66,15 @@ def download_notebook(request):
 
 @pytest.fixture(params=[100, 1000])
 def matplotlib_notebook(tmpdir, request):
+    # TODO Remove when matplotlib 3.04 or 3.1 is released
+    if platform.system() == 'Darwin':
+        pytest.skip('matplotlib is currently broken on Mac OS X, see https://github.com/matplotlib'
+                    '/matplotlib/issues/13096')
     nb = nbformat.v4.new_notebook()
 
     nb.cells.append(nbformat.v4.new_code_cell('\n'.join(
         ['import matplotlib.pyplot as plt',
-         '% matplotlib inline'])))
+         '%matplotlib inline'])))
 
     for _ in range(request.param):
         nb.cells.append(nbformat.v4.new_code_cell('\n'.join(
@@ -86,13 +90,17 @@ def matplotlib_notebook(tmpdir, request):
 
 @pytest.fixture(params=['png', 'jpg', 'jpeg'])
 def embedded_images_notebook(tmpdir, request):
+    # TODO Remove when matplotlib 3.04 or 3.1 is released
+    if platform.system() == 'Darwin':
+        pytest.skip('matplotlib is currently broken on Mac OS X, see https://github.com/matplotlib'
+                    '/matplotlib/issues/13096')
     nb = nbformat.v4.new_notebook()
 
     filename = 'matplotlib.' + request.param
 
     plt.figure()
     plt.plot(np.linspace(0, 1), np.power(np.linspace(0, 1), 2))
-    if platform.system() == 'Windows' and request.param is not 'png':
+    if platform.system() == 'Windows' and request.param != 'png':
         pytest.skip('Image export only works for png on Windows.')
     plt.savefig(os.path.join(tmpdir, filename))
 

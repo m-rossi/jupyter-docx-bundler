@@ -32,10 +32,8 @@ def notebook_to_html(content, htmlfile):
     content, _ = html_exporter.from_notebook_node(content)
 
     # check if export path exists
-    if os.path.dirname(htmlfile) is not '' and not os.path.isdir(
-            os.path.dirname(htmlfile)):
-        raise FileNotFoundError(f'Path to html-file does not exist: '
-                                f'{os.path.dirname(htmlfile)}')
+    if os.path.dirname(htmlfile) != '' and not os.path.isdir(os.path.dirname(htmlfile)):
+        raise FileNotFoundError(f'Path to html-file does not exist: {os.path.dirname(htmlfile)}')
 
     # write content to html file
     with open(htmlfile, 'w', encoding='utf-8') as file:
@@ -63,10 +61,8 @@ def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
         raise FileNotFoundError(f'html-file does not exist: {htmlfile}')
 
     # check if export path exists
-    if os.path.dirname(docxfile) is not '' and not os.path.isdir(
-            os.path.dirname(docxfile)):
-        raise FileNotFoundError(f'Path to docx-file does not exist: '
-                                f'{os.path.dirname(docxfile)}')
+    if os.path.dirname(docxfile) != '' and not os.path.isdir(os.path.dirname(docxfile)):
+        raise FileNotFoundError(f'Path to docx-file does not exist: {os.path.dirname(docxfile)}')
 
     # set extra args for pandoc
     extra_args = []
@@ -100,7 +96,7 @@ def attachment_to_embedded_image(cell):
     """
     if 'attachments' in cell:
         for att in cell['attachments']:
-            s = re.split(f'!\[.+\]\(attachment:{att}\)', cell['source'])
+            s = re.split(rf'!\[.+\]\(attachment:{att}\)', cell['source'])
             if len(s) != 2:
                 raise NotImplementedError
             for key, val in cell['attachments'][att].items():

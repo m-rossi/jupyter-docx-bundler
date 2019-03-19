@@ -1,0 +1,158 @@
+jobs:
+- job: 'codestyle'
+  pool:
+    vmImage: 'Ubuntu-16.04'
+  steps:
+    - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
+      displayName: Add conda to PATH
+    - bash: sudo chown -R $USER /usr/share/miniconda
+      displayName: Take ownership of conda installation
+    - script: |
+        conda update conda -y --quiet
+        conda install conda-build -y --quiet
+      displayName: Update and install conda and conda-build
+    - script: conda install --yes --quiet flake8
+      displayName: Install flake8
+    - script: |
+        source activate base
+        flake8 . --max-line-length=99
+      displayName: flake8
+- job: 'linux'
+  pool:
+    vmImage: 'Ubuntu-16.04'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 2
+  steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+    - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
+      displayName: Add conda to PATH
+    - bash: sudo chown -R $USER /usr/share/miniconda
+      displayName: Take ownership of conda installation
+    - script: |
+        conda update conda -y --quiet
+        conda install conda-build -y --quiet
+      displayName: Update and install conda and conda-build
+    - script: conda create --yes --quiet --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+      displayName: Create conda environment for testing
+    - script: |
+        source activate jupyter-docx-bundler-testing
+        pytest . --junitxml=junit/test-results.xml --cov=jupyter_docx_bundler --cov-report=xml:coverage.xml --cov-report=html:coverage_html
+      displayName: pytest
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: 'junit/test-results.xml'
+        testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
+      condition: succeededOrFailed()
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: 'coverage.xml'
+        reportDirectory: 'coverage_html'
+    - script: |
+        source activate base
+        conda build --output-folder conda-bld --python $(python.version) conda.recipe
+      displayName: conda-build
+    - task: PublishPipelineArtifact@0
+      inputs:
+        artifactName: '$(Agent.OS)_$(Agent.OSArchitecture)_py$(python.version)'
+        targetPath: 'conda-bld'
+- job: 'macosx'
+  pool:
+    vmImage: 'macOS-10.13'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 2
+  steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+    - bash: echo "##vso[task.prependpath]$CONDA/bin"
+      displayName: Add conda to PATH
+    - bash: sudo chown -R $USER $CONDA
+      displayName: Take ownership of conda installation
+    - script: |
+        conda update conda -y --quiet
+        conda install conda-build -y --quiet
+      displayName: Update and install conda and conda-build
+    - script: conda create --yes --quiet --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+      displayName: Create conda environment for testing
+    - script: |
+        source activate jupyter-docx-bundler-testing
+        pytest . --junitxml=junit/test-results.xml --cov=jupyter_docx_bundler --cov-report=xml:coverage.xml --cov-report=html:coverage_html
+      displayName: pytest
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: 'junit/test-results.xml'
+        testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
+      condition: succeededOrFailed()
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: 'coverage.xml'
+        reportDirectory: 'coverage_html'
+    - script: |
+        source activate base
+        conda build --output-folder conda-bld --python $(python.version) conda.recipe
+      displayName: conda-build
+    - task: PublishPipelineArtifact@0
+      inputs:
+        artifactName: '$(Agent.OS)_$(Agent.OSArchitecture)_py$(python.version)'
+        targetPath: 'conda-bld'
+- job: 'windows'
+  pool:
+    vmImage: 'vs2017-win2016'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 2
+  steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+    - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+      displayName: Add conda to PATH
+    - script: |
+        conda update conda -y --quiet
+        conda install conda-build -y --quiet
+      displayName: Update and install conda and conda-build
+    - script: conda create --yes --quiet --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+      displayName: Create conda environment for testing
+    - script: |
+        call activate jupyter-docx-bundler-testing
+        pytest . --junitxml=junit/test-results.xml --cov=jupyter_docx_bundler --cov-report=xml:coverage.xml --cov-report=html:coverage_html
+      displayName: pytest
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: 'junit/test-results.xml'
+        testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
+      condition: succeededOrFailed()
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: 'coverage.xml'
+        reportDirectory: 'coverage_html'
+    - script: |
+        call activate base
+        conda build --output-folder conda-bld --python $(python.version) conda.recipe
+      displayName: conda-build
+    - task: PublishPipelineArtifact@0
+      inputs:
+        artifactName: '$(Agent.OS)_$(Agent.OSArchitecture)_py$(python.version)'
+        targetPath: 'conda-bld'
