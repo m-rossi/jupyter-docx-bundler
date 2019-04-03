@@ -1,6 +1,7 @@
 import os
 import tempfile
 from . import converters
+from nbconvert.exporters import Exporter
 
 
 def _jupyter_bundlerextension_paths():
@@ -62,3 +63,35 @@ def bundle(handler, model):
 
         # Return the buffer value as the response
         handler.finish()
+
+class DocxExporter(Exporter):
+    """Convert a notebook to docx
+    This is the API which nbconvert calls.
+    """
+    output_mimetype = 'application/docx'
+
+    def _file_extension_default(self):
+        return '.docx'
+
+    def from_notebook_node(self, nb, resources=None, **kw):
+        nb_copy, resources = super().from_notebook_node(nb, resources)
+
+        with tempfile.TemporaryDirectory() as tempdir:
+            # Prepare file names
+            htmlfile = os.path.join(tempdir, resources['metadata']['name'] + '.html')
+            docxfile = os.path.join(tempdir, resources['metadata']['name'] + '.docx')
+
+            # Convert notebook to html
+            converters.notebook_to_html(nb_copy, htmlfile)
+
+            # Convert html to docx
+            converters.html_to_docx(htmlfile,
+                                    docxfile,
+                                    metadata=resources['metadata'],
+                                    handler=None) # Handler not required
+
+            # Send file to handler
+            with open(docxfile, 'rb') as bundle_file:
+                fileContents = bundle_file.read()
+
+        return fileContents, resources
