@@ -64,6 +64,7 @@ def bundle(handler, model):
         # Return the buffer value as the response
         handler.finish()
 
+
 class DocxExporter(Exporter):
     """Convert a notebook to docx
     This is the API which nbconvert calls.
@@ -84,11 +85,11 @@ class DocxExporter(Exporter):
             # Convert notebook to html
             converters.notebook_to_html(nb_copy, htmlfile)
 
-            # Convert html to docx
+            # Convert html to docx (handler is not required)
             converters.html_to_docx(htmlfile,
                                     docxfile,
                                     metadata=resources['metadata'],
-                                    handler=None) # Handler not required
+                                    handler=None)
 
             # Send file to handler
             with open(docxfile, 'rb') as bundle_file:
