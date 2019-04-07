@@ -49,7 +49,7 @@ setup(
         'setuptools>=38.6.0',
         'setuptools_scm',
     ],
-    url='https://github.com/m-rossi/jupyter_docx_bundler',
+    url='https://github.com/m-rossi/jupyter-docx-bundler',
     use_scm_version=True,
     entry_points={
         'nbconvert.exporters': [
