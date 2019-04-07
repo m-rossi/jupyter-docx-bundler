@@ -51,4 +51,9 @@ setup(
     ],
     url='https://github.com/m-rossi/jupyter_docx_bundler',
     use_scm_version=True,
+    entry_points={
+        'nbconvert.exporters': [
+            'docx = jupyter_docx_bundler:DocxExporter',
+        ],
+    }
 )

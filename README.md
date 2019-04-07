@@ -46,6 +46,14 @@ _(Currently there are no default values configured for these tags, the ones list
 
 Cell tags can be shown by activating the cell toolbar under _View_ -> _Cell Toolbar_ -> _Tags_.
 
+### Direct call from console (nbconvert)
+
+To use the bundler direct from console the nbconvert utility can be used with target format docx:
+
+* `nbconvert --execute --to=docx <source notebook>.ipynb --output <target document>.docx`
+
+The `--execute` option should be used to ensure that the notebook is run before generation.
+
 ## Development
 
 ### Testing
