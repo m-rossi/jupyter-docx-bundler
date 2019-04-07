@@ -112,7 +112,7 @@ jobs:
         conda update conda -y --quiet
         conda install conda-build -y --quiet
       displayName: Update and install conda and conda-build
-    - script: conda create --yes --quiet --name -c defaults -c conda-forge jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+    - script: conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
       displayName: Create conda environment for testing
     - script: |
         call activate jupyter-docx-bundler-testing
