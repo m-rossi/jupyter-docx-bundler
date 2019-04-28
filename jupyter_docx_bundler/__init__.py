@@ -88,8 +88,7 @@ class DocxExporter(Exporter):
             # Convert html to docx (handler is not required)
             converters.html_to_docx(htmlfile,
                                     docxfile,
-                                    metadata=resources['metadata'],
-                                    handler=None)
+                                    metadata=resources['metadata'])
 
             # Send file to handler
             with open(docxfile, 'rb') as bundle_file:
