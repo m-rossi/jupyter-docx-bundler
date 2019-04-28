@@ -27,7 +27,7 @@ setup(
         ],
     },
     install_requires=[
-        'nbconvert>=5.3.1',
+        'nbconvert>=5.5',
         'pypandoc>=1.4',
         'notebook>=5.0',
     ],
