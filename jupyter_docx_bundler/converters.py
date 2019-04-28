@@ -17,7 +17,9 @@ def notebook_to_html(content, htmlfile):
         Filename for the notebook exported as html
     """
     # prepare html exporter, anchor_link_text=' ' suppress anchors being shown
-    html_exporter = HTMLExporter(anchor_link_text=' ')
+    html_exporter = HTMLExporter(anchor_link_text=' ',
+                                 exclude_input_prompt=True,
+                                 exclude_output_prompt=True)
 
     # preprocess notebook
     tag_preprocessor = preprocessors.TagRemovePreprocessor()
