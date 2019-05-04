@@ -50,7 +50,7 @@ Cell tags can be shown by activating the cell toolbar under _View_ -> _Cell Tool
 
 To use the bundler direct from console the nbconvert utility can be used with target format docx:
 
-* `nbconvert --execute --to=docx <source notebook>.ipynb --output <target document>.docx`
+* `jupyter nbconvert --execute --to=docx <source notebook>.ipynb --output <target document>.docx`
 
 The `--execute` option should be used to ensure that the notebook is run before generation.
 
