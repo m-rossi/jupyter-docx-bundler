@@ -36,6 +36,9 @@ def bundle(handler, model):
     notebook_name = os.path.splitext(notebook_filename)[0]
 
     with tempfile.TemporaryDirectory() as tempdir:
+        # preprocess notebook
+        model['content'] = converters.preprocess(model['content'])
+
         # prepare file names
         htmlfile = os.path.join(tempdir, f'{notebook_name}.html')
         docxfile = os.path.join(tempdir, f'{notebook_name}.docx')
@@ -78,6 +81,9 @@ class DocxExporter(Exporter):
         nb_copy, resources = super().from_notebook_node(nb, resources)
 
         with tempfile.TemporaryDirectory() as tempdir:
+            # preprocess notebook
+            nb_copy = converters.preprocess(nb_copy)
+
             # Prepare file names
             htmlfile = os.path.join(tempdir, resources['metadata']['name'] + '.html')
             docxfile = os.path.join(tempdir, resources['metadata']['name'] + '.docx')

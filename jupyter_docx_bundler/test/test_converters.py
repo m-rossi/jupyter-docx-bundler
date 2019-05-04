@@ -121,24 +121,28 @@ def embedded_images_notebook(tmpdir, request):
 def test_notebook_to_html_download(tmpdir, download_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
+    download_notebook = converters.preprocess(download_notebook)
     converters.notebook_to_html(download_notebook, htmlfile)
 
 
 def test_notebook_to_html_matplotlib(tmpdir, matplotlib_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
+    matplotlib_notebook = converters.preprocess(matplotlib_notebook)
     converters.notebook_to_html(matplotlib_notebook, htmlfile)
 
 
 def test_notebook_to_html_embedded_images(tmpdir, embedded_images_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
+    embedded_images_notebook = converters.preprocess(embedded_images_notebook)
     converters.notebook_to_html(embedded_images_notebook, htmlfile)
 
 
 def test_html_to_docx_download(tmpdir, download_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
+    download_notebook = converters.preprocess(download_notebook)
     converters.notebook_to_html(download_notebook, htmlfile)
 
     # convert notebook to DOCX
@@ -149,6 +153,7 @@ def test_html_to_docx_download(tmpdir, download_notebook):
 def test_html_to_docx_matplotlib(tmpdir, matplotlib_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
+    matplotlib_notebook = converters.preprocess(matplotlib_notebook)
     converters.notebook_to_html(matplotlib_notebook, htmlfile)
 
     # convert notebook to DOCX
@@ -159,6 +164,7 @@ def test_html_to_docx_matplotlib(tmpdir, matplotlib_notebook):
 def test_html_to_docx_embedded_images(tmpdir, embedded_images_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
+    embedded_images_notebook = converters.preprocess(embedded_images_notebook)
     converters.notebook_to_html(embedded_images_notebook, htmlfile)
 
     # convert notebook to DOCX

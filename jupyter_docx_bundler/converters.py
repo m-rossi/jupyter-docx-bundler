@@ -5,6 +5,32 @@ from nbconvert import HTMLExporter, preprocessors
 import pypandoc
 
 
+def preprocess(content):
+    """Preprocess the notebook data.
+    Cells will specific tags will be removed and attached images will be embedded.
+
+    Parameters
+    ----------
+    content : nbformat.NotebookNode
+        A dict-like node of the notebook with attribute-access
+
+    Returns
+    -------
+    content : nbformat.NotebookNode
+        Preprocessed notebook content
+
+    """
+    tag_preprocessor = preprocessors.TagRemovePreprocessor()
+    tag_preprocessor.remove_cell_tags.add('nbconvert-remove-cell')
+    tag_preprocessor.remove_input_tags.add('nbconvert-remove-input')
+    tag_preprocessor.preprocess(content, {})
+
+    for cell in content['cells']:
+        attachment_to_embedded_image(cell)
+
+    return content
+
+
 def notebook_to_html(content, htmlfile):
     """ Convert notebook to html file.
 
@@ -20,15 +46,6 @@ def notebook_to_html(content, htmlfile):
     html_exporter = HTMLExporter(anchor_link_text=' ',
                                  exclude_input_prompt=True,
                                  exclude_output_prompt=True)
-
-    # preprocess notebook
-    tag_preprocessor = preprocessors.TagRemovePreprocessor()
-    tag_preprocessor.remove_cell_tags.add('nbconvert-remove-cell')
-    tag_preprocessor.remove_input_tags.add('nbconvert-remove-input')
-    tag_preprocessor.preprocess(content, {})
-
-    for cell in content['cells']:
-        attachment_to_embedded_image(cell)
 
     # export to html
     content, _ = html_exporter.from_notebook_node(content)
