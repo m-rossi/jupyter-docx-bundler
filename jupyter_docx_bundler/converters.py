@@ -105,7 +105,7 @@ def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
                           extra_args=extra_args)
 
 
-def notebookcontent_to_bytes(content, filename, handler=None):
+def notebookcontent_to_docxbytes(content, filename, handler=None):
     """Convert content of a Jupyter notebook to the raw bytes content of a *.docx file
 
     Parameters

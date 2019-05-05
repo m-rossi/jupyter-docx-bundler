@@ -45,7 +45,7 @@ def bundle(handler, model):
     )
 
     # send content to handler
-    handler.write(converters.notebookcontent_to_bytes(model['content'], notebook_filename))
+    handler.write(converters.notebookcontent_to_docxbytes(model['content'], notebook_filename))
 
     # Return the buffer value as the response
     handler.finish()
@@ -64,4 +64,4 @@ class DocxExporter(Exporter):
         nb_copy, resources = super().from_notebook_node(nb, resources)
         notebook_filename = resources['metadata']['name']
 
-        return converters.notebookcontent_to_bytes(nb_copy, notebook_filename), resources
+        return converters.notebookcontent_to_docxbytes(nb_copy, notebook_filename), resources
