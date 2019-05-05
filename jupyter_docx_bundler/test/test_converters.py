@@ -168,3 +168,15 @@ def test_html_to_docx_embedded_images(tmpdir, embedded_images_notebook):
     # convert notebook to DOCX
     docxfile = os.path.join(tmpdir, 'notebook.docx')
     converters.html_to_docx(htmlfile, docxfile)
+
+
+def test_notebookcontent_to_docxbytes_download(download_notebook):
+    converters.notebookcontent_to_docxbytes(download_notebook, 'download-notebook')
+
+
+def test_notebookcontent_to_docxbytes_matplotlib(matplotlib_notebook):
+    converters.notebookcontent_to_docxbytes(matplotlib_notebook, 'matplotlib-notebook')
+
+
+def test_notebookcontent_to_docxbytes(embedded_images_notebook):
+    converters.notebookcontent_to_docxbytes(embedded_images_notebook, 'embedded-images-notebook')
