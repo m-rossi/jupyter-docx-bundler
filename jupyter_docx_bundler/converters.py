@@ -1,5 +1,6 @@
 import os
 import re
+import tempfile
 
 from nbconvert import HTMLExporter, preprocessors
 import pypandoc
@@ -102,6 +103,49 @@ def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
                           format='html+tex_math_dollars',
                           outputfile=docxfile,
                           extra_args=extra_args)
+
+
+def notebookcontent_to_bytes(content, filename, handler=None):
+    """Convert content of a Jupyter notebook to the raw bytes content of a *.docx file
+
+    Parameters
+    ----------
+    content : nbformat.NotebookNode
+        A dict-like node of the notebook with attribute-access
+    filename : str
+        Filename of the notebook without extension
+    andler : tornado.web.RequestHandler, optional
+        Handler that serviced the bundle request
+
+    Returns
+    -------
+    bytes
+
+    """
+    with tempfile.TemporaryDirectory() as tempdir:
+        # preprocess notebook
+        content = preprocess(content)
+
+        # prepare file names
+        htmlfile = os.path.join(tempdir, f'{filename}.html')
+        docxfile = os.path.join(tempdir, f'{filename}.docx')
+
+        # convert notebook to html
+        notebook_to_html(content, htmlfile)
+
+        # convert html to docx
+        html_to_docx(
+            htmlfile,
+            docxfile,
+            metadata=content['metadata'],
+            handler=handler,
+        )
+
+        # read raw data
+        with open(docxfile, 'rb') as bundle_file:
+            rawdata = bundle_file.read()
+
+        return rawdata
 
 
 def attachment_to_embedded_image(cell):

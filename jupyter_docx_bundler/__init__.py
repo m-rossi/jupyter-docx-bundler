@@ -1,5 +1,4 @@
 import os
-import tempfile
 from . import converters
 from nbconvert.exporters import Exporter
 
@@ -35,37 +34,21 @@ def bundle(handler, model):
     notebook_filename = os.path.basename(model['name'])
     notebook_name = os.path.splitext(notebook_filename)[0]
 
-    with tempfile.TemporaryDirectory() as tempdir:
-        # preprocess notebook
-        model['content'] = converters.preprocess(model['content'])
+    # Set headers to trigger browser download
+    handler.set_header(
+        'Content-Disposition',
+        f'attachment; filename="{os.path.basename(notebook_name)}"',
+    )
+    handler.set_header(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    )
 
-        # prepare file names
-        htmlfile = os.path.join(tempdir, f'{notebook_name}.html')
-        docxfile = os.path.join(tempdir, f'{notebook_name}.docx')
+    # send content to handler
+    handler.write(converters.notebookcontent_to_bytes(model['content'], notebook_filename))
 
-        # convert notebook to html
-        converters.notebook_to_html(model['content'], htmlfile)
-
-        # convert html to docx
-        converters.html_to_docx(htmlfile,
-                                docxfile,
-                                metadata=model['content']['metadata'],
-                                handler=handler)
-
-        # Set headers to trigger browser download
-        handler.set_header('Content-Disposition',
-                           f'attachment; filename="'
-                           f'{os.path.basename(docxfile)}"')
-        handler.set_header('Content-Type',
-                           'application/vnd.openxmlformats-officedocument.word'
-                           'processingml.document')
-
-        # send file to handler
-        with open(docxfile, 'rb') as bundle_file:
-            handler.write(bundle_file.read())
-
-        # Return the buffer value as the response
-        handler.finish()
+    # Return the buffer value as the response
+    handler.finish()
 
 
 class DocxExporter(Exporter):
@@ -79,25 +62,6 @@ class DocxExporter(Exporter):
 
     def from_notebook_node(self, nb, resources=None, **kw):
         nb_copy, resources = super().from_notebook_node(nb, resources)
+        notebook_filename = resources['metadata']['name']
 
-        with tempfile.TemporaryDirectory() as tempdir:
-            # preprocess notebook
-            nb_copy = converters.preprocess(nb_copy)
-
-            # Prepare file names
-            htmlfile = os.path.join(tempdir, resources['metadata']['name'] + '.html')
-            docxfile = os.path.join(tempdir, resources['metadata']['name'] + '.docx')
-
-            # Convert notebook to html
-            converters.notebook_to_html(nb_copy, htmlfile)
-
-            # Convert html to docx (handler is not required)
-            converters.html_to_docx(htmlfile,
-                                    docxfile,
-                                    metadata=resources['metadata'])
-
-            # Send file to handler
-            with open(docxfile, 'rb') as bundle_file:
-                fileContents = bundle_file.read()
-
-        return fileContents, resources
+        return converters.notebookcontent_to_bytes(nb_copy, notebook_filename), resources
