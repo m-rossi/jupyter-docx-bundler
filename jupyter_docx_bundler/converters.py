@@ -91,7 +91,7 @@ def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
                 all(['name' in x for x in metadata['authors']]):
             extra_args.append(
                 f'--metadata=author:'
-                f'{", ".join([x.name for x in metadata["authors"]])}')
+                f'{", ".join([x["name"] for x in metadata["authors"]])}')
         elif handler is not None:
             handler.log.warning('Author metadata has wrong format, see https:/'
                                 '/github.com/m-rossi/jupyter_docx_bundler/blob'

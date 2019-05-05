@@ -112,3 +112,15 @@ def embedded_images_notebook(tmpdir, request):
     ep.preprocess(nb, {'metadata': {'path': tmpdir}})
 
     return nb
+
+
+@pytest.fixture()
+def authors_notebook(tmpdir):
+    nb = nbformat.v4.new_notebook()
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    nb['metadata'].update({"authors": [{"name": "author1"}, {"name": "author2"}]})
+
+    return nb
