@@ -18,6 +18,7 @@ setup(
     extras_require={
         'test': [
             'pytest',
+            'pytest-azurepipelines>=0.6.0',
             'pytest-cov',
             'pillow',
             'matplotlib',
