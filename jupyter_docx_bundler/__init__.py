@@ -1,6 +1,9 @@
 import os
-from . import converters
+
 from nbconvert.exporters import Exporter
+from tornado import gen
+
+from . import converters
 
 
 def _jupyter_bundlerextension_paths():
@@ -18,6 +21,7 @@ def _jupyter_bundlerextension_paths():
     }]  # pragma: no cover
 
 
+@gen.coroutine
 def bundle(handler, model):
     """ Create a compressed tarball containing the notebook document.
 
@@ -45,7 +49,8 @@ def bundle(handler, model):
     )
 
     # send content to handler
-    handler.write(converters.notebookcontent_to_docxbytes(model['content'], notebook_filename))
+    yield handler.write(converters.notebookcontent_to_docxbytes(model['content'],
+                                                                notebook_filename))
 
     # Return the buffer value as the response
     handler.finish()
