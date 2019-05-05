@@ -31,7 +31,7 @@ test:
   requires:
     - matplotlib
     - nbformat
-    - pillow
+    - pillow >= 6.0.0
     - pytest
     - pytest-azurepipelines >=0.6.0
     - pytest-cov

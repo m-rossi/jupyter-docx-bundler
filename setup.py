@@ -20,7 +20,7 @@ setup(
             'pytest',
             'pytest-azurepipelines>=0.6.0',
             'pytest-cov',
-            'pillow',
+            'pillow>=6.0.0',
             'matplotlib',
             'nbformat',
             'numpy',
