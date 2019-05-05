@@ -116,6 +116,22 @@ def embedded_images_notebook(tmpdir, request):
     return nb
 
 
+def test_notebook_to_html_exportpath(download_notebook):
+    with pytest.raises(FileNotFoundError):
+        converters.notebook_to_html(download_notebook, 'not/existing.html')
+
+
+def test_html_to_docx(tmpdir, download_notebook):
+    htmlfile = os.path.join(tmpdir, 'notebook.html')
+    docxfile = os.path.join(tmpdir, 'notebook.docx')
+    download_notebook = converters.preprocess(download_notebook)
+    converters.notebook_to_html(download_notebook, htmlfile)
+    with pytest.raises(FileNotFoundError):
+        converters.html_to_docx('not/existing.html', docxfile)
+    with pytest.raises(FileNotFoundError):
+        converters.html_to_docx(htmlfile, 'not/existing.docx')
+
+
 def test_notebook_to_html_download(tmpdir, download_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
