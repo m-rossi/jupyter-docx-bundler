@@ -15,7 +15,7 @@ def _jupyter_bundlerextension_paths():
         "label": "Office Open XML (.docx)",
         # group under 'deploy' or 'download' menu
         "group": "download",
-    }] # pragma: no cover
+    }]  # pragma: no cover
 
 
 def bundle(handler, model):
