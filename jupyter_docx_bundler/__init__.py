@@ -41,7 +41,7 @@ def bundle(handler, model):
     # Set headers to trigger browser download
     handler.set_header(
         'Content-Disposition',
-        f'attachment; filename="{os.path.basename(notebook_name)}"',
+        f'attachment; filename="{os.path.basename(notebook_name)}.docx"',
     )
     handler.set_header(
         'Content-Type',
