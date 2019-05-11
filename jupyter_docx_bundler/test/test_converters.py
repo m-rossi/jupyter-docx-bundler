@@ -87,10 +87,10 @@ def test_notebookcontent_to_docxbytes(embedded_images_notebook):
     converters.notebookcontent_to_docxbytes(embedded_images_notebook, 'embedded-images-notebook')
 
 
-def test_html_to_docx_authors(tmpdir, authors_notebook):
+def test_html_to_docx_metadata(tmpdir, metadata_notebook):
     # convert notebook to HTML
     htmlfile = os.path.join(tmpdir, 'notebook.html')
-    download_notebook = converters.preprocess(authors_notebook)
+    download_notebook = converters.preprocess(metadata_notebook)
     converters.notebook_to_html(download_notebook, htmlfile)
 
     # convert notebook to DOCX

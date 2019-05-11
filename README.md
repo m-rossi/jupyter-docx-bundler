@@ -30,8 +30,10 @@ conda install -c mrossi jupyter_docx_bundler
 
 The bundle extension uses metadata of the notebook, if you you provide it.
 
-* You can add a title by adding `"title": "Notebook title"`
-* You can add authors by adding `"authors": [{"name": "author1"}, {"name": "author2"}]`
+* `"title": "Notebook title"`
+* `"authors": [{"name": "author1"}, {"name": "author2"}]`
+* `"subtitle": "Notebook subtitle"`
+* `"date": "Notebook date"`
 
 The notebook metadata can be edited under _Edit_ -> _Edit Notebook Metadata_.
 

@@ -96,6 +96,10 @@ def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
             handler.log.warning('Author metadata has wrong format, see https:/'
                                 '/github.com/m-rossi/jupyter_docx_bundler/blob'
                                 '/master/README.md')
+    if metadata is not None and 'subtitle' in metadata:
+        extra_args.append(f'--metadata=subtitle:{metadata["subtitle"]}')
+    if metadata is not None and 'date' in metadata:
+        extra_args.append(f'--metadata=date:{metadata["date"]}')
 
     # convert to docx
     pypandoc.convert_file(htmlfile,
