@@ -22,6 +22,7 @@ setup(
             'pytest-cov',
             'pillow>=6.0.0',
             'matplotlib',
+            'mock',
             'nbformat',
             'numpy',
             'requests',

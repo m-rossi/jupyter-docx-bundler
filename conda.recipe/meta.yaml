@@ -30,6 +30,7 @@ test:
     - jupyter_docx_bundler
   requires:
     - matplotlib
+    - mock
     - nbformat
     - pillow >= 6.0.0
     - pytest

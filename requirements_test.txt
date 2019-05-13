@@ -3,6 +3,7 @@ pytest-azurepipelines >= 0.6.0
 pytest-cov
 pillow >= 6.0.0
 matplotlib
+mock
 nbformat
 numpy
 requests
