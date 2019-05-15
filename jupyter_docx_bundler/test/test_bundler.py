@@ -14,8 +14,6 @@ from notebook.tests.launchnotebook import NotebookTestBase
 class BundleAPITest(NotebookTestBase):
     @classmethod
     def setup_class(cls):
-        """Make a test notebook. Borrowed from nbconvert test. Assumes the class
-                teardown will clean it up in the end."""
         super(BundleAPITest, cls).setup_class()
         nbdir = Path(cls.notebook_dir)
 
@@ -33,8 +31,8 @@ class BundleAPITest(NotebookTestBase):
         with patch('notebook.bundler.handlers.BundlerHandler.get_bundler') as mock:
             mock.return_value = {'module_name': 'jupyter_docx_bundler'}
             resp = self.request('GET', 'bundle/testnb.ipynb',
-                                params={'bundler': 'stub_bundler'})
-            mock.assert_called_with('stub_bundler')
+                                params={'bundler': 'jupyter_docx_bundler'})
+            mock.assert_called_with('jupyter_docx_bundler')
         self.assertEqual(resp.status_code, 200)
 
 
