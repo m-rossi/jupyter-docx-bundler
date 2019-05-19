@@ -131,3 +131,18 @@ def metadata_notebook(tmpdir):
     })
 
     return nb
+
+
+@pytest.fixture(params=[
+    pytest.lazy_fixture('download_notebook'),
+    pytest.lazy_fixture('matplotlib_notebook'),
+    pytest.lazy_fixture('embedded_images_notebook'),
+    pytest.lazy_fixture('metadata_notebook')
+], ids=[
+    'download',
+    'matplotlib',
+    'embedded-images',
+    'metadata',
+])
+def test_notebook(request):
+    return request.param

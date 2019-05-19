@@ -36,6 +36,7 @@ test:
     - pytest
     - pytest-azurepipelines >=0.6.0
     - pytest-cov
+    - pytest-lazy-fixture
     - requests
   commands:
     - pytest --pyargs jupyter_docx_bundler
