@@ -45,7 +45,7 @@ setup(
     name='jupyter_docx_bundler',
     packages=[
         'jupyter_docx_bundler',
-        'jupyter_docx_bundler.test',
+        'jupyter_docx_bundler.tests',
     ],
     python_requires='>=3.6',
     setup_requires=[
