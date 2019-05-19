@@ -37,5 +37,5 @@ def test_html_to_docx_missing_path(tmpdir, test_notebook):
         converters.html_to_docx(htmlfile, 'not/existing.docx')
 
 
-def test_notebookcontent_to_docxbytes_download(test_notebook):
+def test_notebookcontent_to_docxbytes(test_notebook):
     converters.notebookcontent_to_docxbytes(test_notebook, 'download-notebook')
