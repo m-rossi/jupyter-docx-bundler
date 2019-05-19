@@ -8,6 +8,7 @@ from nbconvert.preprocessors import ExecutePreprocessor
 import nbformat
 import numpy as np
 import pytest
+from pytest_lazyfixture import lazy_fixture
 import requests
 
 
@@ -134,10 +135,10 @@ def metadata_notebook(tmpdir):
 
 
 @pytest.fixture(params=[
-    pytest.lazy_fixture('download_notebook'),
-    pytest.lazy_fixture('matplotlib_notebook'),
-    pytest.lazy_fixture('embedded_images_notebook'),
-    pytest.lazy_fixture('metadata_notebook')
+    lazy_fixture('download_notebook'),
+    lazy_fixture('matplotlib_notebook'),
+    lazy_fixture('embedded_images_notebook'),
+    lazy_fixture('metadata_notebook')
 ], ids=[
     'download',
     'matplotlib',
