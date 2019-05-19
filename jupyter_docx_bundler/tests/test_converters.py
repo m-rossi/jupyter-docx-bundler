@@ -6,8 +6,7 @@ from .. import converters
 
 
 def test_preprocess(tmpdir, test_notebook):
-    htmlfile = os.path.join(tmpdir, 'notebook.html')
-    converters.notebook_to_html(test_notebook, htmlfile)
+    converters.preprocess(test_notebook)
 
 
 def test_notebook_to_html(tmpdir, test_notebook):
