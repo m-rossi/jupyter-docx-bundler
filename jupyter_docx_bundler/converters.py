@@ -118,7 +118,7 @@ def notebookcontent_to_docxbytes(content, filename, handler=None):
         A dict-like node of the notebook with attribute-access
     filename : str
         Filename of the notebook without extension
-    andler : tornado.web.RequestHandler, optional
+    handler : tornado.web.RequestHandler, optional
         Handler that serviced the bundle request
 
     Returns
