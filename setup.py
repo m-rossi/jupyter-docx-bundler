@@ -33,6 +33,7 @@ setup(
         'nbconvert>=5.5',
         'pypandoc>=1.4',
         'notebook>=5.0',
+        'tornado',
     ],
     keywords=[
         'jupyter',

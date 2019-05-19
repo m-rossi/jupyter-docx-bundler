@@ -24,6 +24,7 @@ requirements:
     - pypandoc >=1.4
     - nbconvert >=5.5
     - pandoc >=2.0
+    - tornado
 
 test:
   imports:
