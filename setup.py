@@ -22,7 +22,7 @@ setup(
             'pytest-cov',
             'pytest-lazy-fixture',
             'pillow>=6.0.0',
-            'matplotlib',
+            'matplotlib>=3.1',
             'mock',
             'nbformat',
             'numpy',
