@@ -1,6 +1,5 @@
 import base64
 import os
-import platform
 import re
 
 import matplotlib.pyplot as plt
