@@ -1,4 +1,3 @@
-import base64
 import os
 import re
 
@@ -10,26 +9,7 @@ import pytest
 from pytest_lazyfixture import lazy_fixture
 import requests
 
-
-def encode_image_base64(filepath):
-    """Encode an image as a base64 string
-
-    Parameters
-    ----------
-    filepath : str
-        Filepath of the image file
-
-    Returns
-    -------
-    dict
-        Dictionary with identifier as key and base64-encoded data as value.
-
-    """
-    key = 'image/' + os.path.splitext(filepath)[1][1:]
-    with open(filepath, 'rb') as image:
-        data = base64.b64encode(image.read()).decode('utf8')
-
-    return {key: data}
+from ..converters import encode_image_base64
 
 
 @pytest.fixture(params=['https://nbviewer.jupyter.org/github/unpingco/Python-f'
