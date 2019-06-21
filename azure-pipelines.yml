@@ -1,3 +1,10 @@
+trigger:
+  branches:
+    include:
+    - '*'
+  tags:
+    include:
+    - '*'
 jobs:
 - job: 'codestyle'
   pool:
