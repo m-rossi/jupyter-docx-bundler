@@ -43,7 +43,7 @@ setup(
     license='MIT',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    name='jupyter_docx_bundler',
+    name='jupyter-docx-bundler',
     packages=[
         'jupyter_docx_bundler',
         'jupyter_docx_bundler.tests',
