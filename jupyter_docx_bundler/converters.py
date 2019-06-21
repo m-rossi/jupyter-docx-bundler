@@ -1,12 +1,40 @@
+import base64
 import os
+from pathlib import Path
 import re
 import tempfile
 
 from nbconvert import HTMLExporter, preprocessors
 import pypandoc
+import requests
 
 
-def preprocess(content):
+def encode_image_base64(filepath):
+    """Encode an image as a base64 string
+
+    Parameters
+    ----------
+    filepath : str
+        Filepath of the image file
+
+    Returns
+    -------
+    dict
+        Dictionary with identifier as key and base64-encoded data as value.
+
+    """
+    key = 'image/' + os.path.splitext(filepath)[1][1:]
+    if f'{filepath}'.startswith('http'):
+        r = requests.get(filepath)
+        data = base64.b64encode(r.content).decode('utf8')
+    else:
+        with open(filepath, 'rb') as image:
+            data = base64.b64encode(image.read()).decode('utf8')
+
+    return {key: data}
+
+
+def preprocess(content, path):
     """Preprocess the notebook data.
     Cells will specific tags will be removed and attached images will be embedded.
 
@@ -28,6 +56,7 @@ def preprocess(content):
 
     for cell in content['cells']:
         attachment_to_embedded_image(cell)
+        linked_to_embedded_image(cell, path)
 
     return content
 
@@ -109,7 +138,7 @@ def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
                           extra_args=extra_args)
 
 
-def notebookcontent_to_docxbytes(content, filename, handler=None):
+def notebookcontent_to_docxbytes(content, filename, path, handler=None):
     """Convert content of a Jupyter notebook to the raw bytes content of a *.docx file
 
     Parameters
@@ -118,7 +147,7 @@ def notebookcontent_to_docxbytes(content, filename, handler=None):
         A dict-like node of the notebook with attribute-access
     filename : str
         Filename of the notebook without extension
-    andler : tornado.web.RequestHandler, optional
+    handler : tornado.web.RequestHandler, optional
         Handler that serviced the bundle request
 
     Returns
@@ -128,7 +157,7 @@ def notebookcontent_to_docxbytes(content, filename, handler=None):
     """
     with tempfile.TemporaryDirectory() as tempdir:
         # preprocess notebook
-        content = preprocess(content)
+        content = preprocess(content, path)
 
         # prepare file names
         htmlfile = os.path.join(tempdir, f'{filename}.html')
@@ -170,3 +199,30 @@ def attachment_to_embedded_image(cell):
                 s.insert(1, f'<img src="data:{key};base64,{val}" />')
             cell['source'] = ''.join(s)
         cell.pop('attachments')
+
+
+def linked_to_embedded_image(cell, path):
+    """Converts cell with linked images of notebook cell to markdown embedded images.
+
+    Parameters
+    ----------
+    cell : NotebookNode
+        Cell with attachments
+    """
+    path = Path(path)
+    re_image = re.compile(rf'!\[.+\)')
+    if cell['cell_type'] == 'markdown':
+        s = re_image.split(cell['source'])
+        images = re_image.findall(cell['source'])
+        for ii, image in enumerate(images):
+            _, image = image.split('](')
+            if image.startswith('http'):
+                image = image[:-1]
+            elif Path(image[:-1]).is_absolute():
+                image = Path(image[:-1])
+            else:
+                image = (path / Path(image[:-1])).resolve()
+            b64 = encode_image_base64(image)
+            key = list(b64.keys())[0]
+            s.insert(ii + 1, f'<img src="data:{key};base64,{b64[key]}" />')
+        cell['source'] = ''.join(s)

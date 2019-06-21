@@ -20,8 +20,9 @@ setup(
             'pytest',
             'pytest-azurepipelines>=0.6.0',
             'pytest-cov',
+            'pytest-lazy-fixture',
             'pillow>=6.0.0',
-            'matplotlib',
+            'matplotlib>=3.1',
             'mock',
             'nbformat',
             'numpy',
@@ -32,6 +33,7 @@ setup(
         'nbconvert>=5.5',
         'pypandoc>=1.4',
         'notebook>=5.0',
+        'tornado',
     ],
     keywords=[
         'jupyter',
@@ -44,7 +46,7 @@ setup(
     name='jupyter_docx_bundler',
     packages=[
         'jupyter_docx_bundler',
-        'jupyter_docx_bundler.test',
+        'jupyter_docx_bundler.tests',
     ],
     python_requires='>=3.6',
     setup_requires=[

@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from nbconvert.exporters import Exporter
 from tornado import gen
@@ -35,6 +36,11 @@ def bundle(handler, model):
     """
 
     # prepare notebook
+    if Path(model['path']).is_absolute():
+        notebook_path = Path(model['path']).parent
+    else:
+        notebook_path = (Path.cwd() / model['path']).parent
+    print(notebook_path)
     notebook_filename = os.path.basename(model['name'])
     notebook_name = os.path.splitext(notebook_filename)[0]
 
@@ -50,7 +56,8 @@ def bundle(handler, model):
 
     # send content to handler
     yield handler.write(converters.notebookcontent_to_docxbytes(model['content'],
-                                                                notebook_filename))
+                                                                notebook_filename,
+                                                                notebook_path))
 
     # Return the buffer value as the response
     handler.finish()
@@ -67,6 +74,9 @@ class DocxExporter(Exporter):
 
     def from_notebook_node(self, nb, resources=None, **kw):
         nb_copy, resources = super().from_notebook_node(nb, resources)
-        notebook_filename = resources['metadata']['name']
 
-        return converters.notebookcontent_to_docxbytes(nb_copy, notebook_filename), resources
+        return converters.notebookcontent_to_docxbytes(
+            nb_copy,
+            resources['metadata']['name'],
+            resources['metadata']['path'],
+        ), resources

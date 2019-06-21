@@ -24,18 +24,20 @@ requirements:
     - pypandoc >=1.4
     - nbconvert >=5.5
     - pandoc >=2.0
+    - tornado
 
 test:
   imports:
     - jupyter_docx_bundler
   requires:
-    - matplotlib
+    - matplotlib >=3.1
     - mock
     - nbformat
     - pillow >= 6.0.0
     - pytest
     - pytest-azurepipelines >=0.6.0
     - pytest-cov
+    - pytest-lazy-fixture
     - requests
   commands:
     - pytest --pyargs jupyter_docx_bundler
