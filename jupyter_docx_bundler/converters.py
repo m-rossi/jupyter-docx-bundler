@@ -42,6 +42,8 @@ def preprocess(content, path):
     ----------
     content : nbformat.NotebookNode
         A dict-like node of the notebook with attribute-access
+    path : str
+        Path to the notebook as string
 
     Returns
     -------
@@ -149,7 +151,8 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
         Filename of the notebook without extension
     handler : tornado.web.RequestHandler, optional
         Handler that serviced the bundle request
-
+    path : str
+        Path to the notebook as string
     Returns
     -------
     bytes
@@ -208,6 +211,8 @@ def linked_to_embedded_image(cell, path):
     ----------
     cell : NotebookNode
         Cell with attachments
+    path : str
+        Path to the notebook as string
     """
     path = Path(path)
     re_image = re.compile(rf'!\[.+\)')
