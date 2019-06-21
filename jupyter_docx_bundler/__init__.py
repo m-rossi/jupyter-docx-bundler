@@ -40,7 +40,6 @@ def bundle(handler, model):
         notebook_path = Path(model['path']).parent
     else:
         notebook_path = (Path.cwd() / model['path']).parent
-    print(notebook_path)
     notebook_filename = os.path.basename(model['name'])
     notebook_name = os.path.splitext(notebook_filename)[0]
 
