@@ -1,7 +1,7 @@
 # Jupyter docx bundler extension
 
-[![PyPi Version](https://img.shields.io/pypi/v/jupyter_docx_bundler.svg)](https://pypi.org/project/jupyter-docx-bundler/)
-[![Conda Version](https://img.shields.io/conda/vn/mrossi/jupyter_docx_bundler.svg)](https://anaconda.org/mrossi/jupyter_docx_bundler)
+[![PyPi Version](https://img.shields.io/pypi/v/jupyter-docx-bundler.svg)](https://pypi.org/project/jupyter-docx-bundler/)
+[![Conda Version](https://img.shields.io/conda/vn/mrossi/jupyter-docx-bundler.svg)](https://anaconda.org/mrossi/jupyter-docx-bundler)
 [![Build Status](https://dev.azure.com/m-rossi-github/jupyter-docx-bundler/_apis/build/status/m-rossi.jupyter-docx-bundler?branchName=master)](https://dev.azure.com/m-rossi-github/jupyter-docx-bundler/_build/latest?definitionId=1&branchName=master)
 [![Coverage](https://img.shields.io/azure-devops/coverage/m-rossi-github/jupyter-docx-bundler/1/master.svg)](https://img.shields.io/azure-devops/coverage/m-rossi-github/jupyter-docx-bundler/1/master.svg)
 
@@ -14,14 +14,14 @@ Jupyter bundler extension to export notebook as a docx file
 Make sure you have [Pandoc](https://pandoc.org) installed, see [installing-pandoc](https://github.com/bebraw/pypandoc#installing-pandoc) for instructions.
 
 ```
-pip install jupyter_docx_bundler
+pip install jupyter-docx-bundler
 jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix
 ```
 
 ### Installing with conda
 
 ```
-conda install -c mrossi jupyter_docx_bundler
+conda install -c mrossi jupyter-docx-bundler
 ```
 
 ## Usage
