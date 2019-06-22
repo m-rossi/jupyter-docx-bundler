@@ -26,13 +26,13 @@ setup(
             'mock',
             'nbformat',
             'numpy',
-            'requests',
         ],
     },
     install_requires=[
         'nbconvert>=5.5',
         'pypandoc>=1.4',
         'notebook>=5.0',
+        'requests',
         'tornado',
     ],
     keywords=[
