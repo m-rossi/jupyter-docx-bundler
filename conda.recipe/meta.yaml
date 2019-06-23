@@ -1,8 +1,4 @@
-{% if GIT_DESCRIBE_NUMBER == '0' %}
 {% set version = GIT_DESCRIBE_TAG %}
-{% else %}
-{% set version = GIT_DESCRIBE_TAG + '.dev' + GIT_DESCRIBE_NUMBER %}
-{% endif %}
 package:
   name: jupyter-docx-bundler
   version: {{version}}
@@ -11,15 +7,18 @@ source:
   path: ..
 
 build:
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  noarch: python
+  number: 1
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
 
 requirements:
-  build:
+  host:
+    - pip
     - python
     - setuptools >=38.6.0
     - setuptools_scm
   run:
-    - python
+    - python >=3.6
     - notebook >=5.0
     - pypandoc >=1.4
     - nbconvert >=5.5
