@@ -6,7 +6,7 @@ from nbconvert import nbconvertapp
 
 
 # Check if bundler extension is enabled
-out = subprocess.run(['jupyter-bundlerextension', 'list', '--sys-prefix'], capture_output=True)
+out = subprocess.run(['jupyter-bundlerextension', 'list', '--sys-prefix'], stdout=subprocess.PIPE)
 if not re.search(r'Office Open XML \(\.docx\).*enable', out.stdout.decode('utf8')):
     sys.exit(1)
 
