@@ -49,8 +49,11 @@ jobs:
     - script: |
         source activate base
         conda update conda -y --quiet
+      displayName: Update conda
+    - script: |
+        source activate base
         conda install conda-build -y --quiet
-      displayName: Update and install conda and conda-build
+      displayName: Install conda-build
     - script: |
         source activate base
         conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
@@ -89,8 +92,11 @@ jobs:
     - script: |
         source activate base
         conda update conda -y --quiet
+      displayName: Update conda
+    - script: |
+        source activate base
         conda install conda-build -y --quiet
-      displayName: Update and install conda and conda-build
+      displayName: Install conda-build
     - script: |
         source activate base
         conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
@@ -127,14 +133,18 @@ jobs:
     - script: |
         call activate base
         conda update conda -y --quiet
+      displayName: Update conda
+    - script: |
+        call activate base
         conda install conda-build -y --quiet
-      displayName: Update and install conda and conda-build
+      displayName: Install conda-build
     - script: |
         call activate base
         conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
       displayName: Create conda environment for testing
     - script: |
         call activate jupyter-docx-bundler-testing
+        pip install --upgrade --force-reinstall pillow
         pytest . --cov jupyter_docx_bundler --cov-report html
       displayName: pytest
     - script: |
