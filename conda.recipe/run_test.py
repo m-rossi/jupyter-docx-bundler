@@ -1,16 +1,28 @@
-import re
-import subprocess
+import os
 import sys
 
 from nbconvert import nbconvertapp
+from notebook.config_manager import BaseJSONConfigManager
+from jupyter_core.paths import jupyter_config_path
 
 
 # Check if bundler extension is enabled
-out = subprocess.run(['jupyter-bundlerextension', 'list', '--sys-prefix'], stdout=subprocess.PIPE)
-if not re.search(r'Office Open XML \(\.docx\).*enable', out.stdout.decode('utf8')):
-    sys.exit(1)
+bundler_enabled = False
+config_dirs = [os.path.join(p, 'nbconfig') for p in jupyter_config_path()]
+for config_dir in config_dirs:
+    cm = BaseJSONConfigManager(config_dir=config_dir)
+    data = cm.get('notebook')
+    if 'bundlerextensions' in data:
+        for bundler_id, info in data['bundlerextensions'].items():
+            label = info.get('label')
+            module = info.get('module_name')
+            if module == 'jupyter_docx_bundler':
+                bundler_enabled = True
+if not bundler_enabled:
+    sys.exit('jupyter-dox-bundler not enabled.')
+
 
 # Check if nbconvert lists docx as available format
 formats = nbconvertapp.get_export_names()
 if 'docx' not in formats:
-    sys.exit(1)
+    sys.exit('*.docx not in nbconvert export-names.')
