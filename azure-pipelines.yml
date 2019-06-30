@@ -15,10 +15,13 @@ jobs:
     - bash: sudo chown -R $USER /usr/share/miniconda
       displayName: Take ownership of conda installation
     - script: |
+        source activate base
         conda update conda -y --quiet
         conda install conda-build -y --quiet
       displayName: Update and install conda and conda-build
-    - script: conda install --yes --quiet flake8
+    - script: |
+        source activate base
+        conda install --yes --quiet flake8
       displayName: Install flake8
     - script: |
         source activate base
@@ -44,10 +47,13 @@ jobs:
     - bash: sudo chown -R $USER /usr/share/miniconda
       displayName: Take ownership of conda installation
     - script: |
+        source activate base
         conda update conda -y --quiet
         conda install conda-build -y --quiet
       displayName: Update and install conda and conda-build
-    - script: conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+    - script: |
+        source activate base
+        conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
       displayName: Create conda environment for testing
     - script: |
         source activate jupyter-docx-bundler-testing
@@ -81,10 +87,13 @@ jobs:
     - bash: sudo chown -R $USER $CONDA
       displayName: Take ownership of conda installation
     - script: |
+        source activate base
         conda update conda -y --quiet
         conda install conda-build -y --quiet
       displayName: Update and install conda and conda-build
-    - script: conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+    - script: |
+        source activate base
+        conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
       displayName: Create conda environment for testing
     - script: |
         source activate jupyter-docx-bundler-testing
@@ -116,10 +125,13 @@ jobs:
     - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
       displayName: Add conda to PATH
     - script: |
+        call activate base
         conda update conda -y --quiet
         conda install conda-build -y --quiet
       displayName: Update and install conda and conda-build
-    - script: conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
+    - script: |
+        call activate base
+        conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
       displayName: Create conda environment for testing
     - script: |
         call activate jupyter-docx-bundler-testing
