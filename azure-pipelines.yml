@@ -127,6 +127,7 @@ jobs:
     - script: |
         call activate base
         conda update conda -y --quiet
+        call activate base
         conda install conda-build -y --quiet
       displayName: Update and install conda and conda-build
     - script: |
