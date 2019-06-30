@@ -49,8 +49,11 @@ jobs:
     - script: |
         source activate base
         conda update conda -y --quiet
+      displayName: Update conda
+    - script: |
+        source activate base
         conda install conda-build -y --quiet
-      displayName: Update and install conda and conda-build
+      displayName: Install conda-build
     - script: |
         source activate base
         conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
@@ -89,8 +92,11 @@ jobs:
     - script: |
         source activate base
         conda update conda -y --quiet
+      displayName: Update conda
+    - script: |
+        source activate base
         conda install conda-build -y --quiet
-      displayName: Update and install conda and conda-build
+      displayName: Install conda-build
     - script: |
         source activate base
         conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
@@ -127,9 +133,11 @@ jobs:
     - script: |
         call activate base
         conda update conda -y --quiet
+      displayName: Update conda
+    - script: |
         call activate base
         conda install conda-build -y --quiet
-      displayName: Update and install conda and conda-build
+      displayName: Install conda-build
     - script: |
         call activate base
         conda create --yes --quiet -c defaults -c conda-forge --name jupyter-docx-bundler-testing --file requirements.txt --file requirements_test.txt python=$(python.version)
