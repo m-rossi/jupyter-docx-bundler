@@ -102,8 +102,8 @@ def images_notebook(tmpdir, request):
     return nb
 
 
-@pytest.fixture()
-def metadata_notebook(tmpdir):
+@pytest.fixture(params=[True, False])
+def metadata_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
 
     ep = ExecutePreprocessor()
@@ -118,6 +118,8 @@ def metadata_notebook(tmpdir):
         "date": '2019-05-11',
         "path": f"{tmpdir}",
     })
+    if request.param:
+        nb['metadata']['title'] = 'title'
 
     return nb
 

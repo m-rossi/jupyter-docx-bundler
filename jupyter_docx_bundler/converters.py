@@ -79,12 +79,19 @@ def notebook_to_html(content, htmlfile):
                                  exclude_input_prompt=True,
                                  exclude_output_prompt=True)
 
+    # save metadata for possible title removement
+    metadata = content['metadata']
+
     # export to html
     content, _ = html_exporter.from_notebook_node(content)
 
     # check if export path exists
     if os.path.dirname(htmlfile) != '' and not os.path.isdir(os.path.dirname(htmlfile)):
         raise FileNotFoundError(f'Path to html-file does not exist: {os.path.dirname(htmlfile)}')
+
+    # Remove title from htmlfile if none is set to prevent pandoc from writing one
+    if 'title' not in metadata:
+        content = remove_html_title(content)
 
     # write content to html file
     with open(htmlfile, 'w', encoding='utf-8') as file:
@@ -231,3 +238,14 @@ def linked_to_embedded_image(cell, path):
             key = list(b64.keys())[0]
             s.insert(ii + 1, f'<img src="data:{key};base64,{b64[key]}" />')
         cell['source'] = ''.join(s)
+
+
+def remove_html_title(htmlcontent):
+    """Remove <title> tag from htmlcontent.
+
+    Parameters
+    ----------
+    htmlcontent : str
+        Content of htmlfile.
+    """
+    return re.sub('<title>.+</title>', '', htmlcontent)
