@@ -79,12 +79,19 @@ def notebook_to_html(content, htmlfile):
                                  exclude_input_prompt=True,
                                  exclude_output_prompt=True)
 
+    # save metadata for possible title removement
+    metadata = content['metadata']
+
     # export to html
     content, _ = html_exporter.from_notebook_node(content)
 
     # check if export path exists
     if os.path.dirname(htmlfile) != '' and not os.path.isdir(os.path.dirname(htmlfile)):
         raise FileNotFoundError(f'Path to html-file does not exist: {os.path.dirname(htmlfile)}')
+
+    # Remove title from htmlfile if none is set to prevent pandoc from writing one
+    if 'title' not in metadata:
+        remove_html_title(content)
 
     # write content to html file
     with open(htmlfile, 'w', encoding='utf-8') as file:
@@ -169,10 +176,6 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
         # convert notebook to html
         notebook_to_html(content, htmlfile)
 
-        # Remove title from htmlfile if none is set to prevent pandoc from writing one
-        if 'title' not in content['metadata']:
-            remove_html_title(htmlfile)
-
         # convert html to docx
         html_to_docx(
             htmlfile,
@@ -237,16 +240,12 @@ def linked_to_embedded_image(cell, path):
         cell['source'] = ''.join(s)
 
 
-def remove_html_title(htmlfile):
-    """Remove <title> tag from htmlfile.
+def remove_html_title(htmlcontent):
+    """Remove <title> tag from htmlcontent.
 
     Parameters
     ----------
-    htmlfile : str
-        Filename of the notebook exported as html
+    htmlcontent : str
+        Content of htmlfile.
     """
-    with open(htmlfile, 'r', encoding='utf8') as file:
-        lines = file.readlines()
-        lines = [re.sub('<title>.+</title>', '', line) for line in lines]
-    with open(htmlfile, 'w', encoding='utf8') as file:
-        file.writelines(lines)
+    return re.sub('<title>.+</title>', '', htmlcontent)
