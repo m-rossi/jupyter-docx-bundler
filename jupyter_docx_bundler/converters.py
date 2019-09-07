@@ -91,7 +91,7 @@ def notebook_to_html(content, htmlfile):
 
     # Remove title from htmlfile if none is set to prevent pandoc from writing one
     if 'title' not in metadata:
-        remove_html_title(content)
+        content = remove_html_title(content)
 
     # write content to html file
     with open(htmlfile, 'w', encoding='utf-8') as file:
