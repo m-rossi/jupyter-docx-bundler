@@ -16,8 +16,9 @@ jobs:
         shell: bash -l {0}
         run: conda install --yes --quiet flake8
       - name: Execute flake8
-        shell: bash -l {0}
-        run: flake8 . --max-line-length=99
+        run: |
+          conda activate flake8
+          flake8 . --max-line-length=99
 
   pytest:
     name: pytest (${{ matrix.python-version }}, ${{ matrix.os }})
