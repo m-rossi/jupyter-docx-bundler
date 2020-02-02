@@ -11,10 +11,10 @@ jobs:
         with:
           auto-update-conda: true
           python-version: 3.8
-          auto-activate-base: true
       - name: Install dependencies
         run: conda install --yes --quiet flake8
       - name: Execute flake8
+        shell: bash -l {0}
         run: flake8 . --max-line-length=99
 
   pytest:
