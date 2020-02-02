@@ -1,0 +1,22 @@
+name: "Continous integration"
+
+on:
+  push:
+    branches:
+    - '*'
+  pull_request:
+    branches:
+    - '*'
+
+jobs:
+  pytest:
+    name: pytest (${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        python-version: ['3.6', '3.7', '3.8']
+    steps:
+      - name: conda version
+        run: conda --version
