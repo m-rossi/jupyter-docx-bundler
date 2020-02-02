@@ -3,7 +3,7 @@ name: "Continous integration"
 on: push
 
 jobs:
-  pep8:
+  flake8:
     name: flake8
     runs-on: 'ubuntu-latest'
     steps:
@@ -21,6 +21,7 @@ jobs:
         run: flake8 . --max-line-length=99
 
   pytest:
+    needs: flake8
     name: pytest (Python ${{ matrix.python-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
