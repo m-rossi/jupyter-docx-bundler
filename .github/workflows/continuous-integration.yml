@@ -3,6 +3,24 @@ name: "Continous integration"
 on: push
 
 jobs:
+  pep8:
+    name: flake8 (${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-latest']
+        python-version: ['3.8']
+    steps:
+      - uses: goanpeca/setup-miniconda@v1
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: conda install --yes --quiet flake8
+      - name: Execute flake8
+        run: flake8 . --max-line-length=99
+
   pytest:
     name: pytest (${{ matrix.python-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
