@@ -11,7 +11,7 @@ jobs:
         with:
           auto-update-conda: true
           python-version: 3.8
-          auto-activate-base: false
+          auto-activate-base: true
       - name: Install dependencies
         run: conda install --yes --quiet flake8
       - name: Execute flake8
