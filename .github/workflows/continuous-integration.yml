@@ -43,4 +43,4 @@ jobs:
         run: conda install --yes --quiet --file requirements.txt --file requirements_test.txt
       - name: Execute pytest
         shell: bash -l {0}
-        run: pytest
+        run: pytest . --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
