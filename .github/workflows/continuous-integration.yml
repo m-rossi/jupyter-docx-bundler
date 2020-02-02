@@ -13,6 +13,8 @@ jobs:
           python-version: 3.8
       - name: Install dependencies
         run: conda install --yes --quiet flake8
+      - name: List envs
+        run: conda info --envs
       - name: Execute flake8
         shell: bash -l {0}
         run: flake8 . --max-line-length=99
