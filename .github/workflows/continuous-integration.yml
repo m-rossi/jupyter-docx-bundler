@@ -62,7 +62,7 @@ jobs:
           auto-update-conda: true
       - name: Install conda-build
         shell: bash -l {0}
-        run: conda install --yes --quiet conda-build git
+        run: conda install --yes --quiet conda-build
       - name: Add conda-forge channel
         shell: bash -l {0}
         run: conda config --append channels conda-forge
