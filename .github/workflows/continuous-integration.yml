@@ -57,8 +57,7 @@ jobs:
         python-version: ['3.6', '3.7', '3.8']
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - uses: goanpeca/setup-miniconda@v1
         with:
           auto-update-conda: true
