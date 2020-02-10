@@ -19,6 +19,9 @@ jobs:
       - name: Execute flake8
         shell: bash -l {0}
         run: flake8 . --max-line-length=99
+      - name: fetch tags
+        shell: bash -l {0}
+        run: git fetch --tags
       - name: Check git tag
         shell: bash -l {0}
         run: git describe --tag
