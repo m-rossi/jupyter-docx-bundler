@@ -19,10 +19,6 @@ jobs:
       - name: Execute flake8
         shell: bash -l {0}
         run: flake8 . --max-line-length=99
-      - run: git fetch --prune --unshallow
-      - name: Check git tag
-        shell: bash -l {0}
-        run: git describe --tag
 
   pytest:
     needs: flake8
@@ -61,7 +57,8 @@ jobs:
         python-version: ['3.6', '3.7', '3.8']
     steps:
       - uses: actions/checkout@v2
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Fetch history for all branches and tags
+        run: git fetch --prune --unshallow
       - uses: goanpeca/setup-miniconda@v1
         with:
           auto-update-conda: true
