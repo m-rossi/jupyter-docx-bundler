@@ -19,6 +19,9 @@ jobs:
       - name: Execute flake8
         shell: bash -l {0}
         run: flake8 . --max-line-length=99
+      - name: Check git tag
+        shell: bash -l {0}
+        run: git describe --tag
 
   pytest:
     needs: flake8
@@ -67,9 +70,6 @@ jobs:
       - name: Add conda-forge channel
         shell: bash -l {0}
         run: conda config --append channels conda-forge
-      - name: Check git tag
-        shell: bash -l {0}
-        run: git describe --tag
       - name: Execute conda-build
         shell: bash -l {0}
         run: conda build --python ${{ matrix.python-version }} conda.recipe
