@@ -73,7 +73,7 @@ jobs:
         run: conda build --output-folder conda-bld --python ${{ matrix.python-version }} conda.recipe
       - name: Determine files to upload
         id: getfilename
-        run: echo "::set-output name=file::$(ls conda-bld/*/*.tar.bz2)"
+        run: ls conda-bld/*/*.tar.bz2
       - uses: actions/upload-artifact@v1
         with:
           path: ${{ steps.getfilename.outputs.file }}
