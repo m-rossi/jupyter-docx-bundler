@@ -75,8 +75,7 @@ jobs:
         shell: bash -l {0}
         id: getfilename
         run: echo "::set-output name=file::$(ls conda-bld/*/*.tar.bz2)"
-
       - uses: actions/upload-artifact@v1
         with:
-          name: ${{ matrix.python-version }}-${{ matrix.os }}
+          name: python-${{ matrix.python-version }}-${{ matrix.os }}
           path: ${{ steps.getfilename.outputs.file }}
