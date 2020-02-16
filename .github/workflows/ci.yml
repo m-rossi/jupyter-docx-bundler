@@ -1,4 +1,4 @@
-name: "Continous integration"
+name: "CI"
 
 on: push
 
