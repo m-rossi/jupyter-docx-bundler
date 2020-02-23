@@ -67,6 +67,8 @@ jobs:
         python-version: ['3.6', '3.7', '3.8']
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Fetch history for all branches and tags
         run: git fetch --prune --unshallow
       - uses: goanpeca/setup-miniconda@v1
