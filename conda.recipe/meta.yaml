@@ -38,7 +38,6 @@ test:
     - nbformat
     - pillow >=6.0.0
     - pytest
-    - pytest-azurepipelines >=0.6.0
     - pytest-cov
     - pytest-lazy-fixture
   commands:
