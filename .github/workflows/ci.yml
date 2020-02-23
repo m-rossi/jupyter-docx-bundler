@@ -70,7 +70,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Fetch history for all branches and tags
-        run: git fetch --prune --unshallow
+        run: git fetch --prune
       - uses: goanpeca/setup-miniconda@v1
         with:
           auto-update-conda: true
