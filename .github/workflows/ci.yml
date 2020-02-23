@@ -46,6 +46,7 @@ jobs:
         shell: bash -l {0}
         run: pytest .
       - uses: codecov/codecov-action@v1
+        github.event_name == 'push' && github.ref == 'refs/heads/master'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
