@@ -6,7 +6,7 @@ on:
       - master
   pull_request:
   schedule:
-    - cron: '* * * * 6'
+    - cron: '0 12 * * 6'
 
 jobs:
   flake8:
