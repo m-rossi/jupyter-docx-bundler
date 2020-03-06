@@ -85,6 +85,13 @@ def images_notebook(tmpdir, request):
         'line3',
     ])))
 
+    # add image as path with extra title
+    nb.cells.append(nbformat.v4.new_markdown_cell('\n'.join([
+        'line1',
+        f'![title]({filename} "extra-title")',
+        'line3',
+    ])))
+
     # add image as attachment
     nb.cells.append(nbformat.v4.new_markdown_cell('\n'.join([
         'line1',
