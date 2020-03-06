@@ -223,11 +223,20 @@ def linked_to_embedded_image(cell, path):
     """
     path = Path(path)
     re_image = re.compile(rf'!\[.+\)')
+    re_extra_title = re.compile(r'\s".+"')
     if cell['cell_type'] == 'markdown':
         s = re_image.split(cell['source'])
         images = re_image.findall(cell['source'])
         for ii, image in enumerate(images):
+            # split markdown link by alt and link
             _, image = image.split('](')
+            # search for an additional title and save it for later
+            if re_extra_title.search(image):
+                title = f' title={re_extra_title.search(image).group(0)[1:]}'
+            else:
+                title = ''
+            # replace extra title in image link
+            image = re_extra_title.sub("", image)
             if image.startswith('http'):
                 image = image[:-1]
             elif Path(image[:-1]).is_absolute():
@@ -236,7 +245,7 @@ def linked_to_embedded_image(cell, path):
                 image = (path / Path(image[:-1])).resolve()
             b64 = encode_image_base64(image)
             key = list(b64.keys())[0]
-            s.insert(ii + 1, f'<img src="data:{key};base64,{b64[key]}" />')
+            s.insert(ii + 1, f'<img src="data:{key};base64,{b64[key]}"{title} />')
         cell['source'] = ''.join(s)
 
 
