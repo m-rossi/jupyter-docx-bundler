@@ -6,7 +6,10 @@ from nbconvert import nbconvertapp
 import nbformat
 from nbformat import write
 from nbformat.v4 import (
-    new_notebook, new_markdown_cell, new_code_cell, new_output,
+    new_notebook,
+    new_markdown_cell,
+    new_code_cell,
+    new_output,
 )
 from notebook.tests.launchnotebook import NotebookTestBase
 
@@ -30,8 +33,9 @@ class BundleAPITest(NotebookTestBase):
     def test_bundler_invoke(self):
         with patch('notebook.bundler.handlers.BundlerHandler.get_bundler') as mock:
             mock.return_value = {'module_name': 'jupyter_docx_bundler'}
-            resp = self.request('GET', 'bundle/testnb.ipynb',
-                                params={'bundler': 'jupyter_docx_bundler'})
+            resp = self.request(
+                'GET', 'bundle/testnb.ipynb', params={'bundler': 'jupyter_docx_bundler'}
+            )
             mock.assert_called_with('jupyter_docx_bundler')
         self.assertEqual(resp.status_code, 200)
 

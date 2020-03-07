@@ -75,9 +75,9 @@ def notebook_to_html(content, htmlfile):
         Filename for the notebook exported as html
     """
     # prepare html exporter, anchor_link_text=' ' suppress anchors being shown
-    html_exporter = HTMLExporter(anchor_link_text=' ',
-                                 exclude_input_prompt=True,
-                                 exclude_output_prompt=True)
+    html_exporter = HTMLExporter(
+        anchor_link_text=' ', exclude_input_prompt=True, exclude_output_prompt=True
+    )
 
     # save metadata for possible title removement
     metadata = content['metadata']
@@ -125,26 +125,30 @@ def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
     # set extra args for pandoc
     extra_args = []
     if metadata is not None and 'authors' in metadata:
-        if isinstance(metadata['authors'], list) and \
-                all(['name' in x for x in metadata['authors']]):
+        if isinstance(metadata['authors'], list) and all(
+            ['name' in x for x in metadata['authors']]
+        ):
             extra_args.append(
-                f'--metadata=author:'
-                f'{", ".join([x["name"] for x in metadata["authors"]])}')
+                f'--metadata=author:' f'{", ".join([x["name"] for x in metadata["authors"]])}'
+            )
         elif handler is not None:
-            handler.log.warning('Author metadata has wrong format, see https:/'
-                                '/github.com/m-rossi/jupyter_docx_bundler/blob'
-                                '/master/README.md')
+            handler.log.warning(
+                'Author metadata has wrong format, see https://github.com/m-rossi/jupyter_docx_bun'
+                'dler/blob/master/README.md'
+            )
     if metadata is not None and 'subtitle' in metadata:
         extra_args.append(f'--metadata=subtitle:{metadata["subtitle"]}')
     if metadata is not None and 'date' in metadata:
         extra_args.append(f'--metadata=date:{metadata["date"]}')
 
     # convert to docx
-    pypandoc.convert_file(htmlfile,
-                          'docx',
-                          format='html+tex_math_dollars',
-                          outputfile=docxfile,
-                          extra_args=extra_args)
+    pypandoc.convert_file(
+        htmlfile,
+        'docx',
+        format='html+tex_math_dollars',
+        outputfile=docxfile,
+        extra_args=extra_args,
+    )
 
 
 def notebookcontent_to_docxbytes(content, filename, path, handler=None):
@@ -178,10 +182,7 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
 
         # convert html to docx
         html_to_docx(
-            htmlfile,
-            docxfile,
-            metadata=content['metadata'],
-            handler=handler,
+            htmlfile, docxfile, metadata=content['metadata'], handler=handler,
         )
 
         # read raw data
