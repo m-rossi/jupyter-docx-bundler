@@ -236,7 +236,7 @@ def linked_to_embedded_image(cell, path):
             else:
                 title = ''
             # replace extra title in image link
-            image = re_extra_title.sub("", image)
+            image = re_extra_title.sub('', image)
             if image.startswith('http'):
                 image = image[:-1]
             elif Path(image[:-1]).is_absolute():

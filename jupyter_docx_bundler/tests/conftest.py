@@ -117,13 +117,13 @@ def metadata_notebook(tmpdir, request):
     ep.preprocess(nb, {'metadata': {'path': tmpdir}})
 
     nb['metadata'].update({
-        "authors": [
-            {"name": "author1"},
-            {"name": "author2"}
+        'authors': [
+            {'name': 'author1'},
+            {'name': 'author2'}
         ],
-        "subtitle": 'subtitle',
-        "date": '2019-05-11',
-        "path": f"{tmpdir}",
+        'subtitle': 'subtitle',
+        'date': '2019-05-11',
+        'path': f'{tmpdir}',
     })
     if request.param:
         nb['metadata']['title'] = 'title'

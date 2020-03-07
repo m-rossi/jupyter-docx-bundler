@@ -12,13 +12,13 @@ def _jupyter_bundlerextension_paths():
 
     return [{
         # unique bundler name
-        "name": "docx_bundler",
+        'name': 'docx_bundler',
         # module containing bundle function
-        "module_name": "jupyter_docx_bundler",
+        'module_name': 'jupyter_docx_bundler',
         # human-redable menu item label
-        "label": "Office Open XML (.docx)",
+        'label': 'Office Open XML (.docx)',
         # group under 'deploy' or 'download' menu
-        "group": "download",
+        'group': 'download',
     }]  # pragma: no cover
 
 

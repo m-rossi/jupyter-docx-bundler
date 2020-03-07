@@ -21,7 +21,7 @@ class BundleAPITest(NotebookTestBase):
 
         nb.cells.append(new_markdown_cell(u'Created by test'))
         cc1 = new_code_cell(source=u'print(2*6)')
-        cc1.outputs.append(new_output(output_type="stream", text=u'12'))
+        cc1.outputs.append(new_output(output_type='stream', text=u'12'))
         nb.cells.append(cc1)
 
         with open(nbdir / 'testnb.ipynb', 'w', encoding='utf-8') as f:
