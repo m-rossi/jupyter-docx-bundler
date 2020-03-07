@@ -159,7 +159,12 @@ def metadata_notebook(tmpdir, request):
         lazy_fixture('images_notebook'),
         lazy_fixture('metadata_notebook'),
     ],
-    ids=['download', 'matplotlib', 'embedded-images', 'metadata',],
+    ids=[
+        'download',
+        'matplotlib',
+        'embedded-images',
+        'metadata',
+    ],
 )
 def test_notebook(request):
     return request.param
