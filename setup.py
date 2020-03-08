@@ -18,7 +18,6 @@ setup(
     extras_require={
         'test': [
             'pytest',
-            'pytest-azurepipelines>=0.6.0',
             'pytest-cov',
             'pytest-lazy-fixture',
             'pillow>=6.0.0',
