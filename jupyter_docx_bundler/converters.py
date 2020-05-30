@@ -223,7 +223,7 @@ def linked_to_embedded_image(cell, path):
         Path to the notebook as string
     """
     path = Path(path)
-    re_image = re.compile(rf'!\[.+\)')
+    re_image = re.compile(r'!\[.+\)')
     re_extra_title = re.compile(r'\s".+"')
     if cell['cell_type'] == 'markdown':
         s = re_image.split(cell['source'])
