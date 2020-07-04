@@ -73,6 +73,17 @@ def matplotlib_notebook(tmpdir, request):
             )
         )
 
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            '\n'.join([
+                f'for ii in range({request.param}):',
+                '    plt.figure()',
+                '    plt.plot(range(100))',
+                '    plt.show()',
+            ])
+        )
+    )
+
     ep = ExecutePreprocessor()
     ep.preprocess(nb, {'metadata': {'path': tmpdir}})
 
