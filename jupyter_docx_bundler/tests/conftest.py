@@ -142,8 +142,8 @@ def images_notebook(tmpdir, request):
     return nb
 
 
-@pytest.fixture(params=[True, False])
-def metadata_notebook(tmpdir, request):
+@pytest.fixture
+def metadata_notebook(tmpdir):
     nb = nbformat.v4.new_notebook()
 
     ep = ExecutePreprocessor()
@@ -151,14 +151,15 @@ def metadata_notebook(tmpdir, request):
 
     nb['metadata'].update(
         {
+            'title': 'title',
             'authors': [{'name': 'author1'}, {'name': 'author2'}],
             'subtitle': 'subtitle',
             'date': '2019-05-11',
             'path': f'{tmpdir}',
         }
     )
-    if request.param:
-        nb['metadata']['title'] = 'title'
+
+    nb.cells.append(nbformat.v4.new_markdown_cell('Hello World!'))
 
     return nb
 
