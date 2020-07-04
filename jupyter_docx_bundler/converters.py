@@ -4,7 +4,8 @@ from pathlib import Path
 import re
 import tempfile
 
-from nbconvert import HTMLExporter, preprocessors
+from nbconvert import preprocessors
+import nbformat
 import pypandoc
 import requests
 
@@ -63,94 +64,6 @@ def preprocess(content, path):
     return content
 
 
-def notebook_to_html(content, htmlfile):
-    """ Convert notebook to html file.
-
-    Parameters
-    ----------
-
-    content : nbformat.NotebookNode
-        A dict-like node of the notebook with attribute-access
-    htmlfile : str
-        Filename for the notebook exported as html
-    """
-    # prepare html exporter, anchor_link_text=' ' suppress anchors being shown
-    html_exporter = HTMLExporter(
-        anchor_link_text=' ', exclude_input_prompt=True, exclude_output_prompt=True
-    )
-
-    # save metadata for possible title removement
-    metadata = content['metadata']
-
-    # export to html
-    content, _ = html_exporter.from_notebook_node(content)
-
-    # check if export path exists
-    if os.path.dirname(htmlfile) != '' and not os.path.isdir(os.path.dirname(htmlfile)):
-        raise FileNotFoundError(f'Path to html-file does not exist: {os.path.dirname(htmlfile)}')
-
-    # Remove title from htmlfile if none is set to prevent pandoc from writing one
-    if 'title' not in metadata:
-        content = remove_html_title(content)
-
-    # write content to html file
-    with open(htmlfile, 'w', encoding='utf-8') as file:
-        file.write(content)
-
-
-def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
-    """ Convert html file to docx file.
-
-    Parameters
-    ----------
-
-    htmlfile : str
-        Filename of the notebook exported as html
-    docxfile : str
-        Filename for the notebook exported as docx
-    handler : tornado.web.RequestHandler, optional
-        Handler that serviced the bundle request
-    metadata : dict, optional
-        Dicts with metadata information of the notebook
-    """
-
-    # check if html file exists
-    if not os.path.isfile(htmlfile):
-        raise FileNotFoundError(f'html-file does not exist: {htmlfile}')
-
-    # check if export path exists
-    if os.path.dirname(docxfile) != '' and not os.path.isdir(os.path.dirname(docxfile)):
-        raise FileNotFoundError(f'Path to docx-file does not exist: {os.path.dirname(docxfile)}')
-
-    # set extra args for pandoc
-    extra_args = []
-    if metadata is not None and 'authors' in metadata:
-        if isinstance(metadata['authors'], list) and all(
-            ['name' in x for x in metadata['authors']]
-        ):
-            extra_args.append(
-                f'--metadata=author:' f'{", ".join([x["name"] for x in metadata["authors"]])}'
-            )
-        elif handler is not None:
-            handler.log.warning(
-                'Author metadata has wrong format, see https://github.com/m-rossi/jupyter_docx_bun'
-                'dler/blob/master/README.md'
-            )
-    if metadata is not None and 'subtitle' in metadata:
-        extra_args.append(f'--metadata=subtitle:{metadata["subtitle"]}')
-    if metadata is not None and 'date' in metadata:
-        extra_args.append(f'--metadata=date:{metadata["date"]}')
-
-    # convert to docx
-    pypandoc.convert_file(
-        htmlfile,
-        'docx',
-        format='html+tex_math_dollars',
-        outputfile=docxfile,
-        extra_args=extra_args,
-    )
-
-
 def notebookcontent_to_docxbytes(content, filename, path, handler=None):
     """Convert content of a Jupyter notebook to the raw bytes content of a *.docx file
 
@@ -174,15 +87,38 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
         content = preprocess(content, path)
 
         # prepare file names
-        htmlfile = os.path.join(tempdir, f'{filename}.html')
+        ipynbfile = os.path.join(tempdir, f'{filename}.ipynb')
         docxfile = os.path.join(tempdir, f'{filename}.docx')
 
-        # convert notebook to html
-        notebook_to_html(content, htmlfile)
+        # set extra args for pandoc
+        extra_args = []
+        if content['metadata'] is not None and 'authors' in content['metadata']:
+            if isinstance(content['metadata']['authors'], list) and all(
+                    ['name' in x for x in content['metadata']['authors']]
+            ):
+                extra_args.append(
+                    f'--metadata=author:' f'{", ".join([x["name"] for x in content["metadata"]["authors"]])}'
+                )
+            elif handler is not None:
+                handler.log.warning(
+                    'Author metadata has wrong format, see https://github.com/m-rossi/jupyter_docx_bun'
+                    'dler/blob/master/README.md'
+                )
+        if content['metadata'] is not None and 'title' in content['metadata']:
+            extra_args.append(f'--metadata=title:{content["metadata"]["title"]}')
+        if content['metadata'] is not None and 'subtitle' in content['metadata']:
+            extra_args.append(f'--metadata=subtitle:{content["metadata"]["subtitle"]}')
+        if content['metadata'] is not None and 'date' in content['metadata']:
+            extra_args.append(f'--metadata=date:{content["metadata"]["date"]}')
 
-        # convert html to docx
-        html_to_docx(
-            htmlfile, docxfile, metadata=content['metadata'], handler=handler,
+        nbformat.write(content, ipynbfile)
+
+        # convert to docx
+        pypandoc.convert_file(
+            ipynbfile,
+            'docx',
+            outputfile=docxfile,
+            extra_args=extra_args,
         )
 
         # read raw data
@@ -248,14 +184,3 @@ def linked_to_embedded_image(cell, path):
             key = list(b64.keys())[0]
             s.insert(ii + 1, f'<img src="data:{key};base64,{b64[key]}"{title} />')
         cell['source'] = ''.join(s)
-
-
-def remove_html_title(htmlcontent):
-    """Remove <title> tag from htmlcontent.
-
-    Parameters
-    ----------
-    htmlcontent : str
-        Content of htmlfile.
-    """
-    return re.sub('<title>.+</title>', '', htmlcontent)
