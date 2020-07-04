@@ -25,7 +25,7 @@ requirements:
     - notebook >=5.0
     - pypandoc >=1.4
     - nbconvert >=5.5
-    - pandoc >=2.0
+    - pandoc >=2.6
     - requests
     - tornado
 
