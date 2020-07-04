@@ -92,24 +92,26 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
 
         # set extra args for pandoc
         extra_args = []
-        if content['metadata'] is not None and 'authors' in content['metadata']:
-            if isinstance(content['metadata']['authors'], list) and all(
-                    ['name' in x for x in content['metadata']['authors']]
-            ):
-                extra_args.append(
-                    f'--metadata=author:' f'{", ".join([x["name"] for x in content["metadata"]["authors"]])}'
-                )
-            elif handler is not None:
-                handler.log.warning(
-                    'Author metadata has wrong format, see https://github.com/m-rossi/jupyter_docx_bun'
-                    'dler/blob/master/README.md'
-                )
-        if content['metadata'] is not None and 'title' in content['metadata']:
-            extra_args.append(f'--metadata=title:{content["metadata"]["title"]}')
-        if content['metadata'] is not None and 'subtitle' in content['metadata']:
-            extra_args.append(f'--metadata=subtitle:{content["metadata"]["subtitle"]}')
-        if content['metadata'] is not None and 'date' in content['metadata']:
-            extra_args.append(f'--metadata=date:{content["metadata"]["date"]}')
+        if content['metadata'] is not None:
+            if 'authors' in content['metadata']:
+                if isinstance(content['metadata']['authors'], list) and all(
+                        ['name' in x for x in content['metadata']['authors']]
+                ):
+                    author_list = [x["name"] for x in content["metadata"]["authors"]]
+                    extra_args.append(
+                        f'--metadata=author:' f'{", ".join(author_list)}'
+                    )
+                elif handler is not None:
+                    handler.log.warning(
+                        'Author metadata has wrong format, see https://github.com/m-rossi/jupyter_'
+                        'docx_bundler/blob/master/README.md'
+                    )
+            if 'title' in content['metadata']:
+                extra_args.append(f'--metadata=title:{content["metadata"]["title"]}')
+            if 'subtitle' in content['metadata']:
+                extra_args.append(f'--metadata=subtitle:{content["metadata"]["subtitle"]}')
+            if 'date' in content['metadata']:
+                extra_args.append(f'--metadata=date:{content["metadata"]["date"]}')
 
         nbformat.write(content, ipynbfile)
 
