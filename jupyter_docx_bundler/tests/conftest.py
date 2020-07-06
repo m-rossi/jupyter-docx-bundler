@@ -132,7 +132,7 @@ def images_notebook(tmpdir, request):
             ])
         )
     )
-    nb.cells[-1]['attachments'] = {filename: encode_image_base64(os.path.join(tmpdir, filename))}
+    nb.cells[-1]['attachments'] = encode_image_base64(os.path.join(tmpdir, filename))
 
     ep = ExecutePreprocessor()
     ep.preprocess(nb, {'metadata': {'path': tmpdir}})

@@ -10,7 +10,7 @@ import pypandoc
 import requests
 
 
-RE_IMAGE = re.compile(r'!\[.+\)')
+RE_IMAGE = re.compile(r'!\[.+]\((?!attachment:).+\)')
 RE_EXTRA_TITLE = re.compile(r'\s".+"')
 
 
@@ -24,11 +24,12 @@ def encode_image_base64(filepath):
 
     Returns
     -------
-    dict
+    nbformat.NotebookNode
         Dictionary with identifier as key and base64-encoded data as value.
 
     """
-    key = 'image/' + os.path.splitext(filepath)[1][1:]
+    name = os.path.split(filepath)[-1]
+    mime = 'image/' + os.path.splitext(filepath)[1][1:]
     if f'{filepath}'.startswith('http'):
         r = requests.get(filepath)
         data = base64.b64encode(r.content).decode('utf8')
@@ -36,7 +37,7 @@ def encode_image_base64(filepath):
         with open(filepath, 'rb') as image:
             data = base64.b64encode(image.read()).decode('utf8')
 
-    return {key: data}
+    return nbformat.from_dict({name: {mime: data}})
 
 
 def preprocess(content, path):
@@ -62,8 +63,7 @@ def preprocess(content, path):
     tag_preprocessor.preprocess(content, {})
 
     for cell in content['cells']:
-        attachment_to_embedded_image(cell)
-        linked_to_embedded_image(cell, path)
+        linked_to_attachment_image(cell, path)
 
     return content
 
@@ -134,28 +134,8 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
         return rawdata
 
 
-def attachment_to_embedded_image(cell):
-    """Converts cell with embedded images as attachments of notebook cell to
-    markdown embedded images.
-
-    Parameters
-    ----------
-    cell : NotebookNode
-        Cell with attachments
-    """
-    if 'attachments' in cell:
-        for att in cell['attachments']:
-            s = re.split(rf'!\[.+\]\(attachment:{att}\)', cell['source'])
-            if len(s) != 2:
-                raise NotImplementedError
-            for key, val in cell['attachments'][att].items():
-                s.insert(1, f'<img src="data:{key};base64,{val}" />')
-            cell['source'] = ''.join(s)
-        cell.pop('attachments')
-
-
-def linked_to_embedded_image(cell, path):
-    """Converts cell with linked images of notebook cell to markdown embedded images.
+def linked_to_attachment_image(cell, path):
+    """Converts cell with linked images of notebook cell to attachment image.
 
     Parameters
     ----------
@@ -170,7 +150,7 @@ def linked_to_embedded_image(cell, path):
         images = RE_IMAGE.findall(cell['source'])
         for ii, image in enumerate(images):
             # split markdown link by alt and link
-            _, image = image.split('](')
+            alt, image = image.split('](')
             # search for an additional title and save it for later
             if RE_EXTRA_TITLE.search(image):
                 title = f' title={RE_EXTRA_TITLE.search(image).group(0)[1:]}'
@@ -184,7 +164,11 @@ def linked_to_embedded_image(cell, path):
                 image = Path(image[:-1])
             else:
                 image = (path / Path(image[:-1])).resolve()
-            b64 = encode_image_base64(image)
-            key = list(b64.keys())[0]
-            s.insert(ii + 1, f'<img src="data:{key};base64,{b64[key]}"{title} />')
+            nn = encode_image_base64(image)
+            key = 'a'
+            s.insert(ii + 1, f'{alt}](attachment:{key} {title}')
+            if 'attachments' in cell:
+                cell['attachments'].update(nn)
+            else:
+                cell['attachments'] = nn
         cell['source'] = ''.join(s)
