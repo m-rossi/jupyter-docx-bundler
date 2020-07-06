@@ -111,7 +111,12 @@ def matplotlib_notebook(tmpdir, request):
     return nb
 
 
-@pytest.fixture(params=['png'])
+@pytest.fixture(params=[
+    'png',
+    'jpg',
+    'jpeg',
+    'tiff',
+])
 def images_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
 
