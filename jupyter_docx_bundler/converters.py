@@ -10,6 +10,10 @@ import pypandoc
 import requests
 
 
+RE_IMAGE = re.compile(r'!\[.+\)')
+RE_EXTRA_TITLE = re.compile(r'\s".+"')
+
+
 def encode_image_base64(filepath):
     """Encode an image as a base64 string
 
@@ -161,21 +165,19 @@ def linked_to_embedded_image(cell, path):
         Path to the notebook as string
     """
     path = Path(path)
-    re_image = re.compile(r'!\[.+\)')
-    re_extra_title = re.compile(r'\s".+"')
     if cell['cell_type'] == 'markdown':
-        s = re_image.split(cell['source'])
-        images = re_image.findall(cell['source'])
+        s = RE_IMAGE.split(cell['source'])
+        images = RE_IMAGE.findall(cell['source'])
         for ii, image in enumerate(images):
             # split markdown link by alt and link
             _, image = image.split('](')
             # search for an additional title and save it for later
-            if re_extra_title.search(image):
-                title = f' title={re_extra_title.search(image).group(0)[1:]}'
+            if RE_EXTRA_TITLE.search(image):
+                title = f' title={RE_EXTRA_TITLE.search(image).group(0)[1:]}'
             else:
                 title = ''
             # replace extra title in image link
-            image = re_extra_title.sub('', image)
+            image = RE_EXTRA_TITLE.sub('', image)
             if image.startswith('http'):
                 image = image[:-1]
             elif Path(image[:-1]).is_absolute():
