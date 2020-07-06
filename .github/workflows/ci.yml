@@ -31,7 +31,7 @@ jobs:
 
   pytest:
     needs: flake8
-    name: pytest (Python ${{ matrix.python-version }}, ${{ matrix.os }})
+    name: pytest (Python ${{ matrix.python-version }}, ${{ matrix.os }}, Pandoc ${{ matrix.pandoc-version }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
