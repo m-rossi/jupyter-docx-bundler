@@ -53,32 +53,51 @@ def download_notebook(tmpdir, request):
 def matplotlib_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
 
+    # imports
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# Imports',
+        )
+    )
     nb.cells.append(
         nbformat.v4.new_code_cell(
             '\n'.join([
                 'import matplotlib.pyplot as plt',
+                'import numpy as np',
                 '%matplotlib inline',
             ])
         )
     )
 
+    # single matplotlib image inline output
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# single matplotlib image inline output',
+        )
+    )
     for _ in range(request.param):
         nb.cells.append(
             nbformat.v4.new_code_cell(
                 '\n'.join([
                     'plt.figure(dpi=100)',
-                    'plt.plot(range(100))',
+                    'plt.plot(np.random.randn(100))',
                     'plt.show()',
                 ])
             )
         )
 
+    # mulitple matplotlib image inline output
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# mulitple matplotlib image inline output',
+        )
+    )
     nb.cells.append(
         nbformat.v4.new_code_cell(
             '\n'.join([
                 f'for ii in range({request.param}):',
                 '    plt.figure()',
-                '    plt.plot(range(100))',
+                '    plt.plot(np.random.randn(100))',
                 '    plt.show()',
             ])
         )
@@ -104,6 +123,11 @@ def images_notebook(tmpdir, request):
 
     # add image as path
     nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# Linked image',
+        )
+    )
+    nb.cells.append(
         nbformat.v4.new_markdown_cell('\n'.join([
             'line1',
             f'![{filename}]({filename})',
@@ -112,6 +136,11 @@ def images_notebook(tmpdir, request):
     )
 
     # add image as path with extra title
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# Linked image with extra title'
+        )
+    )
     nb.cells.append(
         nbformat.v4.new_markdown_cell(
             '\n'.join([
@@ -123,6 +152,11 @@ def images_notebook(tmpdir, request):
     )
 
     # add image as attachment
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# Image as attachment'
+        )
+    )
     nb.cells.append(
         nbformat.v4.new_markdown_cell(
             '\n'.join([
