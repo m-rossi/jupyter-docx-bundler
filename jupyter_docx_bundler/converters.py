@@ -153,7 +153,7 @@ def linked_to_attachment_image(cell, path):
             alt, image = image.split('](')
             # search for an additional title and save it for later
             if RE_EXTRA_TITLE.search(image):
-                title = f' title={RE_EXTRA_TITLE.search(image).group(0)[1:]}'
+                title = rf' "{RE_EXTRA_TITLE.search(image).group(0)[1:]}"'
             else:
                 title = ''
             # replace extra title in image link
@@ -165,8 +165,8 @@ def linked_to_attachment_image(cell, path):
             else:
                 image = (path / Path(image[:-1])).resolve()
             nn = encode_image_base64(image)
-            key = 'a'
-            s.insert(ii + 1, f'{alt}](attachment:{key} {title}')
+            key = list(nn.keys())[0]
+            s.insert(ii + 1, f'{alt}](attachment:{key}{title})')
             if 'attachments' in cell:
                 cell['attachments'].update(nn)
             else:
