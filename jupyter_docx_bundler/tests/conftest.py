@@ -103,10 +103,10 @@ def matplotlib_notebook(tmpdir, request):
         )
     )
 
+    nb['metadata'].update({'path': f'{tmpdir}'})
+
     ep = ExecutePreprocessor()
     ep.preprocess(nb, {'metadata': {'path': tmpdir}})
-
-    nb['metadata'].update({'path': f'{tmpdir}'})
 
     return nb
 
@@ -173,10 +173,10 @@ def images_notebook(tmpdir, request):
     )
     nb.cells[-1]['attachments'] = encode_image_base64(os.path.join(tmpdir, filename))
 
+    nb['metadata'].update({'path': f'{tmpdir}'})
+
     ep = ExecutePreprocessor()
     ep.preprocess(nb, {'metadata': {'path': tmpdir}})
-
-    nb['metadata'].update({'path': f'{tmpdir}'})
 
     return nb
 
@@ -184,9 +184,6 @@ def images_notebook(tmpdir, request):
 @pytest.fixture
 def metadata_notebook(tmpdir):
     nb = nbformat.v4.new_notebook()
-
-    ep = ExecutePreprocessor()
-    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
 
     nb['metadata'].update(
         {
@@ -199,6 +196,9 @@ def metadata_notebook(tmpdir):
     )
 
     nb.cells.append(nbformat.v4.new_markdown_cell('Hello World!'))
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
 
     return nb
 
