@@ -23,7 +23,7 @@ def test_image_conversion(tmpdir, images_notebook):
         file.write(docxbytes)
 
     # convert to markdown and extract media
-    pypandoc.convert(
+    pypandoc.convert_file(
         f'{filename}',
         'markdown',
         'docx',
