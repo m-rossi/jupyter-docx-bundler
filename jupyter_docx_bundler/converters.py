@@ -57,10 +57,17 @@ def preprocess(content, path):
         Preprocessed notebook content
 
     """
+    # Use cell tags
     tag_preprocessor = preprocessors.TagRemovePreprocessor()
     tag_preprocessor.remove_cell_tags.add('nbconvert-remove-cell')
     tag_preprocessor.remove_input_tags.add('nbconvert-remove-input')
     tag_preprocessor.preprocess(content, {})
+
+    # Set input of cells with transient 'remove_source' to later remove it with a pandoc-filter
+    for cell in content['cells']:
+        if 'transient' in cell and 'remove_source' in cell['transient'] and \
+                cell['transient']['remove_source']:
+            cell['source'] = 'jupyter-docx-bundler-remove-input'
 
     for cell in content['cells']:
         linked_to_attachment_image(cell, path)
@@ -118,6 +125,10 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
                 extra_args.append(f'--metadata=date:{content["metadata"]["date"]}')
 
         nbformat.write(content, ipynbfile)
+
+        # add filter specification to args
+        extra_args.append('--filter')
+        extra_args.append(f'{(Path(__file__).parent / "pandoc_filter.py").absolute()}')
 
         # convert to docx
         pypandoc.convert_file(

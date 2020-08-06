@@ -26,6 +26,7 @@ requirements:
     - pypandoc >=1.4
     - nbconvert >=5.5
     - pandoc >=2.7
+    - pandocfilters
     - requests
     - tornado
 
