@@ -12,6 +12,15 @@ import requests
 from ..converters import encode_image_base64
 
 
+def _random_matplotlib_image(path):
+    fig, ax = plt.subplots(1, 1)
+    ax.plot(np.random.randn(100))
+    fig.savefig(path)
+    plt.close(fig)
+
+    return path
+
+
 @pytest.fixture(
     params=[
         'https://nbviewer.jupyter.org/github/unpingco/Python-for-Signal-Processing/blob/master/Mor'
@@ -119,12 +128,7 @@ def matplotlib_notebook(tmpdir, request):
 ])
 def images_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
-
-    filename = 'matplotlib.' + request.param
-
-    plt.figure()
-    plt.plot(np.linspace(0, 1), np.power(np.linspace(0, 1), 2))
-    plt.savefig(os.path.join(tmpdir, filename))
+    image_count = 0
 
     # add image as path
     nb.cells.append(
@@ -132,6 +136,7 @@ def images_notebook(tmpdir, request):
             '# Linked image',
         )
     )
+    filename = _random_matplotlib_image(tmpdir / f'path.{request.param}')
     nb.cells.append(
         nbformat.v4.new_markdown_cell('\n'.join([
             'line1',
@@ -139,6 +144,7 @@ def images_notebook(tmpdir, request):
             'line3',
         ]))
     )
+    image_count += 1
 
     # add image as path with extra title
     nb.cells.append(
@@ -146,6 +152,7 @@ def images_notebook(tmpdir, request):
             '# Linked image with extra title'
         )
     )
+    filename = _random_matplotlib_image(tmpdir / f'path_extra-title.{request.param}')
     nb.cells.append(
         nbformat.v4.new_markdown_cell(
             '\n'.join([
@@ -155,6 +162,7 @@ def images_notebook(tmpdir, request):
             ])
         )
     )
+    image_count += 1
 
     # add image as attachment
     nb.cells.append(
@@ -162,6 +170,7 @@ def images_notebook(tmpdir, request):
             '# Image as attachment'
         )
     )
+    filename = _random_matplotlib_image(tmpdir / f'attachment.{request.param}')
     nb.cells.append(
         nbformat.v4.new_markdown_cell(
             '\n'.join([
@@ -172,8 +181,12 @@ def images_notebook(tmpdir, request):
         )
     )
     nb.cells[-1]['attachments'] = encode_image_base64(os.path.join(tmpdir, filename))
+    image_count += 1
 
-    nb['metadata'].update({'path': f'{tmpdir}'})
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'image_count': image_count,
+    })
 
     ep = ExecutePreprocessor()
     ep.preprocess(nb, {'metadata': {'path': tmpdir}})
