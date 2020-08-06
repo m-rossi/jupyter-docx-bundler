@@ -1,6 +1,7 @@
-pandoc >= 2.0
-pypandoc >= 1.4
 nbconvert >= 5.5
 notebook >= 5.0
+pandoc >= 2.7
+pandocfilters
+pypandoc >= 1.4
 requests
 tornado

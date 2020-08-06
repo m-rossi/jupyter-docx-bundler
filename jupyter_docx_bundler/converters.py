@@ -4,9 +4,14 @@ from pathlib import Path
 import re
 import tempfile
 
-from nbconvert import HTMLExporter, preprocessors
+from nbconvert import preprocessors
+import nbformat
 import pypandoc
 import requests
+
+
+RE_IMAGE = re.compile(r'!\[.+]\((?!attachment:).+\)')
+RE_EXTRA_TITLE = re.compile(r'\s".+"')
 
 
 def encode_image_base64(filepath):
@@ -19,11 +24,12 @@ def encode_image_base64(filepath):
 
     Returns
     -------
-    dict
+    nbformat.NotebookNode
         Dictionary with identifier as key and base64-encoded data as value.
 
     """
-    key = 'image/' + os.path.splitext(filepath)[1][1:]
+    name = os.path.split(filepath)[-1]
+    mime = 'image/' + os.path.splitext(filepath)[1][1:]
     if f'{filepath}'.startswith('http'):
         r = requests.get(filepath)
         data = base64.b64encode(r.content).decode('utf8')
@@ -31,7 +37,7 @@ def encode_image_base64(filepath):
         with open(filepath, 'rb') as image:
             data = base64.b64encode(image.read()).decode('utf8')
 
-    return {key: data}
+    return nbformat.from_dict({name: {mime: data}})
 
 
 def preprocess(content, path):
@@ -51,104 +57,22 @@ def preprocess(content, path):
         Preprocessed notebook content
 
     """
+    # Use cell tags
     tag_preprocessor = preprocessors.TagRemovePreprocessor()
     tag_preprocessor.remove_cell_tags.add('nbconvert-remove-cell')
     tag_preprocessor.remove_input_tags.add('nbconvert-remove-input')
     tag_preprocessor.preprocess(content, {})
 
+    # Set input of cells with transient 'remove_source' to later remove it with a pandoc-filter
     for cell in content['cells']:
-        attachment_to_embedded_image(cell)
-        linked_to_embedded_image(cell, path)
+        if 'transient' in cell and 'remove_source' in cell['transient'] and \
+                cell['transient']['remove_source']:
+            cell['source'] = 'jupyter-docx-bundler-remove-input'
+
+    for cell in content['cells']:
+        linked_to_attachment_image(cell, path)
 
     return content
-
-
-def notebook_to_html(content, htmlfile):
-    """ Convert notebook to html file.
-
-    Parameters
-    ----------
-
-    content : nbformat.NotebookNode
-        A dict-like node of the notebook with attribute-access
-    htmlfile : str
-        Filename for the notebook exported as html
-    """
-    # prepare html exporter, anchor_link_text=' ' suppress anchors being shown
-    html_exporter = HTMLExporter(
-        anchor_link_text=' ', exclude_input_prompt=True, exclude_output_prompt=True
-    )
-
-    # save metadata for possible title removement
-    metadata = content['metadata']
-
-    # export to html
-    content, _ = html_exporter.from_notebook_node(content)
-
-    # check if export path exists
-    if os.path.dirname(htmlfile) != '' and not os.path.isdir(os.path.dirname(htmlfile)):
-        raise FileNotFoundError(f'Path to html-file does not exist: {os.path.dirname(htmlfile)}')
-
-    # Remove title from htmlfile if none is set to prevent pandoc from writing one
-    if 'title' not in metadata:
-        content = remove_html_title(content)
-
-    # write content to html file
-    with open(htmlfile, 'w', encoding='utf-8') as file:
-        file.write(content)
-
-
-def html_to_docx(htmlfile, docxfile, handler=None, metadata=None):
-    """ Convert html file to docx file.
-
-    Parameters
-    ----------
-
-    htmlfile : str
-        Filename of the notebook exported as html
-    docxfile : str
-        Filename for the notebook exported as docx
-    handler : tornado.web.RequestHandler, optional
-        Handler that serviced the bundle request
-    metadata : dict, optional
-        Dicts with metadata information of the notebook
-    """
-
-    # check if html file exists
-    if not os.path.isfile(htmlfile):
-        raise FileNotFoundError(f'html-file does not exist: {htmlfile}')
-
-    # check if export path exists
-    if os.path.dirname(docxfile) != '' and not os.path.isdir(os.path.dirname(docxfile)):
-        raise FileNotFoundError(f'Path to docx-file does not exist: {os.path.dirname(docxfile)}')
-
-    # set extra args for pandoc
-    extra_args = []
-    if metadata is not None and 'authors' in metadata:
-        if isinstance(metadata['authors'], list) and all(
-            ['name' in x for x in metadata['authors']]
-        ):
-            extra_args.append(
-                f'--metadata=author:' f'{", ".join([x["name"] for x in metadata["authors"]])}'
-            )
-        elif handler is not None:
-            handler.log.warning(
-                'Author metadata has wrong format, see https://github.com/m-rossi/jupyter_docx_bun'
-                'dler/blob/master/README.md'
-            )
-    if metadata is not None and 'subtitle' in metadata:
-        extra_args.append(f'--metadata=subtitle:{metadata["subtitle"]}')
-    if metadata is not None and 'date' in metadata:
-        extra_args.append(f'--metadata=date:{metadata["date"]}')
-
-    # convert to docx
-    pypandoc.convert_file(
-        htmlfile,
-        'docx',
-        format='html+tex_math_dollars',
-        outputfile=docxfile,
-        extra_args=extra_args,
-    )
 
 
 def notebookcontent_to_docxbytes(content, filename, path, handler=None):
@@ -174,15 +98,44 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
         content = preprocess(content, path)
 
         # prepare file names
-        htmlfile = os.path.join(tempdir, f'{filename}.html')
+        ipynbfile = os.path.join(tempdir, f'{filename}.ipynb')
         docxfile = os.path.join(tempdir, f'{filename}.docx')
 
-        # convert notebook to html
-        notebook_to_html(content, htmlfile)
+        # set extra args for pandoc
+        extra_args = []
+        if content['metadata'] is not None:
+            if 'authors' in content['metadata']:
+                if isinstance(content['metadata']['authors'], list) and all(
+                        ['name' in x for x in content['metadata']['authors']]
+                ):
+                    author_list = [x["name"] for x in content["metadata"]["authors"]]
+                    extra_args.append(
+                        f'--metadata=author:' f'{", ".join(author_list)}'
+                    )
+                elif handler is not None:
+                    handler.log.warning(
+                        'Author metadata has wrong format, see https://github.com/m-rossi/jupyter_'
+                        'docx_bundler/blob/master/README.md'
+                    )
+            if 'title' in content['metadata']:
+                extra_args.append(f'--metadata=title:{content["metadata"]["title"]}')
+            if 'subtitle' in content['metadata']:
+                extra_args.append(f'--metadata=subtitle:{content["metadata"]["subtitle"]}')
+            if 'date' in content['metadata']:
+                extra_args.append(f'--metadata=date:{content["metadata"]["date"]}')
 
-        # convert html to docx
-        html_to_docx(
-            htmlfile, docxfile, metadata=content['metadata'], handler=handler,
+        nbformat.write(content, ipynbfile)
+
+        # add filter specification to args
+        extra_args.append('--filter')
+        extra_args.append(f'{(Path(__file__).parent / "pandoc_filter.py").absolute()}')
+
+        # convert to docx
+        pypandoc.convert_file(
+            ipynbfile,
+            'docx',
+            outputfile=docxfile,
+            extra_args=extra_args,
         )
 
         # read raw data
@@ -192,28 +145,8 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
         return rawdata
 
 
-def attachment_to_embedded_image(cell):
-    """Converts cell with embedded images as attachments of notebook cell to
-    markdown embedded images.
-
-    Parameters
-    ----------
-    cell : NotebookNode
-        Cell with attachments
-    """
-    if 'attachments' in cell:
-        for att in cell['attachments']:
-            s = re.split(rf'!\[.+\]\(attachment:{att}\)', cell['source'])
-            if len(s) != 2:
-                raise NotImplementedError
-            for key, val in cell['attachments'][att].items():
-                s.insert(1, f'<img src="data:{key};base64,{val}" />')
-            cell['source'] = ''.join(s)
-        cell.pop('attachments')
-
-
-def linked_to_embedded_image(cell, path):
-    """Converts cell with linked images of notebook cell to markdown embedded images.
+def linked_to_attachment_image(cell, path):
+    """Converts cell with linked images of notebook cell to attachment image.
 
     Parameters
     ----------
@@ -223,39 +156,30 @@ def linked_to_embedded_image(cell, path):
         Path to the notebook as string
     """
     path = Path(path)
-    re_image = re.compile(r'!\[.+\)')
-    re_extra_title = re.compile(r'\s".+"')
     if cell['cell_type'] == 'markdown':
-        s = re_image.split(cell['source'])
-        images = re_image.findall(cell['source'])
+        s = RE_IMAGE.split(cell['source'])
+        images = RE_IMAGE.findall(cell['source'])
         for ii, image in enumerate(images):
             # split markdown link by alt and link
-            _, image = image.split('](')
+            alt, image = image.split('](')
             # search for an additional title and save it for later
-            if re_extra_title.search(image):
-                title = f' title={re_extra_title.search(image).group(0)[1:]}'
+            if RE_EXTRA_TITLE.search(image):
+                title = rf' "{RE_EXTRA_TITLE.search(image).group(0)[1:]}"'
             else:
                 title = ''
             # replace extra title in image link
-            image = re_extra_title.sub('', image)
+            image = RE_EXTRA_TITLE.sub('', image)
             if image.startswith('http'):
                 image = image[:-1]
             elif Path(image[:-1]).is_absolute():
                 image = Path(image[:-1])
             else:
                 image = (path / Path(image[:-1])).resolve()
-            b64 = encode_image_base64(image)
-            key = list(b64.keys())[0]
-            s.insert(ii + 1, f'<img src="data:{key};base64,{b64[key]}"{title} />')
+            nn = encode_image_base64(image)
+            key = list(nn.keys())[0]
+            s.insert(ii + 1, f'{alt}](attachment:{key}{title})')
+            if 'attachments' in cell:
+                cell['attachments'].update(nn)
+            else:
+                cell['attachments'] = nn
         cell['source'] = ''.join(s)
-
-
-def remove_html_title(htmlcontent):
-    """Remove <title> tag from htmlcontent.
-
-    Parameters
-    ----------
-    htmlcontent : str
-        Content of htmlfile.
-    """
-    return re.sub('<title>.+</title>', '', htmlcontent)
