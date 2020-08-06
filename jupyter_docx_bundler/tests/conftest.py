@@ -61,6 +61,7 @@ def download_notebook(tmpdir, request):
 @pytest.fixture(params=[10])
 def matplotlib_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
+    image_count = 0
 
     # imports
     nb.cells.append(
@@ -94,6 +95,7 @@ def matplotlib_notebook(tmpdir, request):
                 ])
             )
         )
+    image_count += request.param
 
     # mulitple matplotlib image inline output
     nb.cells.append(
@@ -111,8 +113,12 @@ def matplotlib_notebook(tmpdir, request):
             ])
         )
     )
+    image_count += request.param
 
-    nb['metadata'].update({'path': f'{tmpdir}'})
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'image_count': image_count,
+    })
 
     ep = ExecutePreprocessor()
     ep.preprocess(nb, {'metadata': {'path': tmpdir}})
@@ -126,7 +132,7 @@ def matplotlib_notebook(tmpdir, request):
     'jpeg',
     'tiff',
 ])
-def images_notebook(tmpdir, request):
+def markdown_images_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
     image_count = 0
 
@@ -231,4 +237,17 @@ def metadata_notebook(tmpdir):
     ],
 )
 def test_notebook(request):
+    return request.param
+
+@pytest.fixture(
+    params=[
+        lazy_fixture('matplotlib_notebook'),
+        lazy_fixture('markdown_images_notebook'),
+    ],
+    ids=[
+        'matplotlib',
+        'images',
+    ]
+)
+def images_notebook(request):
     return request.param
