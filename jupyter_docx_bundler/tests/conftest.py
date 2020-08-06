@@ -239,6 +239,7 @@ def metadata_notebook(tmpdir):
 def test_notebook(request):
     return request.param
 
+
 @pytest.fixture(
     params=[
         lazy_fixture('matplotlib_notebook'),
