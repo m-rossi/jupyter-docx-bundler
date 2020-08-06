@@ -21,12 +21,12 @@ requirements:
     - setuptools >=38.6.0
     - setuptools_scm
   run:
-    - python
-    - notebook >=5.0
-    - pypandoc >=1.4
     - nbconvert >=5.5
+    - notebook >=5.0
     - pandoc >=2.7
     - pandocfilters
+    - pypandoc >=1.4
+    - python
     - requests
     - tornado
 
