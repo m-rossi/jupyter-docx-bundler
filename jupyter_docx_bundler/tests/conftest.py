@@ -222,6 +222,64 @@ def metadata_notebook(tmpdir):
     return nb
 
 
+@pytest.fixture
+def remove_input_notebook(tmpdir):
+    nb = nbformat.v4.new_notebook()
+
+    tags = nbformat.notebooknode.NotebookNode({
+        'tags': ['nbconvert-remove-input'],
+    })
+
+    # Create cell with visible output
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            source='# Visible Output',
+        )
+    )
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='print("Hide my input!")',
+            metadata=tags,
+        )
+    )
+
+    nb['metadata'].update({'path': f'{tmpdir}'})
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
+@pytest.fixture
+def remove_cell_notebook(tmpdir):
+    nb = nbformat.v4.new_notebook()
+
+    tags = nbformat.notebooknode.NotebookNode({
+        'tags': ['nbconvert-remove-cell'],
+    })
+
+    # Create cell with visible output
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            source='# Removed Cell',
+        )
+    )
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='print("Hide me!")',
+            metadata=tags,
+        )
+    )
+
+    nb['metadata'].update({'path': f'{tmpdir}'})
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
 @pytest.fixture(
     params=[
         lazy_fixture('download_notebook'),
