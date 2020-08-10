@@ -121,8 +121,7 @@ def test_remove_all_inputs(tmpdir, remove_all_inputs_notebook):
                remove_all_inputs_notebook['metadata']['ncells'], 'Number of inputs do not match.'
         assert len(re.findall('print(.*Hide my input!.*)', ''.join(lines))) == 0, 'Input not hided'
     else:
-        assert len(re.findall(r'(?<=")Hide my input!(?!"\))', ''.join(lines))) == \
+        assert sum(['`print``(``"Hide my input!"``)' in line for line in lines]) == \
                remove_all_inputs_notebook['metadata']['ncells'], 'Number of inputs do not match.'
-        assert len(
-            re.findall('print(.*Hide my input!.*)', ''.join(lines))) == \
-            remove_all_inputs_notebook['metadata']['ncells'], 'Input not hided'
+        assert len(re.findall('print(.*Hide my input!.*)', ''.join(lines))) == \
+               remove_all_inputs_notebook['metadata']['ncells'], 'Input not hided'
