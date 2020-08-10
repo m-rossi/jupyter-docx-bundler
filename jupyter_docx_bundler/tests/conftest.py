@@ -303,6 +303,7 @@ def remove_all_inputs_notebook(tmpdir, request):
 
     return nb
 
+
 @pytest.fixture(
     params=[
         lazy_fixture('download_notebook'),

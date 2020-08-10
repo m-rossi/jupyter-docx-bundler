@@ -93,7 +93,9 @@ def test_remove_cell(tmpdir, remove_cell_notebook):
 def test_remove_all_inputs(tmpdir, remove_all_inputs_notebook):
     # convert notebook to docx
     docxbytes = converters.notebookcontent_to_docxbytes(
-        remove_all_inputs_notebook, 'test-notebook', remove_all_inputs_notebook['metadata']['path'],
+        remove_all_inputs_notebook,
+        'test-notebook',
+        remove_all_inputs_notebook['metadata']['path'],
     )
 
     # write to file on disk
