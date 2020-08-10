@@ -49,6 +49,20 @@ _(Currently there are no default values configured for these tags, the ones list
 
 Cell tags can be shown by activating the cell toolbar under _View_ -> _Cell Toolbar_ -> _Tags_.
 
+#### Hiding all inputs
+
+It is also possible to hide all inputs. To achive this you need to add the following lines to your notebook metadata:
+
+```json
+{
+    "jupyter-docx-bundler": {
+        "exclude_input": "True"
+    }
+}
+```
+
+The notebook metadata can be edited under _Edit_ -> _Edit Notebook Metadata_.
+
 ### Direct call from console (nbconvert)
 
 To use the bundler direct from console the nbconvert utility can be used with target format docx:

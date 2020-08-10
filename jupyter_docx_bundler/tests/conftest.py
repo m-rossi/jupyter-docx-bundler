@@ -280,6 +280,35 @@ def remove_cell_notebook(tmpdir):
     return nb
 
 
+@pytest.fixture(params=[
+    {'ncells': 10, 'exclude_input': True},
+    {'ncells': 10, 'exclude_input': False},
+    {'ncells': 10, 'exclude_input': "True"},
+])
+def remove_all_inputs_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+
+    for ii in range(request.param['ncells']):
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='print("Hide my input!")',
+            )
+        )
+
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'ncells': request.param['ncells'],
+        'jupyter-docx-bundler': {
+            'exclude_input': request.param['exclude_input'],
+        }
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
 @pytest.fixture(
     params=[
         lazy_fixture('download_notebook'),
