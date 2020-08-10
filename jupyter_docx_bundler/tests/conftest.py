@@ -287,7 +287,7 @@ def remove_all_inputs_notebook(tmpdir, request):
     for ii in range(request.param):
         nb.cells.append(
             nbformat.v4.new_code_cell(
-                source='print("Hide me!")',
+                source='print("Hide my input!")',
             )
         )
 
