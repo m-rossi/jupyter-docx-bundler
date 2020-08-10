@@ -59,7 +59,7 @@ def preprocess(content, path):
     """
     if 'jupyter-docx-bundler' in content['metadata'] and \
             'exclude_input' in content['metadata']['jupyter-docx-bundler'] and \
-            content['metadata']['jupyter-docx-bundler']['exclude_input']:
+            content['metadata']['jupyter-docx-bundler']['exclude_input'] in (True, 'True'):
         for cell in content['cells']:
             if cell['cell_type'] == 'code':
                 if 'tags' not in cell['metadata']:
