@@ -88,3 +88,29 @@ def test_remove_cell(tmpdir, remove_cell_notebook):
 
     # Check for the occurence of code
     assert len(re.findall('Hide me!', ''.join(lines))) == 0, 'Cell not hided.'
+
+
+def test_remove_all_inputs(tmpdir, remove_all_inputs_notebook):
+    # convert notebook to docx
+    docxbytes = converters.notebookcontent_to_docxbytes(
+        remove_all_inputs_notebook, 'test-notebook', remove_all_inputs_notebook['metadata']['path'],
+    )
+
+    # write to file on disk
+    filename = tmpdir / 'test-notebook.docx'
+    outfilename = tmpdir / 'test-cell-notebook.md'
+    with open(filename, 'wb') as file:
+        file.write(docxbytes)
+
+    # convert to markdown and read text
+    pypandoc.convert_file(
+        f'{filename}',
+        'markdown',
+        'docx',
+        outputfile=f'{outfilename}',
+    )
+    with open(outfilename, 'r') as file:
+        lines = file.readlines()
+
+    # Check for the occurence of code
+    assert len(re.findall('print(.*Hide my input!.*)', ''.join(lines))) == 0, 'Input not hided.'

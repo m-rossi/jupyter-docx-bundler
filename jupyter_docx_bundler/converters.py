@@ -57,6 +57,15 @@ def preprocess(content, path):
         Preprocessed notebook content
 
     """
+    if 'jupyter-docx-bundler' in content['metadata'] and \
+            'exclude_input' in content['metadata']['jupyter-docx-bundler'] and \
+            content['metadata']['jupyter-docx-bundler']['exclude_input']:
+        for cell in content['cells']:
+            if cell['cell_type'] == 'code':
+                if 'tags' not in cell['metadata']:
+                    cell['metadata']['tags'] = []
+                cell['metadata']['tags'].append('nbconvert-remove-input')
+
     # Use cell tags
     tag_preprocessor = preprocessors.TagRemovePreprocessor()
     tag_preprocessor.remove_cell_tags.add('nbconvert-remove-cell')
