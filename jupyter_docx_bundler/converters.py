@@ -77,6 +77,7 @@ def preprocess(content, path):
         if 'transient' in cell and 'remove_source' in cell['transient'] and \
                 cell['transient']['remove_source']:
             cell['source'] = 'jupyter-docx-bundler-remove-input'
+            del cell['transient']
 
     for cell in content['cells']:
         linked_to_attachment_image(cell, path)
