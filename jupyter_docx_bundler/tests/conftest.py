@@ -309,6 +309,78 @@ def remove_all_inputs_notebook(tmpdir, request):
     return nb
 
 
+@pytest.fixture(params=[{'ncells': 10}])
+def math_with_space_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+
+    for ii in range(request.param['ncells']):
+        nb.cells.append(
+            nbformat.v4.new_markdown_cell(
+                source=r'Inline formular $ y = m \cdot x + b $',
+            )
+        )
+
+    for ii in range(request.param['ncells']):
+        nb.cells.append(
+            nbformat.v4.new_markdown_cell(
+                source=r'$$ y = m \cdot x + b $$',
+            )
+        )
+
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'ncells': request.param['ncells'] * 2,
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
+@pytest.fixture(params=[{'ncells': 10}])
+def math_without_space_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+
+    for ii in range(request.param['ncells']):
+        nb.cells.append(
+            nbformat.v4.new_markdown_cell(
+                source=r'Inline formular $y = m \cdot x + b$',
+            )
+        )
+
+    for ii in range(request.param['ncells']):
+        nb.cells.append(
+            nbformat.v4.new_markdown_cell(
+                source=r'$$y = m \cdot x + b$$',
+            )
+        )
+
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'ncells': request.param['ncells'] * 2,
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
+@pytest.fixture(
+    params=[
+        lazy_fixture('math_with_space_notebook'),
+        lazy_fixture('math_without_space_notebook'),
+    ],
+    ids=[
+        'with_space',
+        'without_space'
+    ]
+)
+def math_notebook(request):
+    return request.param
+
+
 @pytest.fixture(
     params=[
         lazy_fixture('download_notebook'),
