@@ -12,6 +12,25 @@ import requests
 
 RE_IMAGE = re.compile(r'!\[.+]\((?!attachment:).+\)')
 RE_EXTRA_TITLE = re.compile(r'\s".+"')
+RE_MATH_SINGLE = re.compile(r'(?<=\$).+(?=\$)')
+RE_MATH_DOUBLE = re.compile(r'(?<=\$\$).+(?=\$\$)')
+
+
+def _strip_match(matchobj):
+    """Strip whitespace from a RE-match-object
+
+    Parameters
+    ----------
+    matchobj : re.Match
+        Match-object of regular-expression.
+
+    Returns
+    -------
+    str
+        Stripped string
+
+    """
+    return matchobj.group(0).strip()
 
 
 def encode_image_base64(filepath):
@@ -42,7 +61,9 @@ def encode_image_base64(filepath):
 
 def preprocess(content, path):
     """Preprocess the notebook data.
-    Cells will specific tags will be removed and attached images will be embedded.
+    * Cells will specific tags will be removed and attached images will be embedded.
+    * Input of cells with specific tags will be prepared for later removal with a pandoc filter
+    * Math-formulas will be fixed to comply with pandoc-requirements
 
     Parameters
     ----------
@@ -72,11 +93,16 @@ def preprocess(content, path):
     tag_preprocessor.remove_input_tags.add('nbconvert-remove-input')
     tag_preprocessor.preprocess(content, {})
 
-    # Set input of cells with transient 'remove_source' to later remove it with a pandoc-filter
+    # Apply non-standard operations on cells
     for cell in content['cells']:
+        # Set input of cells with transient 'remove_source' to later remove it with a pandoc-filter
         if 'transient' in cell and 'remove_source' in cell['transient'] and \
                 cell['transient']['remove_source']:
             cell['source'] = 'jupyter-docx-bundler-remove-input'
+        # Replace whitespace in math formulas
+        if cell['cell_type'] == 'markdown':
+            cell['source'] = RE_MATH_SINGLE.sub(_strip_match, cell['source'])
+            cell['source'] = RE_MATH_DOUBLE.sub(_strip_match, cell['source'])
 
     for cell in content['cells']:
         linked_to_attachment_image(cell, path)
