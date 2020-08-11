@@ -126,3 +126,31 @@ def test_remove_all_inputs(tmpdir, remove_all_inputs_notebook):
                'Number of inputs do not match.'
         assert len(re.findall('print(.*Hide my input!.*)', ''.join(lines))) == \
                remove_all_inputs_notebook['metadata']['ncells'], 'Input not hided'
+
+
+def test_math_notebook(tmpdir, math_notebook):
+    # convert notebook to docx
+    docxbytes = converters.notebookcontent_to_docxbytes(
+        math_notebook,
+        'test-notebook',
+        math_notebook['metadata']['path'],
+    )
+
+    # write to file on disk
+    filename = tmpdir / 'test-notebook.docx'
+    outfilename = tmpdir / 'test-cell-notebook.rst'
+    with open(filename, 'wb') as file:
+        file.write(docxbytes)
+
+    # convert to rst and read text
+    pypandoc.convert_file(
+        f'{filename}',
+        'rst',
+        'docx',
+        outputfile=f'{outfilename}',
+    )
+    with open(outfilename, 'r') as file:
+        lines = file.readlines()
+
+    assert len(re.findall(r'(:math:)|(\.\. math::)', ''.join(lines))) == \
+           math_notebook['metadata']['ncells'], 'Not all math formulars are converted correctly.'
