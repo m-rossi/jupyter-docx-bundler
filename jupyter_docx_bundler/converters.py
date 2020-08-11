@@ -99,6 +99,7 @@ def preprocess(content, path):
         if 'transient' in cell and 'remove_source' in cell['transient'] and \
                 cell['transient']['remove_source']:
             cell['source'] = 'jupyter-docx-bundler-remove-input'
+            del cell['transient']
         # Replace whitespace in math formulas
         if cell['cell_type'] == 'markdown':
             cell['source'] = RE_MATH_SINGLE.sub(_strip_match, cell['source'])
