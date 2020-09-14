@@ -29,7 +29,7 @@ setup(
         ],
     },
     install_requires=[
-        'nbconvert>=5.5',
+        'nbconvert>=6',
         'notebook>=5.0',
         'pandocfilters',
         'pypandoc>=1.4',
