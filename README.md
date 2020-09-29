@@ -8,21 +8,21 @@
 
 Jupyter bundler extension to export notebook as a docx file
 
-## Install
+## Installation
 
-### Installing with pip
+### Using conda
+
+```
+conda install -c conda-forge jupyter-docx-bundler
+```
+
+### Using pip
 
 Make sure you have [Pandoc](https://pandoc.org) installed, see [installing-pandoc](https://github.com/bebraw/pypandoc#installing-pandoc) for instructions.
 
 ```
 pip install jupyter-docx-bundler
 jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix
-```
-
-### Installing with conda
-
-```
-conda install -c conda-forge jupyter-docx-bundler
 ```
 
 ## Usage
@@ -73,13 +73,25 @@ The `--execute` option should be used to ensure that the notebook is run before 
 
 ## Development
 
+### Setup development environment
+
+#### Using conda
+
+1. Clone/download the repository.
+2. Install all development requirements by executing `conda install --file requirements.txt --file requirements_test.txt`
+3. Install the package in _editable_ mode by executing `pip install -e --no-deps .`
+4. Execute `jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix` to make the package available to nbconvert and as an entry in the _Download As_ menu.
+
+#### Using pip
+
+1. Clone/download the repository.
+2. Make sure you have [Pandoc](https://pandoc.org) installed, see [installing-pandoc](https://github.com/bebraw/pypandoc#installing-pandoc) for instructions.
+3. Install the package in _editable_ mode and all necessary requirements by executing `pip install -e .[test]`
+4. Execute `jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix` to make the package available to nbconvert and as an entry in the _Download As_ menu.
+
 ### Testing
 
-The package is tested with [pytest](https://docs.pytest.org/en/latest/). Clone the repository and install the requirements for example with conda:
-```
-conda install --file requirements.txt --file requirements_test.txt
-```
-Test the package with
+Test the package with [pytest](https://docs.pytest.org/en/latest/)
 ```
 pytest .
 ```
