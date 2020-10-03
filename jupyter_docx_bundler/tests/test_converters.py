@@ -61,6 +61,8 @@ def test_remove_input(tmpdir, remove_input_notebook):
         lines = file.readlines()
 
     # Check for the occurence of code
+    assert len(re.findall('jupyter.*docx.*bundler.*remove.*input', ''.join(lines))) == 0, \
+        'Keyword not removed'
     assert len(re.findall('print(.*Hide my input!.*)', ''.join(lines))) == 0, 'Input not hided.'
 
 
@@ -117,6 +119,8 @@ def test_remove_all_inputs(tmpdir, remove_all_inputs_notebook):
     # Check for the occurence of code
     if remove_all_inputs_notebook['metadata']['jupyter-docx-bundler']['exclude_input'] in \
             (True, 'True'):
+        assert len(re.findall('jupyter.*docx.*bundler.*remove.*input', ''.join(lines))) == 0, \
+            'Keyword not removed'
         assert len(re.findall('Hide my input!', ''.join(lines))) == \
                remove_all_inputs_notebook['metadata']['ncells'], 'Number of inputs do not match.'
         assert len(re.findall('print(.*Hide my input!.*)', ''.join(lines))) == 0, 'Input not hided'
