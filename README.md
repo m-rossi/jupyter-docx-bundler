@@ -79,7 +79,7 @@ The `--execute` option should be used to ensure that the notebook is run before 
 
 1. Clone/download the repository.
 2. Install all development requirements by executing `conda install --file requirements.txt --file requirements_test.txt`
-3. Install the package in _editable_ mode by executing `pip install -e --no-deps .`
+3. Install the package in _editable_ mode by executing `pip install --no-deps -e .`
 4. Execute `jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix` to make the package available to nbconvert and as an entry in the _Download As_ menu.
 
 #### Using pip
