@@ -193,12 +193,15 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
     # replace some weird escape sequence for markdown export of pandoc
     with open(outfilename, 'r') as file:
         lines = file.readlines()
-    lines = [line.replace('\\', '').replace(', ', ',') for line in lines]
+    fixed_lines = []
+    for line in lines:
+        if line != '\n':
+            fixed_lines.append(line.replace('\\', '').replace(', ', ','))
     with open(outfilename, 'w') as file:
-        file.writelines(lines)
+        file.writelines(fixed_lines)
 
     # load markdown table
-    df_md = pd.read_table(outfilename, skiprows=[0, 1, 2, 3, 6], sep=r'\s+')
+    df_md = pd.read_csv(outfilename, skiprows=[0, 1, 2, 4], sep=r'\s+')
 
     # compare index and data
     assert all(df_md.index == df_html.index), 'Index does not match'
