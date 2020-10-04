@@ -122,7 +122,7 @@ def preprocess(content, path, handler=None):
                             )
                         )
                         del cell['outputs'][jj]
-                    except:
+                    except: # noqa E722
                         if handler is not None:
                             handler.log.warning('Conversion of pandas HTML-table failed.')
 
