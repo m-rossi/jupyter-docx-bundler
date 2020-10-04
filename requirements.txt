@@ -6,4 +6,5 @@ pandoc >= 2.7
 pandocfilters
 pypandoc >= 1.4
 requests
+tabulate
 tornado

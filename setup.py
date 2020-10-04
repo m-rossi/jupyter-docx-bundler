@@ -36,6 +36,7 @@ setup(
         'pandocfilters',
         'pypandoc>=1.4',
         'requests',
+        'tabulate',
         'tornado',
     ],
     keywords=[

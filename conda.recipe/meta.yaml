@@ -30,6 +30,7 @@ requirements:
     - pypandoc >=1.4
     - python
     - requests
+    - tabulate
     - tornado
 
 test:
