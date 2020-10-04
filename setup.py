@@ -31,6 +31,7 @@ setup(
     install_requires=[
         'nbconvert>=5.5',
         'notebook>=5.0',
+        'pandas',
         'pandocfilters',
         'pypandoc>=1.4',
         'requests',

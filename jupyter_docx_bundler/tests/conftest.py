@@ -369,6 +369,50 @@ def math_without_space_notebook(tmpdir, request):
 
 @pytest.fixture(
     params=[
+        {'cellspan': False},
+        {'cellspan': True},
+    ],
+    ids=[
+        'normal-table',
+        'table-with-cellspan',
+    ],
+)
+def pandas_html_table_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='\n'.join([
+                'import numpy as np',
+                'import pandas as pd',
+            ])
+        )
+    )
+    if request.param['cellspan']:
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='pd.DataFrame(np.random.randn(6, 4), columns=[list("1122"), list("ABCD")])',
+            )
+        )
+    else:
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='pd.DataFrame(np.random.randn(6, 4), columns=("A", "B", "C", "D"))',
+            )
+        )
+
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
+@pytest.fixture(
+    params=[
         lazy_fixture('math_with_space_notebook'),
         lazy_fixture('math_without_space_notebook'),
     ],
@@ -387,12 +431,14 @@ def math_notebook(request):
         lazy_fixture('matplotlib_notebook'),
         lazy_fixture('images_notebook'),
         lazy_fixture('metadata_notebook'),
+        lazy_fixture('pandas_html_table_notebook')
     ],
     ids=[
         'download',
         'matplotlib',
         'embedded-images',
         'metadata',
+        'html-table',
     ],
 )
 def test_notebook(request):

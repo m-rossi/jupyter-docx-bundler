@@ -6,6 +6,7 @@ import tempfile
 
 from nbconvert import preprocessors
 import nbformat
+import pandas as pd
 import pypandoc
 import requests
 
@@ -59,7 +60,7 @@ def encode_image_base64(filepath):
     return nbformat.from_dict({name: {mime: data}})
 
 
-def preprocess(content, path):
+def preprocess(content, path, handler=None):
     """Preprocess the notebook data.
     * Cells will specific tags will be removed and attached images will be embedded.
     * Input of cells with specific tags will be prepared for later removal with a pandoc filter
@@ -71,6 +72,8 @@ def preprocess(content, path):
         A dict-like node of the notebook with attribute-access
     path : str
         Path to the notebook as string
+    handler : tornado.web.RequestHandler, optional
+        Handler that serviced the bundle request
 
     Returns
     -------
@@ -94,7 +97,7 @@ def preprocess(content, path):
     tag_preprocessor.preprocess(content, {})
 
     # Apply non-standard operations on cells
-    for cell in content['cells']:
+    for ii, cell in enumerate(content['cells']):
         # Set input of cells with transient 'remove_source' to later remove it with a pandoc-filter
         if 'transient' in cell and 'remove_source' in cell['transient'] and \
                 cell['transient']['remove_source']:
@@ -105,7 +108,25 @@ def preprocess(content, path):
             cell['source'] = RE_MATH_SINGLE.sub(_strip_match, cell['source'])
             cell['source'] = RE_MATH_DOUBLE.sub(_strip_match, cell['source'])
 
-    for cell in content['cells']:
+        # process outputs
+        if 'outputs' in cell and any(['data' in output for output in cell['outputs']]):
+            for jj, output in enumerate(cell['outputs']):
+                if 'text/plain' in output['data'] and 'text/html' in output['data'] and \
+                        re.search('<table', output['data']['text/html']):
+                    try:
+                        content['cells'].insert(
+                            ii + 1,
+                            nbformat.v4.new_markdown_cell(
+                                source=pd.read_html(
+                                    output['data']['text/html'], index_col=0)[0].to_markdown(),
+                            )
+                        )
+                        del cell['outputs'][jj]
+                    except:
+                        if handler is not None:
+                            handler.log.warning('Conversion of pandas HTML-table failed.')
+
+        # convert linked images to attachments
         linked_to_attachment_image(cell, path)
 
     return content
@@ -131,7 +152,7 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
     """
     with tempfile.TemporaryDirectory() as tempdir:
         # preprocess notebook
-        content = preprocess(content, path)
+        content = preprocess(content, path, handler=handler)
 
         # prepare file names
         ipynbfile = os.path.join(tempdir, f'{filename}.ipynb')

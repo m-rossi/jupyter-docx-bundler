@@ -1,6 +1,8 @@
 from pathlib import Path
 import re
 
+import numpy as np
+import pandas as pd
 import pypandoc
 
 from .. import converters
@@ -158,3 +160,46 @@ def test_math_notebook(tmpdir, math_notebook):
 
     assert len(re.findall(r'(:math:)|(\.\. math::)', ''.join(lines))) == \
            math_notebook['metadata']['ncells'], 'Not all math formulars are converted correctly.'
+
+
+def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
+    # read HTML table
+    df_html = pd.read_html(
+        pandas_html_table_notebook['cells'][1]['outputs'][0]['data']['text/html'],
+        index_col=0,
+    )[0]
+
+    # convert notebook to docx
+    docxbytes = converters.notebookcontent_to_docxbytes(
+        pandas_html_table_notebook,
+        'test-notebook',
+        pandas_html_table_notebook['metadata']['path'],
+    )
+
+    # write to file on disk
+    filename = tmpdir / 'test-notebook.docx'
+    outfilename = tmpdir / 'test-cell-notebook.md'
+    with open(filename, 'wb') as file:
+        file.write(docxbytes)
+
+    # convert docx back to markdown
+    pypandoc.convert_file(
+        f'{filename}',
+        'markdown',
+        'docx',
+        outputfile=f'{outfilename}',
+    )
+
+    # replace some weird escape sequence for markdown export of pandoc
+    with open(outfilename, 'r') as file:
+        lines = file.readlines()
+    lines = [line.replace('\\', '').replace(', ', ',') for line in lines]
+    with open(outfilename, 'w') as file:
+        file.writelines(lines)
+
+    # load markdown table
+    df_md = pd.read_table(outfilename, skiprows=[0, 1, 2, 3, 6], sep=r'\s+')
+
+    # compare index and data
+    assert all(df_md.index == df_html.index), 'Index does not match'
+    np.testing.assert_allclose(df_md.values, df_html.values, atol=1e-5)
