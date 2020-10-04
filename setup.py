@@ -29,6 +29,7 @@ setup(
         ],
     },
     install_requires=[
+        'lxml',
         'nbconvert>=5.5',
         'notebook>=5.0',
         'pandas',
