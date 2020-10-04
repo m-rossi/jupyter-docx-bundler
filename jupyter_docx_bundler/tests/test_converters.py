@@ -198,10 +198,10 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
         if line != '\n':
             fixed_lines.append(line.replace('\\', '').replace(', ', ','))
     with open(outfilename, 'w') as file:
-        file.writelines(fixed_lines)
+        file.writelines(fixed_lines[-8:])
 
     # load markdown table
-    df_md = pd.read_csv(outfilename, skiprows=[0, 1, 2, 4], sep=r'\s+')
+    df_md = pd.read_csv(outfilename, skiprows=[1], sep=r'\s+')
 
     # compare index and data
     assert all(df_md.index == df_html.index), 'Index does not match'
