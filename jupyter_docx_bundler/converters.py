@@ -122,9 +122,11 @@ def preprocess(content, path, handler=None):
                             )
                         )
                         del cell['outputs'][jj]
-                    except: # noqa E722
+                    except Exception as e:
                         if handler is not None:
-                            handler.log.warning('Conversion of pandas HTML-table failed.')
+                            handler.log.warning(f'Conversion of pandas HTML-table failed : {e}')
+                        else:
+                            raise e
 
         # convert linked images to attachments
         linked_to_attachment_image(cell, path)
