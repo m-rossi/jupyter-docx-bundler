@@ -6,6 +6,7 @@ import tempfile
 
 from nbconvert import preprocessors
 import nbformat
+import pandas as pd
 import pypandoc
 import requests
 
@@ -59,7 +60,66 @@ def encode_image_base64(filepath):
     return nbformat.from_dict({name: {mime: data}})
 
 
-def preprocess(content, path):
+def html_to_pandas_table(s):
+    """Get HTML-string of pandas-dataframe out of Jupyter-notebook and transform it back to a
+    pandas-dataframe
+
+    Parameters
+    ----------
+    s : str
+        HTML-representation of pandas-dataframe
+
+    Returns
+    -------
+    pandas.DataFrame
+
+    """
+    df = pd.read_html(s)[0]
+    if isinstance(df.columns, pd.MultiIndex):
+        # find columns which starts with "Unnamed"
+        index_col = [all([y.startswith('Unnamed') for y in x]) for x in df.columns]
+
+        # check if there are columns which do not all start with "Unnamed"
+        if not any(index_col):
+            index_col = [all([y.startswith('Unnamed') for y in x][:len(x)-1]) for x in df.columns]
+
+        # get names of these columns as a list
+        index_column_names = df.columns[index_col].values.tolist()
+
+        # set index
+        df.set_index(index_column_names, inplace=True)
+
+        # set names of new index to last row of multiindex
+        df.index.names = [x[-1] for x in index_column_names]
+
+        # check for "Unnamed*" columns and drop them
+        unnamed_cols = [sum([y.startswith('Unnamed') for y in x]) for x in df.columns]
+        if all([x == unnamed_cols[0] for x in unnamed_cols]) and unnamed_cols[0] > 0:
+            idx = df.columns
+            for ii in range(len(idx[0]) - 1, len(idx[0]) - 1 - unnamed_cols[0], -1):
+                idx = idx.droplevel(ii)
+            df.columns = idx
+    elif isinstance(df.columns, pd.Index):
+        # find columns which starts with "Unnamed"
+        index_col = [x.startswith('Unnamed') for x in df.columns]
+
+        # get names of these columns as a list
+        index_column_names = df.columns[index_col].values.tolist()
+
+        # set index
+        df.set_index(index_column_names, inplace=True)
+
+    # Remove "Unnamed*" name from indexes
+    if isinstance(df.index, pd.MultiIndex):
+        for ii, name in enumerate(df.index.names):
+            if name.startswith('Unnamed'):
+                df.index.names[ii] = None
+    elif isinstance(df.index, pd.Index) and df.index.name.startswith('Unnamed'):
+        df.index.name = None
+    return df
+
+
+def preprocess(content, path, handler=None):
     """Preprocess the notebook data.
     * Cells will specific tags will be removed and attached images will be embedded.
     * Input of cells with specific tags will be prepared for later removal with a pandoc filter
@@ -71,6 +131,8 @@ def preprocess(content, path):
         A dict-like node of the notebook with attribute-access
     path : str
         Path to the notebook as string
+    handler : tornado.web.RequestHandler, optional
+        Handler that serviced the bundle request
 
     Returns
     -------
@@ -94,7 +156,7 @@ def preprocess(content, path):
     tag_preprocessor.preprocess(content, {})
 
     # Apply non-standard operations on cells
-    for cell in content['cells']:
+    for ii, cell in enumerate(content['cells']):
         # Set input of cells with transient 'remove_source' to later remove it with a pandoc-filter
         if 'transient' in cell and 'remove_source' in cell['transient'] and \
                 cell['transient']['remove_source']:
@@ -105,7 +167,26 @@ def preprocess(content, path):
             cell['source'] = RE_MATH_SINGLE.sub(_strip_match, cell['source'])
             cell['source'] = RE_MATH_DOUBLE.sub(_strip_match, cell['source'])
 
-    for cell in content['cells']:
+        # process outputs
+        if 'outputs' in cell and any(['data' in output for output in cell['outputs']]):
+            for jj, output in enumerate(cell['outputs']):
+                if 'text/plain' in output['data'] and 'text/html' in output['data'] and \
+                        re.search('<table', output['data']['text/html']):
+                    try:
+                        content['cells'].insert(
+                            ii + 1,
+                            nbformat.v4.new_markdown_cell(
+                                html_to_pandas_table(output['data']['text/html']).to_markdown(),
+                            )
+                        )
+                        del cell['outputs'][jj]
+                    except Exception as e:
+                        if handler is not None:
+                            handler.log.warning(f'Conversion of pandas HTML-table failed : {e}')
+                        else:
+                            raise e
+
+        # convert linked images to attachments
         linked_to_attachment_image(cell, path)
 
     return content
@@ -131,7 +212,7 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
     """
     with tempfile.TemporaryDirectory() as tempdir:
         # preprocess notebook
-        content = preprocess(content, path)
+        content = preprocess(content, path, handler=handler)
 
         # prepare file names
         ipynbfile = os.path.join(tempdir, f'{filename}.ipynb')
