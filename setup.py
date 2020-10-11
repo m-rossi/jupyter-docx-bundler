@@ -18,6 +18,7 @@ setup(
     description='Jupyter bundler extension to export notebook as a docx file',
     extras_require={
         'test': [
+            'ipython>=7.0'
             'matplotlib>=3.1',
             'mock',
             'nbformat',
