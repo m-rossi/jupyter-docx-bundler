@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from nbconvert.preprocessors import ExecutePreprocessor
 import nbformat
 import numpy as np
+import pandas as pd
 import pytest
 from pytest_lazyfixture import lazy_fixture
 import requests
@@ -369,12 +370,8 @@ def math_without_space_notebook(tmpdir, request):
 
 @pytest.fixture(
     params=[
-        {'cellspan': False},
-        {'cellspan': True},
-    ],
-    ids=[
-        'normal-table',
-        'table-with-cellspan',
+        'normal',
+        'cellspan',
     ],
 )
 def pandas_html_table_notebook(tmpdir, request):
@@ -388,13 +385,16 @@ def pandas_html_table_notebook(tmpdir, request):
             ])
         )
     )
-    if request.param['cellspan']:
+
+    if request.param == 'cellspan':
+        df = pd.DataFrame(np.random.randn(6, 4), columns=[list("1122"), list("ABCD")])
         nb.cells.append(
             nbformat.v4.new_code_cell(
                 source='pd.DataFrame(np.random.randn(6, 4), columns=[list("1122"), list("ABCD")])',
             )
         )
     else:
+        df = pd.DataFrame(np.random.randn(6, 4), columns=("A", "B", "C", "D"))
         nb.cells.append(
             nbformat.v4.new_code_cell(
                 source='pd.DataFrame(np.random.randn(6, 4), columns=("A", "B", "C", "D"))',
@@ -403,10 +403,14 @@ def pandas_html_table_notebook(tmpdir, request):
 
     nb['metadata'].update({
         'path': f'{tmpdir}',
+        'table': df.to_json(),
     })
 
     ep = ExecutePreprocessor()
     ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    nb.cells[-1].outputs[0]['data']['text/plain'] = df.__repr__()
+    nb.cells[-1].outputs[0]['data']['text/html'] = df._repr_html_()
 
     return nb
 

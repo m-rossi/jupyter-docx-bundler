@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import re
 
@@ -163,11 +164,12 @@ def test_math_notebook(tmpdir, math_notebook):
 
 
 def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
-    # read HTML table
-    df_html = pd.read_html(
-        pandas_html_table_notebook['cells'][1]['outputs'][0]['data']['text/html'],
-        index_col=0,
-    )[0]
+    # load source table
+    df = pd.DataFrame(json.loads(pandas_html_table_notebook['metadata']['table']))
+    # because of the intermediate conversion to json-string, the int-datatype is lost
+    df.index = df.index.astype('int')
+    # adujst column names to those we can extract from the markdown format later
+    df.columns = [x.replace(', ', ',') for x in df.columns]
 
     # convert notebook to docx
     docxbytes = converters.notebookcontent_to_docxbytes(
@@ -198,11 +200,12 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
         if line != '\n':
             fixed_lines.append(line.replace('\\', '').replace(', ', ','))
     with open(outfilename, 'w') as file:
-        file.writelines(fixed_lines[-8:])
+        file.writelines(fixed_lines[-(df.shape[0]+2):])
 
     # load markdown table
     df_md = pd.read_csv(outfilename, skiprows=[1], sep=r'\s+')
 
     # compare index and data
-    assert all(df_md.index == df_html.index), 'Index does not match'
-    np.testing.assert_allclose(df_md.values, df_html.values, atol=1e-5)
+    assert all(df_md.index == df.index), 'Index does not match'
+    assert all(df_md.columns == df.columns), 'Columns does not match'
+    np.testing.assert_allclose(df_md.values, df.values, atol=1e-5)
