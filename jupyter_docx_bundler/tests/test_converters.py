@@ -167,9 +167,21 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
     # load source table
     df = pd.DataFrame(json.loads(pandas_html_table_notebook['metadata']['table']))
     # because of the intermediate conversion to json-string, the int-datatype is lost
-    df.index = df.index.astype('int')
+    try:
+        df.index = df.index.astype('int')
+    except TypeError:
+        pass
+
     # adujst column names to those we can extract from the markdown format later
     df.columns = [x.replace(', ', ',') for x in df.columns]
+    try:
+        df.index = [x.replace(', ', ',') for x in df.index]
+    except AttributeError:
+        pass
+
+    # fix named index for json-converted pandas-dataframe
+    if pandas_html_table_notebook['metadata']['named-index']:
+        df.index.name = 'index'
 
     # convert notebook to docx
     docxbytes = converters.notebookcontent_to_docxbytes(
@@ -204,6 +216,12 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
 
     # load markdown table
     df_md = pd.read_csv(outfilename, skiprows=[1], sep=r'\s+')
+
+    # set index for named-index dataframes
+    cols = re.split(r'\s+', fixed_lines[-(df.shape[0])])
+    cols = sum([len(x) > 0 for x in cols])
+    if cols == df_md.shape[1]:
+        df_md.set_index('index', inplace=True)
 
     # compare index and data
     assert all(df_md.index == df.index), 'Index does not match'
