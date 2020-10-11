@@ -37,6 +37,7 @@ test:
   imports:
     - jupyter_docx_bundler
   requires:
+    - ipython >=7.0
     - matplotlib-base >=3.1
     - mock
     - nbformat
