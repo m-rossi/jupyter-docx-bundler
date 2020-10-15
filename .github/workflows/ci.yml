@@ -20,7 +20,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v1
         with:
           auto-update-conda: true
-          python-version: 3.8
+          python-version: 3.9
           activate-environment: flake8
           channels: defaults, conda-forge
       - name: Install dependencies
