@@ -17,7 +17,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v2
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: conda-incubator/setup-miniconda@v1
         with:
           auto-update-conda: true
           python-version: 3.8
@@ -41,7 +41,7 @@ jobs:
         pandoc-version: ['2.7', '2.8', '2.9', '2.10', '2.11']
     steps:
       - uses: actions/checkout@v2
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: conda-incubator/setup-miniconda@v1
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
@@ -72,7 +72,7 @@ jobs:
           fetch-depth: 0
       - name: Fetch history for all branches and tags
         run: git fetch --prune
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: conda-incubator/setup-miniconda@v1
         with:
           auto-update-conda: true
       - name: Install conda-build
