@@ -17,11 +17,12 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v2
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: conda-incubator/setup-miniconda@v1
         with:
           auto-update-conda: true
-          python-version: 3.8
+          python-version: 3.9
           activate-environment: flake8
+          channels: defaults, conda-forge
       - name: Install dependencies
         shell: bash -l {0}
         run: conda install --yes --quiet flake8
@@ -37,18 +38,16 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.6', '3.7', '3.8']
+        python-version: ['3.6', '3.7', '3.8', '3.9']
         pandoc-version: ['2.7', '2.8', '2.9', '2.10', '2.11']
     steps:
       - uses: actions/checkout@v2
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: conda-incubator/setup-miniconda@v1
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           activate-environment: test
-      - name: Add conda-forge channel
-        shell: bash -l {0}
-        run: conda config --append channels conda-forge
+          channels: defaults, conda-forge
       - name: Install dependencies
         shell: bash -l {0}
         run: conda install --yes --quiet --file requirements.txt --file requirements_test.txt pandoc=${{ matrix.pandoc-version }}
@@ -72,15 +71,13 @@ jobs:
           fetch-depth: 0
       - name: Fetch history for all branches and tags
         run: git fetch --prune
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: conda-incubator/setup-miniconda@v1
         with:
           auto-update-conda: true
+          channels: defaults, conda-forge
       - name: Install conda-build
         shell: bash -l {0}
         run: conda install --yes --quiet conda-build
-      - name: Add conda-forge channel
-        shell: bash -l {0}
-        run: conda config --append channels conda-forge
       - name: Execute conda-build
         shell: bash -l {0}
         run: conda build --output-folder conda-bld --python ${{ matrix.python-version }} conda.recipe

@@ -305,7 +305,8 @@ def remove_all_inputs_notebook(tmpdir, request):
     })
 
     ep = ExecutePreprocessor()
-    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+    while request.param['ncells'] != sum([len(c.outputs) for c in nb.cells]):
+        ep.preprocess(nb, {'metadata': {'path': tmpdir}})
 
     return nb
 
