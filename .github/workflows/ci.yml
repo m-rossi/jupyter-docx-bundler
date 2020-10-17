@@ -85,3 +85,28 @@ jobs:
         with:
           name: python-${{ matrix.python-version }}-${{ matrix.os }}
           path: conda-bld/*/*.tar.bz2
+
+  pypi-packages:
+    needs: pytest
+    name: pypi-packages
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Fetch history for all branches and tags
+        run: git fetch --prune
+      - uses: conda-incubator/setup-miniconda@v1
+        with:
+          auto-update-conda: true
+          channels: defaults, conda-forge
+      - name: Install setuptools setuptools-scm and wheel
+        shell: bash -l {0}
+        run: conda install --yes --quiet setuptools setuptools-scm wheel
+      - name: Build source-distribution and wheel
+        shell: bash -l {0}
+        run: python setup.py sdist bdist_wheel
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pypi-packages
+          path: dist/*
