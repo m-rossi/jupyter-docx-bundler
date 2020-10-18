@@ -502,17 +502,17 @@ def math_notebook(request):
 @pytest.fixture(
     params=[
         lazy_fixture('download_notebook'),
-        lazy_fixture('matplotlib_notebook'),
         lazy_fixture('images_notebook'),
         lazy_fixture('metadata_notebook'),
-        lazy_fixture('pandas_html_table_notebook')
+        lazy_fixture('pandas_html_table_notebook'),
+        lazy_fixture('math_notebook'),
     ],
     ids=[
         'download',
-        'matplotlib',
-        'embedded-images',
+        'images',
         'metadata',
         'html-table',
+        'math',
     ],
 )
 def test_notebook(request):
