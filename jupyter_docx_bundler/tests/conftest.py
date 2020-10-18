@@ -534,6 +534,58 @@ def plotly_notebook(tmpdir, request):
     return nb
 
 
+@pytest.fixture(params=[10])
+def bokeh_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+    image_count = 0
+
+    # imports
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# Imports',
+        )
+    )
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            '\n'.join([
+                'from bokeh.io import output_notebook, show',
+                'from bokeh.plotting import figure',
+                'import numpy as np',
+                'output_notebook()',
+            ])
+        )
+    )
+
+    # single bokeh image per cell
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# single bokeh image per cell',
+        )
+    )
+    for _ in range(request.param):
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                '\n'.join([
+                    'p = figure()',
+                    'p.line(np.arange(100), np.random.randn(100))',
+                    'show(p)',
+                ])
+            )
+        )
+    image_count += request.param
+
+    # update metadata
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'image_count': image_count,
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
 @pytest.fixture(
     params=[
         lazy_fixture('math_with_space_notebook'),
@@ -573,11 +625,13 @@ def test_notebook(request):
         lazy_fixture('matplotlib_notebook'),
         lazy_fixture('markdown_images_notebook'),
         lazy_fixture('plotly_notebook'),
+        lazy_fixture('bokeh_notebook'),
     ],
     ids=[
         'matplotlib',
         'images',
         'plotly',
+        'bokeh',
     ]
 )
 def images_notebook(request):
