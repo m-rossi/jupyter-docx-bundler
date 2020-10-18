@@ -485,6 +485,55 @@ def pandas_html_table_notebook(tmpdir, request):
     return nb
 
 
+@pytest.fixture(params=[10])
+def plotly_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+    image_count = 0
+
+    # imports
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# Imports',
+        )
+    )
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            '\n'.join([
+                'import numpy as np',
+                'import plotly.express as px',
+            ])
+        )
+    )
+
+    # single plotly image per cell
+    nb.cells.append(
+        nbformat.v4.new_markdown_cell(
+            '# single plotly image per cell',
+        )
+    )
+    for _ in range(request.param):
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                '\n'.join([
+                    'fig = px.line(x=np.arange(100), y=np.random.randn(100))',
+                    'fig.show()',
+                ])
+            )
+        )
+    image_count += request.param
+
+    # update metadata
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'image_count': image_count,
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
 @pytest.fixture(
     params=[
         lazy_fixture('math_with_space_notebook'),
@@ -523,10 +572,12 @@ def test_notebook(request):
     params=[
         lazy_fixture('matplotlib_notebook'),
         lazy_fixture('markdown_images_notebook'),
+        lazy_fixture('plotly_notebook'),
     ],
     ids=[
         'matplotlib',
         'images',
+        'plotly',
     ]
 )
 def images_notebook(request):
