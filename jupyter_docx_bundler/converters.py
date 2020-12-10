@@ -170,7 +170,8 @@ def preprocess(content, path, handler=None):
         # process outputs
         if 'outputs' in cell and any(['data' in output for output in cell['outputs']]):
             for jj, output in enumerate(cell['outputs']):
-                if 'text/plain' in output['data'] and 'text/html' in output['data'] and \
+                if 'data' in output and 'text/plain' in output['data'] and \
+                        'text/html' in output['data'] and \
                         re.search('<table', output['data']['text/html']):
                     try:
                         content['cells'].insert(

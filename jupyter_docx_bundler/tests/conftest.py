@@ -499,6 +499,19 @@ def math_notebook(request):
     return request.param
 
 
+def simple_print(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='\n'.join([
+                'print("Hello World !")',
+            ])
+        )
+    )
+    return nb
+
+
 @pytest.fixture(
     params=[
         lazy_fixture('download_notebook'),
@@ -506,6 +519,7 @@ def math_notebook(request):
         lazy_fixture('metadata_notebook'),
         lazy_fixture('pandas_html_table_notebook'),
         lazy_fixture('math_notebook'),
+        lazy_fixture('simple_print'),
     ],
     ids=[
         'download',
@@ -513,6 +527,7 @@ def math_notebook(request):
         'metadata',
         'html-table',
         'math',
+        'simple-print',
     ],
 )
 def test_notebook(request):
