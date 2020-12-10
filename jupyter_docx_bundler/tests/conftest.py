@@ -500,7 +500,7 @@ def math_notebook(request):
 
 
 @pytest.fixture()
-def simple_print(tmpdir, request):
+def simple_print(tmpdir):
     nb = nbformat.v4.new_notebook()
 
     nb.cells.append(
@@ -510,6 +510,9 @@ def simple_print(tmpdir, request):
             ])
         )
     )
+    nb['metadata'].update({'path': f'{tmpdir}'})
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
     return nb
 
 
