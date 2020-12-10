@@ -498,6 +498,7 @@ def pandas_html_table_notebook(tmpdir, request):
 def math_notebook(request):
     return request.param
 
+
 @pytest.fixture()
 def simple_print(tmpdir, request):
     nb = nbformat.v4.new_notebook()
