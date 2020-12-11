@@ -499,30 +499,6 @@ def math_notebook(request):
     return request.param
 
 
-@pytest.fixture()
-def print_with_html_notebook(tmpdir):
-    nb = nbformat.v4.new_notebook()
-
-    tags = nbformat.notebooknode.NotebookNode({
-        'tags': ['nbconvert-remove-input'],
-    })
-
-    nb.cells.append(
-        nbformat.v4.new_code_cell(
-            source='\n'.join([
-                'import pandas as pd',
-                'print("Hello World !")',
-                'pd.DataFrame({"A": [1, 2, 3], "B": [2, 3, 4] })'
-            ]),
-            metadata=tags,
-        )
-    )
-    nb['metadata'].update({'path': f'{tmpdir}'})
-    ep = ExecutePreprocessor()
-    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
-    return nb
-
-
 @pytest.fixture(
     params=[
         lazy_fixture('download_notebook'),
@@ -530,7 +506,6 @@ def print_with_html_notebook(tmpdir):
         lazy_fixture('metadata_notebook'),
         lazy_fixture('pandas_html_table_notebook'),
         lazy_fixture('math_notebook'),
-        lazy_fixture('print_with_html_notebook'),
     ],
     ids=[
         'download',
@@ -538,7 +513,6 @@ def print_with_html_notebook(tmpdir):
         'metadata',
         'html-table',
         'math',
-        'print_with_html_notebook',
     ],
 )
 def test_notebook(request):

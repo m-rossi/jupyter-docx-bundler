@@ -227,31 +227,3 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
     assert all(df_md.index == df.index), 'Index does not match'
     assert all(df_md.columns == df.columns), 'Columns does not match'
     np.testing.assert_allclose(df_md.values, df.values, atol=1e-5)
-
-
-def test_print_with_html(tmpdir, print_with_html_notebook):
-    # convert notebook to docx
-    docxbytes = converters.notebookcontent_to_docxbytes(
-        print_with_html_notebook, 'test-notebook', print_with_html_notebook['metadata']['path'],
-    )
-
-    # write to file on disk
-    filename = tmpdir / 'print_with_html_notebook.docx'
-    outfilename = tmpdir / 'print_with_html_notebook.md'
-    with open(filename, 'wb') as file:
-        file.write(docxbytes)
-
-    # convert to markdown and read text
-    pypandoc.convert_file(
-        f'{filename}',
-        'markdown',
-        'docx',
-        outputfile=f'{outfilename}',
-    )
-    with open(outfilename, 'r') as file:
-        lines = file.readlines()
-
-    # Check for the occurence of code
-    assert len(re.findall('jupyter.*docx.*bundler.*remove.*input', ''.join(lines))) == 0, \
-        'Keyword not removed'
-    assert len(re.findall('print("Hello World !")', ''.join(lines))) == 0, 'Input not hided.'
