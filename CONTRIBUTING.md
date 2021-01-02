@@ -26,7 +26,7 @@ cd jupyter-docx-bundler
 Install all development requirements by executing
 
 ```sh
-conda install --file requirements.txt --file requirements_test.txt
+conda install --file requirements.txt --file requirements_test.txt pandoc
 ```
 
 Install the package in _editable_ mode by executing
