@@ -22,7 +22,7 @@ jobs:
           auto-update-conda: true
           python-version: 3.9
           activate-environment: flake8
-          channels: defaults, conda-forge
+          channels: conda-forge
       - name: Install dependencies
         shell: bash -l {0}
         run: conda install --yes --quiet flake8
@@ -47,7 +47,7 @@ jobs:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           activate-environment: test
-          channels: defaults, conda-forge
+          channels: conda-forge
       - name: Install dependencies
         shell: bash -l {0}
         run: conda install --yes --quiet --file requirements.txt --file requirements_test.txt pandoc=${{ matrix.pandoc-version }}
@@ -74,7 +74,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
-          channels: defaults, conda-forge
+          channels: conda-forge
       - name: Install conda-build
         shell: bash -l {0}
         run: conda install --yes --quiet conda-build
@@ -99,7 +99,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
-          channels: defaults, conda-forge
+          channels: conda-forge
       - name: Install setuptools setuptools-scm and wheel
         shell: bash -l {0}
         run: conda install --yes --quiet setuptools setuptools-scm wheel
