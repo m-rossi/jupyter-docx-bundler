@@ -30,8 +30,16 @@ jobs:
         shell: bash -l {0}
         run: flake8 . --max-line-length=99
 
+  pycharm-security:
+    runs-on: ubuntu-latest
+    name: pycharm-security
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run PyCharm Security
+        uses: tonybaloney/pycharm-security@master
+
   pytest:
-    needs: flake8
+    needs: [flake8, pycharm-security]
     name: pytest (Python ${{ matrix.python-version }}, ${{ matrix.os }}, Pandoc ${{ matrix.pandoc-version }})
     runs-on: ${{ matrix.os }}
     strategy:
