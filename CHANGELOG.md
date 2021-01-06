@@ -158,6 +158,8 @@ Initial version - [@m-rossi]
 [0.1.1]: https://github.com/m-rossi/jupyter-docx-bundler/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/m-rossi/jupyter-docx-bundler/releases/tag/0.1.0
 
+[#66]: https://github.com/m-rossi/jupyter-docx-bundler/issues/66
+[#65]: https://github.com/m-rossi/jupyter-docx-bundler/issues/65
 [#63]: https://github.com/m-rossi/jupyter-docx-bundler/issues/63
 [#62]: https://github.com/m-rossi/jupyter-docx-bundler/issues/62
 [#61]: https://github.com/m-rossi/jupyter-docx-bundler/issues/61
