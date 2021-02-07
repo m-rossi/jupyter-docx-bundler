@@ -57,7 +57,7 @@ setup(
     python_requires='>=3.6',
     setup_requires=[
         'setuptools>=38.6.0',
-        'setuptools_scm',
+        'setuptools-scm',
     ],
     url='https://github.com/m-rossi/jupyter-docx-bundler',
     use_scm_version=True,

@@ -19,7 +19,7 @@ requirements:
     - pip
     - python
     - setuptools >=38.6.0
-    - setuptools_scm
+    - setuptools-scm
   run:
     - lxml
     - nbconvert >=5.5

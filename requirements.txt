@@ -5,5 +5,7 @@ pandas
 pandocfilters
 pypandoc >= 1.4
 requests
+setuptools >= 38.6.0
+setuptools-scm
 tabulate
 tornado
