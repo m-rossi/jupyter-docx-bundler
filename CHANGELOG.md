@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * Add pycharm-security step ([#66]) - [@m-rossi]
+* Support for pandoc 2.12 ([#68], [#69]) - [@m-rossi]
 
 ### Changed
 
@@ -158,6 +159,8 @@ Initial version - [@m-rossi]
 [0.1.1]: https://github.com/m-rossi/jupyter-docx-bundler/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/m-rossi/jupyter-docx-bundler/releases/tag/0.1.0
 
+[#69]: https://github.com/m-rossi/jupyter-docx-bundler/issues/69
+[#68]: https://github.com/m-rossi/jupyter-docx-bundler/issues/68
 [#66]: https://github.com/m-rossi/jupyter-docx-bundler/issues/66
 [#65]: https://github.com/m-rossi/jupyter-docx-bundler/issues/65
 [#63]: https://github.com/m-rossi/jupyter-docx-bundler/issues/63
