@@ -233,7 +233,7 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
                 elif handler is not None:
                     handler.log.warning(
                         'Author metadata has wrong format, see https://github.com/m-rossi/jupyter_'
-                        'docx_bundler/blob/master/README.md'
+                        'docx_bundler/blob/main/README.md'
                     )
             if 'title' in content['metadata']:
                 extra_args.append(f'--metadata=title:{content["metadata"]["title"]}')
