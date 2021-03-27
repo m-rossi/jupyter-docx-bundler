@@ -23,10 +23,8 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: flake8
-          miniforge-variant: Mambaforge
-          miniforge-version: latest
-          python-version: 3.9
-          use-mamba: true
+          channels: conda-forge
+          mamba-version: "*"
       - name: Install dependencies
         run: mamba install --yes --quiet flake8
       - name: Execute flake8
@@ -58,8 +56,8 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: test
-          miniforge-variant: Mambaforge
-          miniforge-version: latest
+          channels: conda-forge
+          mamba-version: "*"
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: mamba install --yes --quiet --file requirements.txt --file requirements_test.txt pandoc=${{ matrix.pandoc-version }}
@@ -87,10 +85,8 @@ jobs:
         run: git fetch --prune
       - uses: conda-incubator/setup-miniconda@v2
         with:
-          auto-update-conda: true
+          channels: conda-forge
           conda-build-version: latest
-          miniforge-variant: Mambaforge
-          miniforge-version: latest
       - name: Execute conda-build
         run: conda build --output-folder conda-bld --python ${{ matrix.python-version }} conda.recipe
       - uses: actions/upload-artifact@v2
@@ -113,8 +109,8 @@ jobs:
         run: git fetch --prune
       - uses: conda-incubator/setup-miniconda@v2
         with:
-          miniforge-variant: Mambaforge
-          miniforge-version: latest
+          channels: conda-forge
+          mamba-version: "*"
       - name: Install setuptools setuptools-scm and wheel
         run: mamba install --yes --quiet setuptools setuptools-scm wheel
       - name: Build source-distribution and wheel
