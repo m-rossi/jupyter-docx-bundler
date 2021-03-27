@@ -26,6 +26,7 @@ jobs:
           miniforge-variant: Mambaforge
           miniforge-version: latest
           python-version: 3.9
+          use-mamba: true
       - name: Install dependencies
         run: mamba install --yes --quiet flake8
       - name: Execute flake8
