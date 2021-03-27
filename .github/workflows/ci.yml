@@ -86,7 +86,9 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           channels: conda-forge
-          conda-build-version: latest
+          mamba-version: "*"
+      - name: Install conda-build
+        run: mamba install --yes --quiet conda-build
       - name: Execute conda-build
         run: conda build --output-folder conda-bld --python ${{ matrix.python-version }} conda.recipe
       - uses: actions/upload-artifact@v2
