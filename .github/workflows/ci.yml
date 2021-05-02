@@ -23,8 +23,8 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: flake8
-          channels: conda-forge
-          mamba-version: "*"
+          auto-update-conda: true
+          miniforge-variant: Mambaforge
       - name: Install dependencies
         run: mamba install --yes --quiet flake8
       - name: Execute flake8
@@ -56,11 +56,11 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: test
-          channels: conda-forge
-          mamba-version: "*"
+          auto-update-conda: true
+          miniforge-variant: Mambaforge
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: mamba install --yes --quiet --file requirements.txt --file requirements_test.txt pandoc=${{ matrix.pandoc-version }}
+        run: mamba install --yes --quiet --file requirements.txt --file requirements_test.txt "python=${{ matrix.python-version }}.*=*_cpython" pandoc=${{ matrix.pandoc-version }}
       - name: Execute pytest
         run: pytest .
       - uses: codecov/codecov-action@v1
@@ -85,8 +85,8 @@ jobs:
         run: git fetch --prune
       - uses: conda-incubator/setup-miniconda@v2
         with:
-          channels: conda-forge
-          mamba-version: "*"
+          auto-update-conda: true
+          miniforge-variant: Mambaforge
       - name: Install conda-build
         run: mamba install --yes --quiet conda-build
       - name: Execute conda-build
@@ -111,8 +111,8 @@ jobs:
         run: git fetch --prune
       - uses: conda-incubator/setup-miniconda@v2
         with:
-          channels: conda-forge
-          mamba-version: "*"
+          auto-update-conda: true
+          miniforge-variant: Mambaforge
       - name: Install setuptools setuptools-scm and wheel
         run: mamba install --yes --quiet setuptools setuptools-scm wheel
       - name: Build source-distribution and wheel
