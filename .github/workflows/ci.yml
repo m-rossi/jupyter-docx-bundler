@@ -60,7 +60,7 @@ jobs:
           miniforge-variant: Mambaforge
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: mamba install --yes --quiet --file requirements.txt --file requirements_test.txt pandoc=${{ matrix.pandoc-version }}
+        run: mamba install --yes --quiet --file requirements.txt --file requirements_test.txt "python=${{ matrix.python-version }}.*=*_cpython" pandoc=${{ matrix.pandoc-version }}
       - name: Execute pytest
         run: pytest .
       - uses: codecov/codecov-action@v1
