@@ -193,7 +193,7 @@ def preprocess(content, path, handler=None):
                             source=output['data']['text/latex'],
                         ),
                     )
-                    cell['outputs'] = []
+                    del cell['outputs'][jj]
 
         # convert linked images to attachments
         linked_to_attachment_image(cell, path)
