@@ -7,3 +7,4 @@ pillow >= 6.0.0
 pytest
 pytest-cov
 pytest-lazy-fixture
+sympy

@@ -186,6 +186,14 @@ def preprocess(content, path, handler=None):
                             handler.log.warning(f'Conversion of pandas HTML-table failed : {e}')
                         else:
                             raise e
+                elif 'data' in output and 'text/latex' in output['data']:
+                    content['cells'].insert(
+                        ii + 1,
+                        nbformat.v4.new_markdown_cell(
+                            source=output['data']['text/latex'],
+                        ),
+                    )
+                    cell['outputs'] = []
 
         # convert linked images to attachments
         linked_to_attachment_image(cell, path)

@@ -485,14 +485,51 @@ def pandas_html_table_notebook(tmpdir, request):
     return nb
 
 
+@pytest.fixture
+def math_in_output(tmpdir):
+    nb = nbformat.v4.new_notebook()
+
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='\n'.join([
+                'from IPython.display import display',
+                'import sympy as sp',
+            ]),
+        )
+    )
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='sp.var("a, b")'
+        )
+    )
+
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='display(a/b**3)'
+        )
+    )
+
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'ncells': 1,
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
 @pytest.fixture(
     params=[
         lazy_fixture('math_with_space_notebook'),
         lazy_fixture('math_without_space_notebook'),
+        lazy_fixture('math_in_output'),
     ],
     ids=[
         'with_space',
-        'without_space'
+        'without_space',
+        'math_in_output',
     ]
 )
 def math_notebook(request):
