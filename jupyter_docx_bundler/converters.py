@@ -194,6 +194,15 @@ def preprocess(content, path, handler=None):
                         ),
                     )
                     del cell['outputs'][jj]
+                elif 'data' in output and 'text/plain' in output['data'] and \
+                    'text/markdown' in output['data']:
+                    content['cells'].insert(
+                        ii + 1,
+                        nbformat.v4.new_markdown_cell(
+                            source=output['data']['text/markdown'],
+                        )
+                    )
+                    del cell['outputs'][jj]
 
         # convert linked images to attachments
         linked_to_attachment_image(cell, path)

@@ -522,6 +522,87 @@ def math_in_output(tmpdir):
 
 @pytest.fixture(
     params=[
+        'Markdown',
+        'LaTeX',
+        'Math',
+        'Code',
+    ]
+)
+def ipython_output_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='from IPython import display',
+            metadata=nbformat.notebooknode.NotebookNode({
+                'tags': [
+                    'nbconvert-remove-input',
+                ],
+            }),
+        ),
+    )
+    if request.param == 'Markdown':
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='display.Markdown("# Heading")',
+                metadata=nbformat.notebooknode.NotebookNode({
+                    'tags': [
+                        'nbconvert-remove-input',
+                    ],
+                }),
+            )
+        )
+        expected_output = '# Heading'
+    elif request.param == 'LaTeX':
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='display.Latex("$a + b$")',
+                metadata=nbformat.notebooknode.NotebookNode({
+                    'tags': [
+                        'nbconvert-remove-input',
+                    ],
+                }),
+            )
+        )
+        expected_output = '$a + b$'
+    elif request.param == 'Math':
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='display.Math("a + b")',
+                metadata=nbformat.notebooknode.NotebookNode({
+                    'tags': [
+                        'nbconvert-remove-input',
+                    ],
+                }),
+            )
+        )
+        expected_output = '$a + b$'
+    elif request.param == 'Code':
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='display.Code("import this")',
+                metadata=nbformat.notebooknode.NotebookNode({
+                    'tags': [
+                        'nbconvert-remove-input',
+                    ],
+                }),
+            )
+        )
+        expected_output = '`import this`'
+
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'expected_output': expected_output,
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
+@pytest.fixture(
+    params=[
         lazy_fixture('math_with_space_notebook'),
         lazy_fixture('math_without_space_notebook'),
         lazy_fixture('math_in_output'),

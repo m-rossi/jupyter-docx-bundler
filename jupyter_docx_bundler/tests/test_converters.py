@@ -227,3 +227,36 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
     assert all(df_md.index == df.index), 'Index does not match'
     assert all(df_md.columns == df.columns), 'Columns does not match'
     np.testing.assert_allclose(df_md.values, df.values, atol=1e-5)
+
+
+def test_ipython_output(tmpdir, ipython_output_notebook):
+    # extract the output of the last cell in the notebook, we need to check against that
+    outputs = ipython_output_notebook['cells'][-1]['outputs'][-1]['data']
+
+    # convert notebook to docx
+    docxbytes = converters.notebookcontent_to_docxbytes(
+        ipython_output_notebook,
+        'test-notebook',
+        ipython_output_notebook['metadata']['path'],
+    )
+
+    # write to file on disk
+    docx_filename = tmpdir / 'test-notebook.docx'
+    with open(docx_filename, 'wb') as file:
+        file.write(docxbytes)
+
+    # convert to markdown and read text
+    markdown_filename = tmpdir / 'test-notebook.md'
+    pypandoc.convert_file(
+        f'{docx_filename}',
+        'md',
+        'docx',
+        outputfile=f'{markdown_filename}',
+    )
+    with open(markdown_filename, 'r') as file:
+        lines = file.readlines()
+
+    # replace newlines
+    lines = [line.replace('\n', '') for line in lines]
+    assert len(lines) == 1
+    assert lines[0] == ipython_output_notebook['metadata']['expected_output']
