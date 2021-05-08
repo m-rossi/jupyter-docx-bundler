@@ -186,7 +186,7 @@ def preprocess(content, path, handler=None):
                             handler.log.warning(f'Conversion of pandas HTML-table failed : {e}')
                         else:
                             raise e
-                elif 'data' in output and 'text/latex' in output['data']:
+                elif 'data' in output and 'text/latex' in output['data'] and 'text/html' not in output['data']:
                     content['cells'].insert(
                         ii + 1,
                         nbformat.v4.new_markdown_cell(
