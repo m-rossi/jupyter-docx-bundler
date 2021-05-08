@@ -230,9 +230,6 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
 
 
 def test_ipython_output(tmpdir, ipython_output_notebook):
-    # extract the output of the last cell in the notebook, we need to check against that
-    outputs = ipython_output_notebook['cells'][-1]['outputs'][-1]['data']
-
     # convert notebook to docx
     docxbytes = converters.notebookcontent_to_docxbytes(
         ipython_output_notebook,

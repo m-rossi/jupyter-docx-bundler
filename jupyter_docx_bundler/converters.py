@@ -188,7 +188,8 @@ def preprocess(content, path, handler=None):
                         else:
                             raise e
                 # latex but not code cells (it write also a latex output)
-                elif 'data' in output and 'text/latex' in output['data'] and 'text/html' not in output['data']:
+                elif 'data' in output and 'text/latex' in output['data'] and \
+                        'text/html' not in output['data']:
                     content['cells'].insert(
                         ii + 1,
                         nbformat.v4.new_markdown_cell(
@@ -198,7 +199,7 @@ def preprocess(content, path, handler=None):
                     del cell['outputs'][jj]
                 # markdown
                 elif 'data' in output and 'text/plain' in output['data'] and \
-                    'text/markdown' in output['data']:
+                        'text/markdown' in output['data']:
                     content['cells'].insert(
                         ii + 1,
                         nbformat.v4.new_markdown_cell(
