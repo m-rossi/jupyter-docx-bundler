@@ -552,7 +552,7 @@ def ipython_output_notebook(tmpdir, request):
                 }),
             )
         )
-        expected_output = '# Heading'
+        expected_pattern = '# Heading'
     elif request.param == 'LaTeX':
         nb.cells.append(
             nbformat.v4.new_code_cell(
@@ -564,7 +564,7 @@ def ipython_output_notebook(tmpdir, request):
                 }),
             )
         )
-        expected_output = '$a + b$'
+        expected_pattern = r'\$a \+ b\$'
     elif request.param == 'Math':
         nb.cells.append(
             nbformat.v4.new_code_cell(
@@ -576,7 +576,7 @@ def ipython_output_notebook(tmpdir, request):
                 }),
             )
         )
-        expected_output = '$a + b$'
+        expected_pattern = '\$a \+ b\$'
     elif request.param == 'Code':
         nb.cells.append(
             nbformat.v4.new_code_cell(
@@ -588,11 +588,11 @@ def ipython_output_notebook(tmpdir, request):
                 }),
             )
         )
-        expected_output = '`import this`'
+        expected_pattern = '[\w`]*import this[\w`]*'
 
     nb['metadata'].update({
         'path': f'{tmpdir}',
-        'expected_output': expected_output,
+        'expected_pattern': expected_pattern,
     })
 
     ep = ExecutePreprocessor()

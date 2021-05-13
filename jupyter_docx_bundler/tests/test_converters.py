@@ -256,4 +256,4 @@ def test_ipython_output(tmpdir, ipython_output_notebook):
     # replace newlines
     lines = [line.replace('\n', '') for line in lines]
     assert len(lines) == 1
-    assert lines[0] == ipython_output_notebook['metadata']['expected_output']
+    assert re.search(ipython_output_notebook['metadata']['expected_pattern'], lines[0])
