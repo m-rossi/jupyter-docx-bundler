@@ -576,7 +576,7 @@ def ipython_output_notebook(tmpdir, request):
                 }),
             )
         )
-        expected_pattern = '\$a \+ b\$'
+        expected_pattern = r'\$a \+ b\$'
     elif request.param == 'Code':
         nb.cells.append(
             nbformat.v4.new_code_cell(
@@ -588,7 +588,7 @@ def ipython_output_notebook(tmpdir, request):
                 }),
             )
         )
-        expected_pattern = '[\w`]*import this[\w`]*'
+        expected_pattern = r'[\w`]*import this[\w`]*'
 
     nb['metadata'].update({
         'path': f'{tmpdir}',
