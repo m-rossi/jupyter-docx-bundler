@@ -39,7 +39,6 @@ test:
     - jupyter_docx_bundler
   requires:
     - ipython >=7.0
-    - kaleido
     - matplotlib-base >=3.1
     - mock
     - nbformat
@@ -48,6 +47,7 @@ test:
     - pytest
     - pytest-cov
     - pytest-lazy-fixture
+    - python-kaleido
     - sympy
   commands:
     - pytest --pyargs jupyter_docx_bundler
