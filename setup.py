@@ -1,8 +1,24 @@
+import sys
+
 from setuptools import setup
 
 
 with open('README.md') as f:
     long_description = f.read()
+
+install_requires = [
+    'lxml',
+    'nbconvert>=5.5',
+    'notebook>=5.0',
+    'pandas',
+    'pandocfilters',
+    'pypandoc>=1.4',
+    'requests',
+    'tabulate',
+    'tornado',
+]
+if sys.version_info.major <= 3 and sys.version_info.minor < 9:
+    install_requires += ['importlib_metadata']
 
 setup(
     author='Marco Rossi',
@@ -20,28 +36,20 @@ setup(
     extras_require={
         'test': [
             'ipython>=7.0'
+            'kaleido',
             'matplotlib>=3.1',
             'mock',
             'nbformat',
             'numpy',
             'pillow>=6.0.0',
+            'plotly',
             'pytest',
             'pytest-cov',
             'pytest-lazy-fixture',
             'sympy',
         ],
     },
-    install_requires=[
-        'lxml',
-        'nbconvert>=5.5',
-        'notebook>=5.0',
-        'pandas',
-        'pandocfilters',
-        'pypandoc>=1.4',
-        'requests',
-        'tabulate',
-        'tornado',
-    ],
+    install_requires=install_requires,
     keywords=[
         'jupyter',
         'docx',

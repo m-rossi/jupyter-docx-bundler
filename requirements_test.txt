@@ -4,7 +4,9 @@ mock
 nbformat
 numpy
 pillow >= 6.0.0
+plotly
 pytest
 pytest-cov
 pytest-lazy-fixture
+python-kaleido
 sympy

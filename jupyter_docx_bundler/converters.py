@@ -1,15 +1,19 @@
 import base64
+try:
+    from importlib.resources import files as resources_files
+except ImportError:
+    from importlib_resources import files as resources_files
+import json
 import os
-from pathlib import Path
 import re
 import tempfile
+from pathlib import Path
 
-from nbconvert import preprocessors
 import nbformat
 import pandas as pd
 import pypandoc
 import requests
-
+from nbconvert import preprocessors
 
 RE_IMAGE = re.compile(r'!\[.+]\((?!attachment:).+\)')
 RE_EXTRA_TITLE = re.compile(r'\s".+"')
@@ -185,6 +189,27 @@ def preprocess(content, path, handler=None):
                     except Exception as e:
                         if handler is not None:
                             handler.log.warning(f'Conversion of pandas HTML-table failed : {e}')
+                        else:
+                            raise e
+                # plotly figure
+                elif 'data' in output and 'application/vnd.plotly.v1+json' in output['data']:
+                    try:
+                        from plotly import io
+                        from kaleido.scopes.plotly import PlotlyScope
+
+                        scope = PlotlyScope(
+                            plotlyjs=resources_files('plotly') / 'package_data' / 'plotly.min.js',
+                        )
+
+                        fig = io.from_json(
+                            json.dumps(output['data']['application/vnd.plotly.v1+json'])
+                        )
+                        imagedata = scope.transform(fig, format='png', scale=2.0)
+                        output['data']['image/png'] = base64.b64encode(imagedata)
+                    except ModuleNotFoundError as e:
+                        if handler is not None:
+                            handler.log.warning('Found plotly-figure in notebook, we need plotly '
+                                                'and kaleido to convert figure.')
                         else:
                             raise e
                 # latex but not code cells (it write also a latex output)
