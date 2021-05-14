@@ -191,6 +191,7 @@ def preprocess(content, path, handler=None):
                             handler.log.warning(f'Conversion of pandas HTML-table failed : {e}')
                         else:
                             raise e
+                # plotly figure
                 elif 'application/vnd.plotly.v1+json' in output['data']:
                     try:
                         from plotly import io
