@@ -28,6 +28,7 @@ setup(
             'pytest',
             'pytest-cov',
             'pytest-lazy-fixture',
+            'sympy',
         ],
     },
     install_requires=[
