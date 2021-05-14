@@ -9,3 +9,4 @@ plotly
 pytest
 pytest-cov
 pytest-lazy-fixture
+sympy

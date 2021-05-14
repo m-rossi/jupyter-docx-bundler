@@ -172,9 +172,11 @@ def preprocess(content, path, handler=None):
             cell['source'] = RE_MATH_DOUBLE.sub(_strip_match, cell['source'])
 
         # process outputs
-        if 'outputs' in cell and any(['data' in output for output in cell['outputs']]):
+        if 'outputs' in cell:
             for jj, output in enumerate(cell['outputs']):
-                if 'text/plain' in output['data'] and 'text/html' in output['data'] and \
+                # pandas table
+                if 'data' in output and 'text/plain' in output['data'] and \
+                        'text/html' in output['data'] and \
                         re.search('<table', output['data']['text/html']):
                     try:
                         content['cells'].insert(
@@ -209,6 +211,26 @@ def preprocess(content, path, handler=None):
                                                 'and kaleido to convert figure.')
                         else:
                             raise e
+                # latex but not code cells (it write also a latex output)
+                elif 'data' in output and 'text/latex' in output['data'] and \
+                        'text/html' not in output['data']:
+                    content['cells'].insert(
+                        ii + 1,
+                        nbformat.v4.new_markdown_cell(
+                            source=output['data']['text/latex'],
+                        ),
+                    )
+                    del cell['outputs'][jj]
+                # markdown
+                elif 'data' in output and 'text/plain' in output['data'] and \
+                        'text/markdown' in output['data']:
+                    content['cells'].insert(
+                        ii + 1,
+                        nbformat.v4.new_markdown_cell(
+                            source=output['data']['text/markdown'],
+                        )
+                    )
+                    del cell['outputs'][jj]
 
         # convert linked images to attachments
         linked_to_attachment_image(cell, path)
@@ -256,7 +278,7 @@ def notebookcontent_to_docxbytes(content, filename, path, handler=None):
                 elif handler is not None:
                     handler.log.warning(
                         'Author metadata has wrong format, see https://github.com/m-rossi/jupyter_'
-                        'docx_bundler/blob/master/README.md'
+                        'docx_bundler/blob/main/README.md'
                     )
             if 'title' in content['metadata']:
                 extra_args.append(f'--metadata=title:{content["metadata"]["title"]}')

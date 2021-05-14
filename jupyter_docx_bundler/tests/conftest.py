@@ -485,6 +485,122 @@ def pandas_html_table_notebook(tmpdir, request):
     return nb
 
 
+@pytest.fixture
+def math_in_output(tmpdir):
+    nb = nbformat.v4.new_notebook()
+
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='\n'.join([
+                'from IPython.display import display',
+                'import sympy as sp',
+            ]),
+        )
+    )
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='sp.var("a, b")'
+        )
+    )
+
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='display(a/b**3)'
+        )
+    )
+
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'ncells': 1,
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
+@pytest.fixture(
+    params=[
+        'Markdown',
+        'LaTeX',
+        'Math',
+        'Code',
+    ]
+)
+def ipython_output_notebook(tmpdir, request):
+    nb = nbformat.v4.new_notebook()
+
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            source='from IPython import display',
+            metadata=nbformat.notebooknode.NotebookNode({
+                'tags': [
+                    'nbconvert-remove-input',
+                ],
+            }),
+        ),
+    )
+    if request.param == 'Markdown':
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='display.Markdown("# Heading")',
+                metadata=nbformat.notebooknode.NotebookNode({
+                    'tags': [
+                        'nbconvert-remove-input',
+                    ],
+                }),
+            )
+        )
+        expected_pattern = '# Heading'
+    elif request.param == 'LaTeX':
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='display.Latex("$a + b$")',
+                metadata=nbformat.notebooknode.NotebookNode({
+                    'tags': [
+                        'nbconvert-remove-input',
+                    ],
+                }),
+            )
+        )
+        expected_pattern = r'\$a \+ b\$'
+    elif request.param == 'Math':
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='display.Math("a + b")',
+                metadata=nbformat.notebooknode.NotebookNode({
+                    'tags': [
+                        'nbconvert-remove-input',
+                    ],
+                }),
+            )
+        )
+        expected_pattern = r'\$a \+ b\$'
+    elif request.param == 'Code':
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='display.Code("import this")',
+                metadata=nbformat.notebooknode.NotebookNode({
+                    'tags': [
+                        'nbconvert-remove-input',
+                    ],
+                }),
+            )
+        )
+        expected_pattern = r'[\w`]*import this[\w`]*'
+
+    nb['metadata'].update({
+        'path': f'{tmpdir}',
+        'expected_pattern': expected_pattern,
+    })
+
+    ep = ExecutePreprocessor()
+    ep.preprocess(nb, {'metadata': {'path': tmpdir}})
+
+    return nb
+
+
 @pytest.fixture(params=[10])
 def plotly_notebook(tmpdir, request):
     nb = nbformat.v4.new_notebook()
@@ -538,10 +654,12 @@ def plotly_notebook(tmpdir, request):
     params=[
         lazy_fixture('math_with_space_notebook'),
         lazy_fixture('math_without_space_notebook'),
+        lazy_fixture('math_in_output'),
     ],
     ids=[
         'with_space',
-        'without_space'
+        'without_space',
+        'math_in_output',
     ]
 )
 def math_notebook(request):
@@ -551,17 +669,17 @@ def math_notebook(request):
 @pytest.fixture(
     params=[
         lazy_fixture('download_notebook'),
-        lazy_fixture('matplotlib_notebook'),
         lazy_fixture('images_notebook'),
         lazy_fixture('metadata_notebook'),
-        lazy_fixture('pandas_html_table_notebook')
+        lazy_fixture('pandas_html_table_notebook'),
+        lazy_fixture('math_notebook'),
     ],
     ids=[
         'download',
-        'matplotlib',
-        'embedded-images',
+        'images',
         'metadata',
         'html-table',
+        'math',
     ],
 )
 def test_notebook(request):

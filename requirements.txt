@@ -3,9 +3,10 @@ lxml
 nbconvert >= 5.5
 notebook >= 5.0
 pandas
-pandoc >= 2.7
 pandocfilters
 pypandoc >= 1.4
 requests
+setuptools >= 38.6.0
+setuptools-scm
 tabulate
 tornado

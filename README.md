@@ -4,7 +4,7 @@
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/jupyter-docx-bundler.svg)](https://anaconda.org/conda-forge/jupyter-docx-bundler)
 [![Conda Version](https://img.shields.io/conda/vn/mrossi/jupyter-docx-bundler.svg)](https://anaconda.org/mrossi/jupyter-docx-bundler)
 [![CI](https://github.com/m-rossi/jupyter-docx-bundler/workflows/CI/badge.svg)](https://github.com/m-rossi/jupyter-docx-bundler/actions)
-[![codecov](https://codecov.io/gh/m-rossi/jupyter-docx-bundler/branch/master/graph/badge.svg)](https://codecov.io/gh/m-rossi/jupyter-docx-bundler)
+[![codecov](https://codecov.io/gh/m-rossi/jupyter-docx-bundler/branch/main/graph/badge.svg)](https://codecov.io/gh/m-rossi/jupyter-docx-bundler)
 
 Jupyter bundler extension to export notebook as a docx file
 
