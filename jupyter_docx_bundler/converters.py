@@ -192,7 +192,7 @@ def preprocess(content, path, handler=None):
                         else:
                             raise e
                 # plotly figure
-                elif 'application/vnd.plotly.v1+json' in output['data']:
+                elif 'data' in output and 'application/vnd.plotly.v1+json' in output['data']:
                     try:
                         from plotly import io
                         from kaleido.scopes.plotly import PlotlyScope
