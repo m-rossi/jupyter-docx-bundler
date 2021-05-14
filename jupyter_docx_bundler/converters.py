@@ -1,8 +1,8 @@
 import base64
 try:
-    from importlib import resources
+    from importlib.resources import files as resources_files
 except ImportError:
-    import importlib_resources as resources
+    from importlib_resources import files as resources_files
 import json
 import os
 import re
@@ -198,7 +198,7 @@ def preprocess(content, path, handler=None):
                         from kaleido.scopes.plotly import PlotlyScope
 
                         scope = PlotlyScope(
-                            plotlyjs=resources.files('plotly') / 'package_data' / 'plotly.min.js',
+                            plotlyjs=resources_files('plotly') / 'package_data' / 'plotly.min.js',
                         )
 
                         fig = io.from_json(
