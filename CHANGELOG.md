@@ -5,18 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.3] - 2021-05-14
 
 ### Added
 
 * Add [pycharm-security](https://pycharm-security.readthedocs.io/en/latest/) step ([#66]) - [@m-rossi]
 * Support for [pandoc](https://pandoc.org) 2.12 ([#68], [#69]) - [@m-rossi]
 * Support for [pandoc](https://pandoc.org) 2.13 ([#70]) - [@m-rossi]
+* Add support for [plotly](https://plotly.com)-figures by converting it to `*.png` in `*.docx` document ([#52], [#60]) - [@m-rossi]
 
 ### Changed
 
 * Use only [conda-forge](https://conda-forge.org) as conda-channel ([#65]) - [@m-rossi]
 * Use [mamba](https://github.com/mamba-org/mamba) in CI to install dependencies ([#71], [#72]) - [@m-rossi]
+* Require [pandoc](https://pandoc.org) 2.11 as minimum
 
 ### Fixed
 
@@ -153,7 +155,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial version - [@m-rossi]
 
-[Unreleased]: https://github.com/m-rossi/jupyter-docx-bundler/compare/0.3.2...HEAD
+[Unreleased]: https://github.com/m-rossi/jupyter-docx-bundler/compare/0.3.3...HEAD
+[0.3.3]: https://github.com/m-rossi/jupyter-docx-bundler/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/m-rossi/jupyter-docx-bundler/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/m-rossi/jupyter-docx-bundler/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/m-rossi/jupyter-docx-bundler/compare/0.2.1...0.3.0
@@ -165,6 +168,11 @@ Initial version - [@m-rossi]
 [0.1.1]: https://github.com/m-rossi/jupyter-docx-bundler/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/m-rossi/jupyter-docx-bundler/releases/tag/0.1.0
 
+[#74]: https://github.com/m-rossi/jupyter-docx-bundler/issues/74
+[#73]: https://github.com/m-rossi/jupyter-docx-bundler/issues/73
+[#72]: https://github.com/m-rossi/jupyter-docx-bundler/issues/72
+[#71]: https://github.com/m-rossi/jupyter-docx-bundler/issues/71
+[#70]: https://github.com/m-rossi/jupyter-docx-bundler/issues/70
 [#69]: https://github.com/m-rossi/jupyter-docx-bundler/issues/69
 [#68]: https://github.com/m-rossi/jupyter-docx-bundler/issues/68
 [#66]: https://github.com/m-rossi/jupyter-docx-bundler/issues/66
@@ -172,6 +180,7 @@ Initial version - [@m-rossi]
 [#63]: https://github.com/m-rossi/jupyter-docx-bundler/issues/63
 [#62]: https://github.com/m-rossi/jupyter-docx-bundler/issues/62
 [#61]: https://github.com/m-rossi/jupyter-docx-bundler/issues/61
+[#60]: https://github.com/m-rossi/jupyter-docx-bundler/issues/60
 [#59]: https://github.com/m-rossi/jupyter-docx-bundler/issues/59
 [#58]: https://github.com/m-rossi/jupyter-docx-bundler/issues/58
 [#57]: https://github.com/m-rossi/jupyter-docx-bundler/issues/57
@@ -179,6 +188,7 @@ Initial version - [@m-rossi]
 [#55]: https://github.com/m-rossi/jupyter-docx-bundler/issues/55
 [#54]: https://github.com/m-rossi/jupyter-docx-bundler/issues/54
 [#53]: https://github.com/m-rossi/jupyter-docx-bundler/issues/53
+[#52]: https://github.com/m-rossi/jupyter-docx-bundler/issues/52
 [#51]: https://github.com/m-rossi/jupyter-docx-bundler/issues/51
 [#50]: https://github.com/m-rossi/jupyter-docx-bundler/issues/50
 [#49]: https://github.com/m-rossi/jupyter-docx-bundler/issues/49
