@@ -9,12 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Add pycharm-security step ([#66]) - [@m-rossi]
-* Support for pandoc 2.12 ([#68], [#69]) - [@m-rossi]
+* Add [pycharm-security](https://pycharm-security.readthedocs.io/en/latest/) step ([#66]) - [@m-rossi]
+* Support for [pandoc](https://pandoc.org) 2.12 ([#68], [#69]) - [@m-rossi]
+* Support for [pandoc](https://pandoc.org) 2.13 ([#70]) - [@m-rossi]
 
 ### Changed
 
-* Use only conda-forge as conda-channel ([#65]) - [@m-rossi]
+* Use only [conda-forge](https://conda-forge.org) as conda-channel ([#65]) - [@m-rossi]
+* Use [mamba](https://github.com/mamba-org/mamba) in CI to install dependencies ([#71], [#72]) - [@m-rossi]
+
+### Fixed
+
+* Convert various types of [IPython-outputs](https://ipython.readthedocs.io/en/stable/api/generated/IPython.display.html) to pandoc-compatible types ([#73], [#74]) - [@m-rossi]
 
 ## [0.3.2] - 2020-12-11
 
