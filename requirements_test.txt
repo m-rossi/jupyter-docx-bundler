@@ -1,9 +1,11 @@
 ipython >= 7.0
+kaleido
 matplotlib-base >= 3.1
 mock
 nbformat
 numpy
 pillow >= 6.0.0
+plotly
 pytest
 pytest-cov
 pytest-lazy-fixture
