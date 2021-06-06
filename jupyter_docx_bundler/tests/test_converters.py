@@ -31,12 +31,12 @@ def test_image_conversion(tmpdir, images_notebook):
         f'{filename}',
         'markdown',
         'docx',
-        extra_args=['--extract-media', f'{tmpdir}'],
+        extra_args=['--extract-media', f'{tmpdir / "media"}'],
         outputfile=f'{tmpdir / "images-notebook.md"}',
     )
 
     # compare number of extracted media with generated media
-    media = list(Path(tmpdir / 'media').glob('*.*'))
+    media = list(Path(tmpdir / 'media').glob('**/*.*'))
     assert images_notebook['metadata']['image_count'] == len(media),\
         'Number of generated images does not match in docx-document.'
 
