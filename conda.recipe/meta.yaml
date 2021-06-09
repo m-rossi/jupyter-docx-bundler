@@ -26,7 +26,7 @@ requirements:
     - nbconvert >=5.5
     - notebook >=5.0
     - pandas
-    - pandoc >=2.11
+    - pandoc >=2.11,<2.14
     - pandocfilters
     - pypandoc >=1.4
     - python
