@@ -18,7 +18,7 @@ install_requires = [
     'tornado',
 ]
 if sys.version_info.major <= 3 and sys.version_info.minor < 9:
-    install_requires += ['importlib_resources']
+    install_requires += ['importlib-resources']
 
 setup(
     author='Marco Rossi',
