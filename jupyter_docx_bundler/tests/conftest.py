@@ -26,8 +26,6 @@ def _random_matplotlib_image(path):
     params=[
         'https://nbviewer.jupyter.org/github/unpingco/Python-for-Signal-Processing/blob/master/Mor'
         'e_Fourier_Transform.ipynb',
-        'https://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesi'
-        'an-Methods-for-Hackers/blob/master/Chapter1_Introduction/Ch1_Introduction_PyMC3.ipynb',
         'https://nbviewer.jupyter.org/github/waltherg/notebooks/blob/master/2013-12-03-Crank_Nicol'
         'son.ipynb',
     ]
