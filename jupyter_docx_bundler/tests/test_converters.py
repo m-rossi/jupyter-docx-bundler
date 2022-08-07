@@ -209,7 +209,8 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
         lines = file.readlines()
     fixed_lines = []
     for line in lines:
-        if line != '\n':
+        # eclude lines with newline and only ---
+        if line != '\n' and not re.search(r'\A[\s]*[-]+\Z', line.replace('\n', '')):
             fixed_lines.append(line.replace('\\', '').replace(', ', ','))
     with open(outfilename, 'w') as file:
         file.writelines(fixed_lines[-(df.shape[0]+2):])
