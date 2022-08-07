@@ -40,7 +40,7 @@ jobs:
 
   pytest:
     needs: [flake8, pycharm-security]
-    name: pytest (Python ${{ matrix.python-version }}, ${{ matrix.os }}, Pandoc ${{ matrix.pandoc-version }})
+    name: pytest (Python ${{ matrix.python-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -50,6 +50,30 @@ jobs:
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         python-version: ['3.7', '3.8', '3.9', '3.10']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: test
+          auto-update-conda: true
+          miniforge-variant: Mambaforge
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: mamba install --yes --quiet --file requirements.txt --file requirements_test.txt "python=${{ matrix.python-version }}.*=*_cpython"
+      - name: Execute pytest
+        run: pytest .
+      - uses: codecov/codecov-action@v1
+
+  pytest-pandoc-versions:
+    needs: [flake8, pycharm-security]
+    name: pytest (Pandoc ${{ matrix.pandoc-version }})
+    runs-on: 'ubuntu-latest'
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      fail-fast: false
+      matrix:
         pandoc-version: ['2.11', '2.12', '2.13']
     steps:
       - uses: actions/checkout@v2
@@ -60,13 +84,12 @@ jobs:
           miniforge-variant: Mambaforge
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: mamba install --yes --quiet --file requirements.txt --file requirements_test.txt "python=${{ matrix.python-version }}.*=*_cpython" pandoc=${{ matrix.pandoc-version }}
+        run: mamba install --yes --quiet --file requirements.txt --file requirements_test.txt pandoc=${{ matrix.pandoc-version }}
       - name: Execute pytest
         run: pytest .
-      - uses: codecov/codecov-action@v1
 
   conda-build:
-    needs: pytest
+    needs: [pytest, pytest-pandoc-versions]
     name: conda-build (Python ${{ matrix.python-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     defaults:
@@ -97,7 +120,7 @@ jobs:
           path: conda-bld/*/*.tar.bz2
 
   pypi-packages:
-    needs: pytest
+    needs: [pytest, pytest-pandoc-versions]
     name: pypi-packages
     runs-on: 'ubuntu-latest'
     defaults:
