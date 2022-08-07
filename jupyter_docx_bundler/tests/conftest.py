@@ -1,5 +1,6 @@
 import os
 import re
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 from nbconvert.preprocessors import ExecutePreprocessor
@@ -13,7 +14,7 @@ import requests
 from ..converters import encode_image_base64
 
 
-def _random_matplotlib_image(path):
+def _random_matplotlib_image(path: Path):
     fig, ax = plt.subplots(1, 1)
     ax.plot(np.random.randn(100))
     fig.savefig(path)
@@ -132,6 +133,7 @@ def matplotlib_notebook(tmpdir, request):
     'tiff',
 ])
 def markdown_images_notebook(tmpdir, request):
+    tmpdir = Path(tmpdir)
     nb = nbformat.v4.new_notebook()
     image_count = 0
 
@@ -180,12 +182,12 @@ def markdown_images_notebook(tmpdir, request):
         nbformat.v4.new_markdown_cell(
             '\n'.join([
                 'line1',
-                f'![{filename}](attachment:{filename})',
+                f'![{filename.name}](attachment:{filename.name})',
                 'line3',
             ])
         )
     )
-    nb.cells[-1]['attachments'] = encode_image_base64(os.path.join(tmpdir, filename))
+    nb.cells[-1]['attachments'] = encode_image_base64(filename)
     image_count += 1
 
     nb['metadata'].update({
