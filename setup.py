@@ -8,7 +8,7 @@ with open('README.md') as f:
 
 install_requires = [
     'lxml',
-    'nbconvert>=5.5',
+    'nbconvert>=7.0',
     'notebook>=5.0',
     'pandas',
     'pandocfilters',

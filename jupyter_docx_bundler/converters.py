@@ -162,10 +162,10 @@ def preprocess(content, path, handler=None):
     # Apply non-standard operations on cells
     for ii, cell in enumerate(content['cells']):
         # Set input of cells with transient 'remove_source' to later remove it with a pandoc-filter
-        if 'transient' in cell and 'remove_source' in cell['transient'] and \
-                cell['transient']['remove_source']:
+        if 'transient' in cell['metadata'] and 'remove_source' in cell['metadata']['transient'] and \
+                cell['metadata']['transient']['remove_source']:
             cell['source'] = 'jupyter-docx-bundler-remove-input'
-            del cell['transient']
+            del cell['metadata']['transient']
         # Replace whitespace in math formulas
         if cell['cell_type'] == 'markdown':
             cell['source'] = RE_MATH_SINGLE.sub(_strip_match, cell['source'])
