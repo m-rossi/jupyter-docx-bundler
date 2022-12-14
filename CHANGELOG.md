@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-* Fix removal of input cells when using [nbconvert](https://nbconvert.readthedocs.io/en/latest/index.html) 7 ([#91], [#92]) - [@m-rossi]
+* Fix removal of input cells when using [nbconvert](https://nbconvert.readthedocs.io/en/latest/index.html) 7 ([#91], [#92], [#93]) - [@m-rossi]
 
 ## [0.3.4] - 2021-06-09
 
@@ -193,6 +193,7 @@ Initial version - [@m-rossi]
 [0.1.0]: https://github.com/m-rossi/jupyter-docx-bundler/releases/tag/0.1.0
 
 [#94]: https://github.com/m-rossi/jupyter-docx-bundler/issues/94
+[#93]: https://github.com/m-rossi/jupyter-docx-bundler/issues/93
 [#92]: https://github.com/m-rossi/jupyter-docx-bundler/issues/92
 [#91]: https://github.com/m-rossi/jupyter-docx-bundler/issues/91
 [#88]: https://github.com/m-rossi/jupyter-docx-bundler/issues/88
