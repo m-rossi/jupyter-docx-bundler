@@ -18,8 +18,8 @@ requirements:
   host:
     - pip
     - python
-    - setuptools >=38.6.0
-    - setuptools-scm
+    - setuptools >=61.0
+    - setuptools-scm >=6.2
   run:
     - importlib_resources  # [py<39]
     - lxml

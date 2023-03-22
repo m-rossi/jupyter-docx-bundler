@@ -1,0 +1,76 @@
+[build-system]
+requires = [
+    "setuptools>=61.0",
+    "setuptools_scm[toml]>=6.2",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jupyter-docx-bundler"
+authors = [
+  {name="Marco Rossi", email="developer@marco-rossi.com"},
+]
+description = "Jupyter bundler extension to export notebook as a docx file"
+dynamic = ["version"]
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: Jupyter :: JupyterLab",
+    "Framework :: Jupyter",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    'importlib-resources; python_version<"3.9"',
+    "lxml",
+    "nbconvert>=7.0",
+    "notebook>=5.0",
+    "pandas",
+    "pandocfilters",
+    "pypandoc>=1.4",
+    "requests",
+    "tabulate",
+    "tornado",
+]
+
+[project.entry-points."nbconvert.exporters"]
+docx = "jupyter_docx_bundler:DocxExporter"
+
+[project.optional-dependencies]
+test = [
+    "ipython>=7.0",
+    "kaleido",
+    "matplotlib>=3.1",
+    "mock",
+    "nbformat",
+    "numpy",
+    "pillow>=6.0.0",
+    "plotly",
+    "pytest",
+    "pytest-cov",
+    "pytest-lazy-fixture",
+    "sympy",
+]
+
+[project.urls]
+repository = "https://github.com/m-rossi/jupyter-docx-bundler"
+"Bug Tracker" = "https://github.com/m-rossi/jupyter-docx-bundler/issues"
+changelog = "https://github.com/m-rossi/jupyter-docx-bundler/blob/main/CHANGELOG.md"
+
+[tool.coverage.run]
+omit = "jupyter_docx_bundler/test/*"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+norecursedirs = ".* build dist CVS _darcs {arch} *.egg venv conda.recipe"
+addopts = "--cov=jupyter_docx_bundler --cov-report xml"
+
+[tool.setuptools_scm]
