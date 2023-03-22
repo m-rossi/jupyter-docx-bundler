@@ -17,7 +17,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     defaults:
       run:
-        shell: bash -l {0}
+        shell: bash -el {0}
     steps:
       - uses: actions/checkout@v2
       - uses: conda-incubator/setup-miniconda@v2
@@ -44,7 +44,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        shell: bash -l {0}
+        shell: bash -el {0}
     strategy:
       fail-fast: false
       matrix:
@@ -70,7 +70,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     defaults:
       run:
-        shell: bash -l {0}
+        shell: bash -el {0}
     strategy:
       fail-fast: false
       matrix:
@@ -94,7 +94,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        shell: bash -l {0}
+        shell: bash -el {0}
     strategy:
       fail-fast: false
       matrix:
@@ -125,7 +125,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     defaults:
       run:
-        shell: bash -l {0}
+        shell: bash -el {0}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -137,9 +137,9 @@ jobs:
           auto-update-conda: true
           miniforge-variant: Mambaforge
       - name: Install setuptools setuptools-scm and wheel
-        run: mamba install --yes --quiet setuptools setuptools-scm wheel
+        run: mamba install --yes --quiet build setuptools setuptools-scm wheel
       - name: Build source-distribution and wheel
-        run: python setup.py sdist bdist_wheel
+        run: python -m build
       - uses: actions/upload-artifact@v2
         with:
           name: pypi-packages
