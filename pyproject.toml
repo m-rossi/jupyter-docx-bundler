@@ -21,8 +21,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -32,13 +30,12 @@ dependencies = [
     'importlib-resources; python_version<"3.9"',
     "lxml",
     "nbconvert>=7.0",
-    "notebook>=5.0",
+    "notebook>=7.0",
     "pandas",
     "pandocfilters",
     "pypandoc>=1.4",
     "requests",
     "tabulate",
-    "tornado",
 ]
 
 [project.entry-points."nbconvert.exporters"]

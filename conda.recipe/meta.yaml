@@ -11,28 +11,27 @@ source:
   path: ..
 
 build:
-  skip: True  # [py<36]
   script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+  noarch: python
 
 requirements:
   host:
     - pip
-    - python
+    - python >=3.8
     - setuptools >=61.0
     - setuptools-scm >=6.2
   run:
-    - importlib_resources  # [py<39]
+    - importlib-resources
     - lxml
     - nbconvert >=7.0
-    - notebook >=5.0
+    - notebook >=7.0
     - pandas
     - pandoc >=2.11,<3
     - pandocfilters
     - pypandoc >=1.4
-    - python
+    - python >=3.8
     - requests
     - tabulate
-    - tornado
 
 test:
   imports:

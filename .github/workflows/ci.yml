@@ -49,7 +49,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
     steps:
       - uses: actions/checkout@v2
       - uses: conda-incubator/setup-miniconda@v2
@@ -82,7 +82,6 @@ jobs:
           activate-environment: test
           auto-update-conda: true
           miniforge-variant: Mambaforge
-          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: mamba install --yes --quiet --file requirements.txt --file requirements_test.txt pandoc=${{ matrix.pandoc-version }}
       - name: Execute pytest
@@ -90,7 +89,7 @@ jobs:
 
   conda-build:
     needs: [pytest, pytest-pandoc-versions]
-    name: conda-build (Python ${{ matrix.python-version }}, ${{ matrix.os }})
+    name: conda-build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -99,7 +98,6 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
     steps:
       - uses: actions/checkout@v2
         with:
@@ -113,10 +111,10 @@ jobs:
       - name: Install conda-build
         run: mamba install --yes --quiet conda-build boa
       - name: Execute conda-build
-        run: conda mambabuild --output-folder conda-bld --python ${{ matrix.python-version }} conda.recipe
+        run: conda mambabuild --output-folder conda-bld conda.recipe
       - uses: actions/upload-artifact@v2
         with:
-          name: python-${{ matrix.python-version }}-${{ matrix.os }}
+          name: python-${{ matrix.os }}
           path: conda-bld/*/*.tar.bz2
 
   pypi-packages:
