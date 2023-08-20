@@ -37,7 +37,7 @@ def test_image_conversion(tmpdir, images_notebook):
 
     # compare number of extracted media with generated media
     media = list(Path(tmpdir / 'media').glob('**/*.*'))
-    assert images_notebook['metadata']['image_count'] == len(media),\
+    assert images_notebook['metadata']['image_count'] == len(media), \
         'Number of generated images does not match in docx-document.'
 
 
