@@ -111,7 +111,7 @@ jobs:
       - name: Install conda-build
         run: mamba install --yes --quiet conda-build boa
       - name: Execute conda-build
-        run: conda mambabuild --output-folder conda-bld - conda.recipe
+        run: conda mambabuild --output-folder conda-bld conda.recipe
       - uses: actions/upload-artifact@v2
         with:
           name: python-${{ matrix.os }}
