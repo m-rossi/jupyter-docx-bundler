@@ -22,7 +22,6 @@ Make sure you have [Pandoc](https://pandoc.org) installed, see [installing-pando
 
 ```
 pip install jupyter-docx-bundler
-jupyter bundlerextension enable --py jupyter_docx_bundler --sys-prefix
 ```
 
 ## Usage
