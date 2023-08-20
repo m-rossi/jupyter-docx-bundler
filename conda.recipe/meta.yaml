@@ -24,7 +24,7 @@ requirements:
     - importlib_resources  # [py<39]
     - lxml
     - nbconvert >=7.0
-    - notebook >=5.0
+    - notebook >=7.0
     - pandas
     - pandoc >=2.11,<3
     - pandocfilters
@@ -32,7 +32,6 @@ requirements:
     - python
     - requests
     - tabulate
-    - tornado
 
 test:
   imports:
