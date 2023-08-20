@@ -168,8 +168,8 @@ def test_pandas_html_table(tmpdir, pandas_html_table_notebook):
     df = pd.DataFrame(json.loads(pandas_html_table_notebook['metadata']['table']))
     # because of the intermediate conversion to json-string, the int-datatype is lost
     try:
-        df.index = df.index.astype('int')
-    except TypeError:
+        df.index = df.index.astype(int)
+    except ValueError:
         pass
 
     # adujst column names to those we can extract from the markdown format later
