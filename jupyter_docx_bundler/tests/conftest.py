@@ -374,6 +374,7 @@ def math_without_space_notebook(tmpdir, request):
         'normal',
         'named-index',
         'multicolumn',
+        'named-multicolumn-named-index',
         'multirow',
         'multirow-multicolumn',
     ],
@@ -414,6 +415,26 @@ def pandas_html_table_notebook(tmpdir, request):
         nb.cells.append(
             nbformat.v4.new_code_cell(
                 source='pd.DataFrame(np.random.randn(6, 4), columns=[list("1122"), list("ABCD")])',
+            )
+        )
+    elif request.param == 'named-multicolumn-named-index':
+        df = pd.DataFrame(
+            np.random.randn(6, 4),
+            columns=[list("1122"), list("ABCD")],
+        )
+        df.index.name = "custom-index"
+        df.columns.names = (None, "unit")
+        nb.cells.append(
+            nbformat.v4.new_code_cell(
+                source='\n'.join([
+                    'df = pd.DataFrame(',
+                    '    np.random.randn(6, 4),',
+                    '    columns=[list("1122"), list("ABCD")],',
+                    ')',
+                    'df.index.name = "custom-index"',
+                    'df.columns.names = (None, "unit")',
+                    'df',
+                ])
             )
         )
     elif request.param == 'multirow':
